@@ -26,3 +26,4 @@ dist-ssr
 .prettierrc
 .env.prod
 .prettierignore
+.lintstagedrc

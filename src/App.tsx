@@ -1,10 +1,9 @@
+import "./App.css"
 import {
   Avatar,
   AvatarImage,
   AvatarFallback,
 } from "@components/components/ui/avatar"
-
-import "./App.css"
 
 function App() {
   return (

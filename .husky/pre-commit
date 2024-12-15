@@ -1,16 +1,21 @@
-# Run Prettier to format the code
-prettier --write .
+# # Run Prettier to format the code
+# prettier --write .
 
-# Run ESLint to lint and fix the code
-eslint . --fix
+# # Run ESLint to lint and fix the code
+# eslint . --fix
 
-# Add changes to git
-echo "Staging changes..."
-git add -A . 
+# # Add changes to git
+# echo "Staging changes..."
+# git add -A . 
 
-# Verify staged changes
-echo "Staged changes:"
-git diff --cached --name-only
+# # Verify staged changes
+# echo "Staged changes:"
+# git diff --cached --name-only
 
-# Run lint-staged to handle staged files
+# # Run lint-staged to handle staged files
+# npx lint-staged
+
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
 npx lint-staged

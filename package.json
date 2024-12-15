@@ -9,13 +9,19 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "prepare": "husky",
+    "prepare": "husky install",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "husky": {
     "hooks": {
       "pre-commit": "prettier --write . && git add -A ."
     }
+  },
+  "lint-staged": {
+    "*.ts, *.tsx": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",

@@ -1,1 +1,14 @@
-npx lint-staged && npm run lint && npm run format && npm test
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run Prettier to format the code
+prettier --write .
+
+# Run ESLint to lint the code
+eslint .
+
+# Add changes to git
+git add -A .
+
+# Run lint-staged to handle staged files
+npx lint-staged

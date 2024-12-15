@@ -10,6 +10,8 @@ function App() {
     <Avatar className="w-16 h-16 bg-gray-200">
       <AvatarImage src="https://github.com/shadcn.png" />
 
+      <div></div>
+
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   )

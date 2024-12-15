@@ -14,13 +14,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier --write . && git add -A ."
+      "pre-commit": "format && git add -A ."
     }
   },
   "lint-staged": {
     "*.ts, *.tsx": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "dependencies": {

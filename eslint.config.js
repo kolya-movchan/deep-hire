@@ -28,7 +28,7 @@ export default [
 
   // React Hooks and React Refresh configuration
   {
-    files: ["**/*.{js,jsx,ts,tsx}"],
+    files: ["**/*.{ts,tsx}"],
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,

@@ -4,8 +4,8 @@
 # Run Prettier to format the code
 prettier --write .
 
-# Run ESLint to lint the code
-eslint .
+# Run ESLint to lint and fix the code
+eslint . --fix
 
 # Add changes to git
 echo "Staging changes..."

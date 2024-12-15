@@ -9,7 +9,7 @@ eslint . --fix
 
 # Add changes to git
 echo "Staging changes..."
-git add -A .
+git add -A . 
 
 # Verify staged changes
 echo "Staged changes:"

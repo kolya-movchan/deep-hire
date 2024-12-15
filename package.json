@@ -17,33 +17,6 @@
       "pre-commit": "format && git add -A ."
     }
   },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.tsx": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.jsx": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ],
-    "*.css": [
-      "prettier --write"
-    ],
-    "*.md": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.3",

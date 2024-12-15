@@ -2,9 +2,9 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-} from "@components/components/ui/avatar";
+} from "@components/components/ui/avatar"
 
-import "./App.css";
+import "./App.css"
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
       <AvatarImage src="https://github.com/shadcn.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
-  );
+  )
 }
 
-export default App;
+export default App

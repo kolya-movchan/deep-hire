@@ -1,13 +1,19 @@
-import "./App.css"
-import { Avatar, AvatarImage, AvatarFallback } from "@components/components/ui/avatar"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Dashboard } from "./pages/Dashboard"
+import { Home } from "./pages/Home"
+import { Login } from "./pages/Login"
+import { Register } from "./pages/Register"
 
 function App() {
   return (
-    <Avatar className="w-16 h-16 bg-gray-200">
-      <AvatarImage src="https://github.com/shadcn.png" />
-
-      <AvatarFallback>CN</AvatarFallback>
-    </Avatar>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
   )
 }
 

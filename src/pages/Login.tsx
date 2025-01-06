@@ -1,8 +1,8 @@
 import React from "react"
-import { Button } from "@components/ui/button"
-import { Card, CardHeader, CardContent, CardFooter } from "@components/ui/card"
-import { Input } from "@components/ui/input"
 import { Link } from "react-router-dom"
+import { Button } from "@/@components/components/ui/button"
+import { Card, CardHeader, CardContent, CardFooter } from "@/@components/components/ui/card"
+import { Input } from "@/@components/components/ui/input"
 
 export const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {

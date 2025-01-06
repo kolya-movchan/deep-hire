@@ -30,6 +30,7 @@ export const Login = () => {
             </Button>
           </form>
         </CardContent>
+
         <CardFooter className="justify-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}

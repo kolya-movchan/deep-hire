@@ -3,27 +3,60 @@ import { Button } from "../components/ui/button"
 
 export const Home = () => {
   return (
-    <div className="min-h-screen">
-      <header className="border-b">
-        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">My App</h1>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
+      <header className="border-b backdrop-blur-sm bg-white/70 sticky top-0 z-50">
+        <nav className="container mx-auto px-6 py-5 flex justify-between items-center">
+          <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+            My App
+          </h1>
           <div className="space-x-4">
             <Link to="/login">
-              <Button variant="outline">Login</Button>
+              <Button variant="ghost" className="hover:bg-purple-50 text-purple-700">
+                Login
+              </Button>
             </Link>
             <Link to="/register">
-              <Button>Register</Button>
+              <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                Register
+              </Button>
             </Link>
           </div>
         </nav>
       </header>
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6">Welcome to My App</h2>
-          <p className="text-gray-600 mb-8">Sign up to access exclusive features!</p>
-          <Link to="/register">
-            <Button size="lg">Get Started</Button>
-          </Link>
+      <main className="container mx-auto px-6 py-16">
+        <div className="max-w-3xl mx-auto text-center space-y-8">
+          <h2 className="text-5xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+            Transform Your Experience with My App
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Join thousands of users who have already discovered our exclusive features. Start your
+            journey today and unlock a world of possibilities.
+          </p>
+          <div className="pt-4">
+            <Link to="/register">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200"
+              >
+                Get Started Now
+              </Button>
+            </Link>
+          </div>
+          <div className="pt-12 grid grid-cols-3 gap-8 text-center">
+            {[
+              { stat: "10K+", label: "Active Users" },
+              { stat: "99.9%", label: "Uptime" },
+              { stat: "24/7", label: "Support" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="p-6 rounded-2xl bg-white/50 backdrop-blur-sm shadow-lg"
+              >
+                <div className="text-3xl font-bold text-purple-600">{item.stat}</div>
+                <div className="text-gray-600 mt-1">{item.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>

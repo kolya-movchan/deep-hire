@@ -1,9 +1,15 @@
+import React from "react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 
 export const Register = () => {
+  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("Register")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
       <header className="border-b backdrop-blur-sm bg-white/70 sticky top-0 z-50">
@@ -24,7 +30,7 @@ export const Register = () => {
             <p className="text-gray-600 text-center mt-2">Join us and start your journey</p>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleRegister}>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Full Name</label>
                 <Input type="text" placeholder="Enter your full name" />

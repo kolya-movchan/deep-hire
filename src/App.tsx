@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { AuthUser, getCurrentUser } from "aws-amplify/auth"
+import { AuthUser } from "aws-amplify/auth"
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import { checkUser } from "./hooks/auth/auth"
 import { Dashboard } from "./pages/Dashboard"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
@@ -11,20 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const user = await getCurrentUser()
-        setAuthUser(user)
-        console.log("Current user:", user)
-      } catch {
-        console.log("Not signed in")
-        setAuthUser(null)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    checkUser()
+    checkUser(setAuthUser, setIsLoading)
   }, [])
 
   if (isLoading) {

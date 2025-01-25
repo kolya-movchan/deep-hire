@@ -1,4 +1,4 @@
-import { fetchAuthSession, signOut, signIn, getCurrentUser } from "aws-amplify/auth"
+import { fetchAuthSession, signOut, signIn, getCurrentUser, AuthUser } from "aws-amplify/auth"
 import { NavigateFunction } from "react-router-dom"
 
 export const logIn = async (username: string, password: string) => {
@@ -38,5 +38,21 @@ export const navigateLoggedInUser = async (navigate: NavigateFunction) => {
 
   if (user) {
     navigate("/dashboard")
+  }
+}
+
+export const checkUser = async (
+  setAuthUser: (user: AuthUser | null) => void,
+  setIsLoading: (loading: boolean) => void
+) => {
+  try {
+    const user = await getCurrentUser()
+    setAuthUser(user)
+    console.log("Current user:", user)
+  } catch {
+    console.log("Not signed in")
+    setAuthUser(null)
+  } finally {
+    setIsLoading(false)
   }
 }

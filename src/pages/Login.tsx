@@ -2,13 +2,15 @@ import React from "react"
 import { Amplify } from "aws-amplify"
 import { signIn, fetchAuthSession } from "aws-amplify/auth"
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import config from "../../config.json"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 
 export const Login = () => {
+  const navigate = useNavigate()
+
   Amplify.configure({
     Auth: {
       Cognito: {
@@ -34,13 +36,16 @@ export const Login = () => {
     console.log("username:", config.credentials.username)
     console.log("password:", config.credentials.password)
 
-    const result = await logIn(config.credentials.username, config.credentials.password)
-
-    console.log("result:", result)
+    try {
+      const result = await logIn(config.credentials.username, config.credentials.password)
+      console.log("result:", result)
+      navigate("/dashboard")
+    } catch (error) {
+      console.error("Login error:", error)
+    }
   }
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleClick = () => {
     main()
   }
 
@@ -64,7 +69,7 @@ export const Login = () => {
             <p className="text-gray-600 text-center mt-2">Please sign in to continue</p>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Email</label>
                 <Input type="email" placeholder="Enter your email" />
@@ -75,7 +80,7 @@ export const Login = () => {
               </div>
               <Button
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={handleLogin}
+                onClick={handleClick}
               >
                 Sign In
               </Button>

@@ -1,12 +1,12 @@
 import { useEffect } from "react"
 import { Amplify } from "aws-amplify"
-import { signIn, getCurrentUser } from "aws-amplify/auth"
 
 import { Link, useNavigate } from "react-router-dom"
 import config from "../../config.json"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
+import { logIn, navigateLoggedInUser } from "@/hooks/auth/auth"
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -20,16 +20,7 @@ export const Login = () => {
     },
   })
 
-  async function logIn(username: string, password: string) {
-    const signInResult = await signIn({
-      username,
-      password,
-    })
-
-    return signInResult
-  }
-
-  async function main() {
+  async function handleClick() {
     // console.log("username:", config.credentials.username)
     // console.log("password:", config.credentials.password)
 
@@ -42,19 +33,8 @@ export const Login = () => {
     }
   }
 
-  const handleClick = () => {
-    main()
-  }
-
-  const checkAuth = async () => {
-    const user = await getCurrentUser()
-    if (user) {
-      navigate("/dashboard")
-    }
-  }
-
   useEffect(() => {
-    checkAuth()
+    navigateLoggedInUser(navigate)
   }, [])
 
   return (

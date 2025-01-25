@@ -1,36 +1,24 @@
 import { useState } from "react"
 import { useEffect } from "react"
-import { fetchAuthSession, signOut } from "aws-amplify/auth"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
+import { checkAuthStatus, singOut } from "../hooks/auth/auth"
 
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
-    try {
-      await signOut()
-      setIsLoggedIn(false)
-      navigate("/")
-    } catch (error) {
-      console.error("Error signing out:", error)
-    }
+    singOut(setIsLoggedIn, navigate)
   }
 
-  const checkAuthStatus = async () => {
-    try {
-      const session = await fetchAuthSession()
-      console.log("session:", session)
-      setIsLoggedIn(!!session.tokens)
-    } catch {
-      setIsLoggedIn(false)
-    }
+  const handleAuthStatus = async () => {
+    checkAuthStatus(setIsLoggedIn)
   }
 
   useEffect(() => {
-    checkAuthStatus()
+    handleAuthStatus()
   }, [])
 
   return (

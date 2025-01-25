@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
 
 export const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
@@ -42,7 +42,9 @@ export const Header = () => {
           </h1>
         </Link>
         <div className="space-x-4">
-          {isLoggedIn ? (
+          {isLoggedIn === null ? (
+            <></>
+          ) : isLoggedIn ? (
             <Button
               variant="ghost"
               className="hover:bg-purple-50 text-purple-700"

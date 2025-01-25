@@ -1,6 +1,6 @@
-import React from "react"
+import { useEffect } from "react"
 import { Amplify } from "aws-amplify"
-import { signIn, fetchAuthSession } from "aws-amplify/auth"
+import { signIn, getCurrentUser } from "aws-amplify/auth"
 
 import { Link, useNavigate } from "react-router-dom"
 import config from "../../config.json"
@@ -26,15 +26,12 @@ export const Login = () => {
       password,
     })
 
-    const session = await fetchAuthSession()
-    console.log("session:", session)
-
     return signInResult
   }
 
   async function main() {
-    console.log("username:", config.credentials.username)
-    console.log("password:", config.credentials.password)
+    // console.log("username:", config.credentials.username)
+    // console.log("password:", config.credentials.password)
 
     try {
       const result = await logIn(config.credentials.username, config.credentials.password)
@@ -48,6 +45,17 @@ export const Login = () => {
   const handleClick = () => {
     main()
   }
+
+  const checkAuth = async () => {
+    const user = await getCurrentUser()
+    if (user) {
+      navigate("/dashboard")
+    }
+  }
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">

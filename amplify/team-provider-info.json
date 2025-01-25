@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aiflex-dev-c897a-authRole",
+      "UnauthRoleArn": "arn:aws:iam::794038211032:role/amplify-aiflex-dev-c897a-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::794038211032:role/amplify-aiflex-dev-c897a-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-aiflex-dev-c897a-deployment",
+      "UnauthRoleName": "amplify-aiflex-dev-c897a-unauthRole",
+      "StackName": "amplify-aiflex-dev-c897a",
+      "StackId": "arn:aws:cloudformation:eu-north-1:794038211032:stack/amplify-aiflex-dev-c897a/1f6c1b40-db06-11ef-914d-06fe80cfc873",
+      "AmplifyAppId": "d39i2tyte5kjnp"
+    }
+  }
+}

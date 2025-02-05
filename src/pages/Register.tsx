@@ -15,8 +15,8 @@ export const Register = () => {
 
     try {
       const { isSignUpComplete, userId, nextStep } = await signUp({
-        username: "hello@mycompany.com",
-        password: "hunter2",
+        username: "testSignUP1@gmail.com",
+        password: "hunter2/32-0i3mKLMALSKDNM***",
         options: {
           userAttributes: {
             email: "hello@mycompany.com",

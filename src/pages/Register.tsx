@@ -1,13 +1,38 @@
+/* eslint-disable import/order */
 import React from "react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
+import { signUp } from "aws-amplify/auth"
+import { configAmplify } from "../hooks/auth/config-amplify"
 
 export const Register = () => {
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  configAmplify()
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log("Register")
+
+    try {
+      const { isSignUpComplete, userId, nextStep } = await signUp({
+        username: "hello@mycompany.com",
+        password: "hunter2",
+        options: {
+          userAttributes: {
+            email: "hello@mycompany.com",
+            phone_number: "+15555555555", // E.164 number convention
+          },
+        },
+      })
+
+      console.log("isSignUpComplete:", isSignUpComplete)
+      console.log("userId:", userId)
+      console.log("nextStep:", nextStep)
+
+      console.log("Registration successful")
+    } catch (error) {
+      console.error("Registration error:", error)
+    }
   }
 
   return (

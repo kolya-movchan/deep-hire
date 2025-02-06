@@ -1,3 +1,16 @@
+#!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
+# Find all staged files
+STAGED_FILES=$(git diff --cached --name-only)
+
+# Process each file
+for FILE in $STAGED_FILES; do
+  # Skip non-text files
+  if file "$FILE" | grep -q text; then
+    # Remove empty lines except the last one
+    sed -i '' -e :a -e '/^\n*$/{$d;N;};/\n$/ba' "$FILE"
+    # Add the modified file back to the staging area
+    git add "$FILE"
+  fi
+done

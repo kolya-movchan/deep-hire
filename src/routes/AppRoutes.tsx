@@ -1,14 +1,11 @@
-import { JSX } from "react"
-import { useEffect } from "react"
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-import { checkAuth } from "../store/authSlice"
-import { RootState } from "../store"
-import { Dashboard } from "../pages/Dashboard"
+import { Routes, Route } from "react-router-dom"
 import { Home } from "../pages/Home"
 import { Login } from "../pages/Login"
 import { Register } from "../pages/Register"
-import { AppDispatch } from "../store"
+import { Dashboard } from "../pages/Dashboard"
+import { PrivateRoute } from "./PrivateRoute"
+import { useAuthCheck } from "../hooks/auth/useAuth"
+import { JSX } from "react"
 
 type RouteConfig = {
   path: string
@@ -24,34 +21,21 @@ const publicRoutes: readonly RouteConfig[] = [
 const authRoutes: readonly RouteConfig[] = [{ path: "/dashboard", element: <Dashboard /> }] as const
 
 export function AppRoutes(): JSX.Element {
-  const dispatch = useDispatch<AppDispatch>()
-  const { user, loading } = useSelector((state: RootState) => state.auth)
-
-  useEffect(() => {
-    dispatch(checkAuth())
-  }, [dispatch])
-
-  if (loading) {
-    return <></> // Or a proper loading spinner
-  }
+  useAuthCheck() // Runs authentication check globally
 
   return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        {publicRoutes.map(({ path, element }) => (
+    <Routes>
+      {/* Public routes */}
+      {publicRoutes.map(({ path, element }) => (
+        <Route key={path} path={path} element={element} />
+      ))}
+
+      {/* Private routes (Wrapped in PrivateRoute) */}
+      <Route element={<PrivateRoute />}>
+        {authRoutes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />
         ))}
-
-        {/* Protected routes */}
-        {authRoutes.map(({ path, element }) => (
-          <Route
-            key={path}
-            path={path}
-            element={user ? element : <Navigate to="/login" replace />}
-          />
-        ))}
-      </Routes>
-    </Router>
+      </Route>
+    </Routes>
   )
 }

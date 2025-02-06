@@ -5,8 +5,9 @@ import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { configAmplify } from "../hooks/auth/config-amplify"
-import { register, confirmRegistration } from "../hooks/auth/auth"
+import { register, confirmRegistration, logIn } from "../hooks/auth/auth"
 import { Eye, EyeOff } from "lucide-react"
+import { navigateLoggedInUser } from "../hooks/navigate-user"
 
 interface RegisterForm {
   fullName: string
@@ -120,11 +121,16 @@ export const Register = () => {
       await confirmRegistration(formData.email, confirmationCode)
       console.log("User confirmed successfully!")
       setIsConfirming(false)
+      await logIn(formData.email, formData.password)
       navigate("/dashboard")
     } catch (error) {
       console.error("Error confirming user:", error)
     }
   }
+
+  useEffect(() => {
+    navigateLoggedInUser(navigate)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">

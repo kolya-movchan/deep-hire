@@ -1,37 +1,64 @@
 /* eslint-disable import/order */
-import React from "react"
-import { Link } from "react-router-dom"
+import React, { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
-import { signUp } from "aws-amplify/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
+import { register, confirmRegistration } from "../hooks/auth/auth"
+
+interface RegisterForm {
+  fullName: string
+  email: string
+  password: string
+}
 
 export const Register = () => {
   configAmplify()
+  const navigate = useNavigate()
+
+  const [formData, setFormData] = useState<RegisterForm>({
+    fullName: "",
+    email: "",
+    password: "",
+  })
+  const [confirmationCode, setConfirmationCode] = useState<string>("")
+  const [isConfirming, setIsConfirming] = useState<boolean>(false)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
-        username: "testSignUP1@gmail.com",
-        password: "hunter2/32-0i3mKLMALSKDNM***",
-        options: {
-          userAttributes: {
-            email: "hello@mycompany.com",
-            phone_number: "+15555555555", // E.164 number convention
-          },
-        },
+      const { isSignUpComplete, userId, nextStep } = await register({
+        ...formData,
+        username: formData.email,
       })
 
       console.log("isSignUpComplete:", isSignUpComplete)
       console.log("userId:", userId)
       console.log("nextStep:", nextStep)
-
-      console.log("Registration successful")
+      setIsConfirming(true)
     } catch (error) {
       console.error("Registration error:", error)
+    }
+  }
+
+  const handleConfirm = async () => {
+    try {
+      await confirmRegistration(formData.email, confirmationCode)
+      console.log("User confirmed successfully!")
+      setIsConfirming(false)
+      navigate("/dashboard")
+    } catch (error) {
+      console.error("Error confirming user:", error)
     }
   }
 
@@ -55,23 +82,64 @@ export const Register = () => {
             <p className="text-gray-600 text-center mt-2">Join us and start your journey</p>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4" onSubmit={handleRegister}>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Full Name</label>
-                <Input type="text" placeholder="Enter your full name" />
+            {!isConfirming ? (
+              <form className="space-y-4" onSubmit={handleRegister}>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Full Name</label>
+                  <Input
+                    type="text"
+                    name="fullName"
+                    placeholder="Enter your full name"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Email</label>
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Password</label>
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="Create a password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                  Create Account
+                </Button>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Confirmation Code</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter confirmation code"
+                    value={confirmationCode}
+                    onChange={(e) => setConfirmationCode(e.target.value)}
+                  />
+                </div>
+                <Button
+                  onClick={handleConfirm}
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  Confirm Account
+                </Button>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Email</label>
-                <Input type="email" placeholder="Enter your email" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Password</label>
-                <Input type="password" placeholder="Create a password" />
-              </div>
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
-                Create Account
-              </Button>
-            </form>
+            )}
             <div className="mt-4 text-center text-sm text-gray-600">
               Already have an account?{" "}
               <Link to="/login" className="text-purple-600 hover:text-purple-700 font-medium">

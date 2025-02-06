@@ -7,10 +7,7 @@ import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { logIn } from "../hooks/auth/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
-import { navigateLoggedInUser } from "@/hooks/navigate-user"     
-
-
-
+import { navigateLoggedInUser } from "@/hooks/navigate-user"
 
 export const Login = () => {
   const navigate = useNavigate()

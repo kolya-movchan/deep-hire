@@ -1,26 +1,47 @@
-import { useEffect } from "react"
-
+import React, { useState, useEffect } from "react"
+import { Visibility, VisibilityOff } from "@mui/icons-material"
+import {
+  TextField,
+  IconButton,
+  Container,
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
-import config from "../../config.json"
-import { Button } from "../components/ui/button"
-import { Card, CardHeader, CardContent } from "../components/ui/card"
-import { Input } from "../components/ui/input"
 import { logIn } from "../hooks/auth/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
 import { navigateLoggedInUser } from "@/hooks/navigate-user"
 
+interface LoginForm {
+  email: string
+  password: string
+}
+
 export const Login = () => {
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState<LoginForm>({
+    email: "",
+    password: "",
+  })
 
   configAmplify()
 
-  async function handleClick() {
-    // console.log("username:", config.credentials.username)
-    // console.log("password:", config.credentials.password)
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
-      const result = await logIn(config.credentials.username, config.credentials.password)
-      console.log("result:", result)
+      await logIn(formData.email, formData.password)
       navigate("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
@@ -32,50 +53,127 @@ export const Login = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
-      <header className="border-b backdrop-blur-sm bg-white/70 sticky top-0 z-50">
-        <nav className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <Link to="/">
-            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-              My App
-            </h1>
-          </Link>
-        </nav>
-      </header>
-      <main className="container mx-auto px-6 py-16">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
-          <CardHeader>
-            <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-              Welcome Back
-            </h2>
-            <p className="text-gray-600 text-center mt-2">Please sign in to continue</p>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Email</label>
-                <Input type="email" placeholder="Enter your email" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Password</label>
-                <Input type="password" placeholder="Enter your password" />
-              </div>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom right, #EEF2FF, #FFFFFF, #F3E8FF)",
+      }}
+    >
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          backdropFilter: "blur(8px)",
+          bgcolor: "rgba(255,255,255,0.7)",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ py: 2, display: "flex", alignItems: "center" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                My App
+              </Typography>
+            </Link>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            maxWidth: "600px",
+            mx: "auto",
+            bgcolor: "rgba(255,255,255,0.7)",
+            backdropFilter: "blur(8px)",
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold" }}>
+            Welcome Back
+          </Typography>
+          <Typography variant="body1" align="center" color="text.secondary" gutterBottom>
+            Please sign in to continue
+          </Typography>
+
+          <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
+            <Stack spacing={3}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                variant="outlined"
+              />
+
+              <TextField
+                fullWidth
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  ),
+                }}
+              />
+
               <Button
-                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={handleClick}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                  "&:hover": {
+                    background: "linear-gradient(to right, #7E22CE, #4338CA)",
+                  },
+                }}
               >
                 Sign In
               </Button>
-            </form>
-            <div className="mt-4 text-center text-sm text-gray-600">
+            </Stack>
+          </Box>
+
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary">
               Don't have an account?{" "}
-              <Link to="/register" className="text-purple-600 hover:text-purple-700 font-medium">
+              <Link
+                to="/register"
+                style={{
+                  color: "#9333EA",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
+              >
                 Register here
               </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+            </Typography>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   )
 }

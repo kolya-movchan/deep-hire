@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
-import { Button } from "../components/ui/button"
 import { checkAuthStatus, singOut } from "../hooks/auth/auth"
 
 export const Header = () => {
@@ -33,24 +32,18 @@ export const Header = () => {
           {isLoggedIn === null ? (
             <></>
           ) : isLoggedIn ? (
-            <Button
-              variant="ghost"
-              className="hover:bg-purple-50 text-purple-700"
-              onClick={handleSignOut}
-            >
+            <button className="hover:bg-purple-50 text-purple-700" onClick={handleSignOut}>
               Log Out
-            </Button>
+            </button>
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" className="hover:bg-purple-50 text-purple-700">
-                  Login
-                </Button>
+                <button className="hover:bg-purple-50 text-purple-700">Login</button>
               </Link>
               <Link to="/register">
-                <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
                   Register
-                </Button>
+                </button>
               </Link>
             </>
           )}

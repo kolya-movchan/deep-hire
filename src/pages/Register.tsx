@@ -1,13 +1,20 @@
 /* eslint-disable import/order */
 import React, { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Button } from "../components/ui/button"
-import { Card, CardHeader, CardContent } from "../components/ui/card"
-import { Input } from "../components/ui/input"
 import { configAmplify } from "../hooks/auth/config-amplify"
 import { register, confirmRegistration, logIn } from "../hooks/auth/auth"
-import { Eye, EyeOff } from "lucide-react"
 import { navigateLoggedInUser } from "../hooks/navigate-user"
+import {
+  TextField,
+  IconButton,
+  Container,
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material"
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 
 interface RegisterForm {
   fullName: string
@@ -133,120 +140,189 @@ export const Register = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
-      <header className="border-b backdrop-blur-sm bg-white/70 sticky top-0 z-50">
-        <nav className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <Link to="/">
-            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-              My App
-            </h1>
-          </Link>
-        </nav>
-      </header>
-      <main className="container mx-auto px-6 py-16">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
-          <CardHeader>
-            <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-              Create Account
-            </h2>
-            <p className="text-gray-600 text-center mt-2">Join us and start your journey</p>
-          </CardHeader>
-          <CardContent>
-            {!isConfirming ? (
-              <form className="space-y-4" onSubmit={handleRegister}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Full Name</label>
-                  <Input
-                    type="text"
-                    name="fullName"
-                    placeholder="Enter your full name"
-                    value={formData.fullName}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom right, #EEF2FF, #FFFFFF, #F3E8FF)",
+      }}
+    >
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          backdropFilter: "blur(8px)",
+          bgcolor: "rgba(255,255,255,0.7)",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ py: 2, display: "flex", alignItems: "center" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                My App
+              </Typography>
+            </Link>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            maxWidth: "600px",
+            mx: "auto",
+            bgcolor: "rgba(255,255,255,0.7)",
+            backdropFilter: "blur(8px)",
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold" }}>
+            Create Account
+          </Typography>
+
+          {!isConfirming ? (
+            <Box component="form" onSubmit={handleRegister} sx={{ mt: 3 }}>
+              <Stack spacing={3}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  name="fullName"
+                  placeholder="Enter your full name"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  required
+                  variant="outlined"
+                />
+
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  variant="outlined"
+                />
+
+                <Box sx={{ position: "relative" }}>
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Create a password"
+                    value={formData.password}
                     onChange={handleInputChange}
                     required
+                    variant="outlined"
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      ),
+                    }}
                   />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Email</label>
-                  <Input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Password</label>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="Create a password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                  {showRequirements && (
+                    <Paper
+                      ref={requirementsRef}
+                      elevation={2}
+                      sx={{
+                        position: "absolute",
+                        zIndex: 10,
+                        mt: 1,
+                        p: 2,
+                        width: "100%",
+                      }}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-500" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-500" />
-                      )}
-                    </button>
-                    {showRequirements && (
-                      <div
-                        ref={requirementsRef}
-                        className="absolute z-10 mt-2 p-4 bg-white rounded-lg shadow-lg border border-gray-200 w-full"
-                      >
-                        {requirements.map((req, i) => (
-                          <div
-                            key={i}
-                            className={`text-sm ${req.met ? "text-green-600" : "text-red-600"} mb-1`}
-                          >
-                            {req.text}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                      {requirements.map((req, i) => (
+                        <Typography
+                          key={i}
+                          variant="body2"
+                          sx={{
+                            color: req.met ? "success.main" : "error.main",
+                            mb: 0.5,
+                          }}
+                        >
+                          {req.text}
+                        </Typography>
+                      ))}
+                    </Paper>
+                  )}
+                </Box>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                    "&:hover": {
+                      background: "linear-gradient(to right, #7E22CE, #4338CA)",
+                    },
+                  }}
+                >
                   Create Account
                 </Button>
-              </form>
-            ) : (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Confirmation Code</label>
-                  <Input
-                    type="text"
-                    placeholder="Enter confirmation code"
-                    value={confirmationCode}
-                    onChange={(e) => setConfirmationCode(e.target.value)}
-                  />
-                </div>
-                <Button
-                  onClick={handleConfirm}
-                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                >
-                  Confirm Account
-                </Button>
-              </div>
-            )}
-            <div className="mt-4 text-center text-sm text-gray-600">
+              </Stack>
+            </Box>
+          ) : (
+            <Stack spacing={3} sx={{ mt: 3 }}>
+              <TextField
+                fullWidth
+                label="Confirmation Code"
+                placeholder="Enter confirmation code"
+                value={confirmationCode}
+                onChange={(e) => setConfirmationCode(e.target.value)}
+                variant="outlined"
+              />
+              <Button
+                onClick={handleConfirm}
+                fullWidth
+                variant="contained"
+                sx={{
+                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                  "&:hover": {
+                    background: "linear-gradient(to right, #7E22CE, #4338CA)",
+                  },
+                }}
+              >
+                Confirm Account
+              </Button>
+            </Stack>
+          )}
+
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary">
               Already have an account?{" "}
-              <Link to="/login" className="text-purple-600 hover:text-purple-700 font-medium">
+              <Link
+                to="/login"
+                style={{
+                  color: "#9333EA",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
+              >
                 Sign in here
               </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+            </Typography>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   )
 }

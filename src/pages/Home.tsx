@@ -1,4 +1,4 @@
-import { Header } from "@/react-components/Header"
+import { Header } from "@/react-components/header"
 import { Box, Container, Typography, Grid, Paper } from "@mui/material"
 
 export const Home = () => {

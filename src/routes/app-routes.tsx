@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom"
-import { Home } from "../pages/Home"
-import { Login } from "../pages/Login"
-import { Register } from "../pages/Register"
-import { Dashboard } from "../pages/Dashboard"
-import { PrivateRoute } from "./PrivateRoute"
-import { useAuthCheck } from "../hooks/auth/useAuth"
+import { Home } from "../pages/home"
+import { Login } from "../pages/login"
+import { Register } from "../pages/register"
+import { Dashboard } from "../pages/dashboard"
+import { PrivateRoute } from "./private-route"
+import { useAuthCheck } from "../hooks/auth/use-auth"
 import { JSX } from "react"
 
 type RouteConfig = {

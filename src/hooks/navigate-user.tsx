@@ -1,6 +1,6 @@
 import { NavigateFunction } from "react-router-dom"
 import { useSelector } from "react-redux"
-import { AuthState } from "@/store/authSlice"
+import { AuthState } from "@/store/auth-slice"
 import { RootState } from "@/store"
 import { useEffect } from "react"
 

@@ -1,4 +1,4 @@
-import { Header } from "@/react-components/Header"
+import { Header } from "@/react-components/header"
 
 export const Dashboard = () => {
   return (

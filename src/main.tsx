@@ -1,4 +1,4 @@
-import App from "./App"
+import App from "./app"
 import "./index.css"
 import { createRoot } from "react-dom/client"
 import "./amplify-config"

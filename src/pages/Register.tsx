@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react"
-import { Link, useNavigate } from "react-router-dom"
+ 
+import React, { useState, useEffect, useRef, useMemo } from "react"
+import { Link } from "react-router-dom"
 import { configAmplify } from "../hooks/auth/config-amplify"
 import { register, confirmRegistration, logIn } from "../hooks/auth/auth"
 import {
@@ -13,6 +14,7 @@ import {
   Stack,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
+import { passwordRequirements } from "@/mocks/data/password-requirements"
 
 interface RegisterForm {
   fullName: string
@@ -20,43 +22,9 @@ interface RegisterForm {
   password: string
 }
 
-interface PasswordRequirement {
-  text: string
-  regex: RegExp
-  met: boolean
-}
-
-const passwordRequirements: PasswordRequirement[] = [
-  {
-    text: "Minimum 8 characters",
-    regex: /.{8,}/,
-    met: false,
-  },
-  {
-    text: "At least 1 number",
-    regex: /\d/,
-    met: false,
-  },
-  {
-    text: "At least 1 lowercase letter",
-    regex: /[a-z]/,
-    met: false,
-  },
-  {
-    text: "At least 1 uppercase letter",
-    regex: /[A-Z]/,
-    met: false,
-  },
-  {
-    text: "At least 1 special character ($*.[]{}-!@#/\\,><':;_~+=)",
-    regex: /[$*.[\]{}\-!@#/\\,><':;_~+=]/,
-    met: false,
-  },
-]
-
 export const Register = () => {
   configAmplify()
-  const navigate = useNavigate()
+
   const requirementsRef = useRef<HTMLDivElement>(null)
 
   const [formData, setFormData] = useState<RegisterForm>({
@@ -68,15 +36,13 @@ export const Register = () => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRequirements, setShowRequirements] = useState<boolean>(false)
-  const [requirements, setRequirements] = useState<PasswordRequirement[]>(passwordRequirements)
 
-  useEffect(() => {
-    const updatedRequirements = requirements.map((req) => ({
+  const requirements = useMemo(() => {
+    return passwordRequirements.map((req) => ({
       ...req,
       met: req.regex.test(formData.password),
     }))
-    setRequirements(updatedRequirements)
-  }, [formData.password, formData.email, formData.fullName, requirements])
+  }, [formData.password])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,7 +93,6 @@ export const Register = () => {
       console.log("User confirmed successfully!")
       setIsConfirming(false)
       await logIn(formData.email, formData.password)
-      navigate("/dashboard")
     } catch (error) {
       console.error("Error confirming user:", error)
     }

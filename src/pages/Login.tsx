@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
+import { useNavigateLoggedInUser } from "@/hooks/navigate-user"
 import {
   TextField,
   IconButton,
@@ -13,7 +14,6 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../hooks/auth/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
-import { navigateLoggedInUser } from "@/hooks/navigate-user"
 
 interface LoginForm {
   email: string
@@ -22,6 +22,8 @@ interface LoginForm {
 
 export const Login = () => {
   const navigate = useNavigate()
+  useNavigateLoggedInUser(navigate)
+
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
@@ -47,10 +49,6 @@ export const Login = () => {
       console.error("Login error:", error)
     }
   }
-
-  useEffect(() => {
-    navigateLoggedInUser(navigate)
-  }, [])
 
   return (
     <Box

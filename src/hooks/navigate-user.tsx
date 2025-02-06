@@ -1,10 +1,16 @@
-import { getCurrentUser } from "aws-amplify/auth"
 import { NavigateFunction } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { AuthState } from "@/store/authSlice"
+import { RootState } from "@/store"
+import { useEffect } from "react"
 
-export const navigateLoggedInUser = async (navigate: NavigateFunction) => {
-  const user = await getCurrentUser()
+export const useNavigateLoggedInUser = (navigate: NavigateFunction): void => {
+  const user = useSelector<RootState, AuthState["user"]>((state) => state.auth.user)
+  const isLoading = useSelector<RootState, boolean>((state) => state.auth.loading)
 
-  if (user) {
-    navigate("/dashboard")
-  }
+  useEffect(() => {
+    if (!isLoading && user) {
+      navigate("/dashboard")
+    }
+  }, [isLoading, user, navigate])
 }

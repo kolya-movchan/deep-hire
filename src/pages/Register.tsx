@@ -1,9 +1,7 @@
-/* eslint-disable import/order */
 import React, { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { configAmplify } from "../hooks/auth/config-amplify"
 import { register, confirmRegistration, logIn } from "../hooks/auth/auth"
-import { navigateLoggedInUser } from "../hooks/navigate-user"
 import {
   TextField,
   IconButton,
@@ -78,7 +76,7 @@ export const Register = () => {
       met: req.regex.test(formData.password),
     }))
     setRequirements(updatedRequirements)
-  }, [formData.password])
+  }, [formData.password, formData.email, formData.fullName, requirements])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -134,10 +132,6 @@ export const Register = () => {
       console.error("Error confirming user:", error)
     }
   }
-
-  useEffect(() => {
-    navigateLoggedInUser(navigate)
-  }, [])
 
   return (
     <Box

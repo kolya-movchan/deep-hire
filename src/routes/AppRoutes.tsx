@@ -21,16 +21,14 @@ const publicRoutes: readonly RouteConfig[] = [
 const authRoutes: readonly RouteConfig[] = [{ path: "/dashboard", element: <Dashboard /> }] as const
 
 export function AppRoutes(): JSX.Element {
-  useAuthCheck() // Runs authentication check globally
+  useAuthCheck()
 
   return (
     <Routes>
-      {/* Public routes */}
       {publicRoutes.map(({ path, element }) => (
         <Route key={path} path={path} element={element} />
       ))}
 
-      {/* Private routes (Wrapped in PrivateRoute) */}
       <Route element={<PrivateRoute />}>
         {authRoutes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />

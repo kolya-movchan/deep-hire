@@ -1,36 +1,67 @@
 import { Header } from "@/react-components/Header"
+import { Box, Container, Typography, Grid, Paper } from "@mui/material"
 
 export const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom right, #EEF2FF, #FFFFFF, #F3E8FF)",
+      }}
+    >
       <Header />
-      <main className="container mx-auto px-6 py-16">
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-          <h2 className="text-5xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+      <Container maxWidth="lg" sx={{ py: 16 }}>
+        <Box sx={{ maxWidth: "900px", mx: "auto", textAlign: "center" }}>
+          <Typography
+            variant="h2"
+            fontWeight="800"
+            gutterBottom
+            sx={{
+              background: "linear-gradient(to right, #9333EA, #4F46E5)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              lineHeight: 1.2,
+            }}
+          >
             Transform Your Experience with My App
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          </Typography>
+          <Typography
+            variant="h5"
+            color="text.secondary"
+            sx={{ maxWidth: "700px", mx: "auto", mb: 8 }}
+          >
             Join thousands of users who have already discovered our exclusive features. Start your
             journey today and unlock a world of possibilities.
-          </p>
+          </Typography>
 
-          <div className="pt-12 grid grid-cols-3 gap-8 text-center">
+          <Grid container spacing={4} sx={{ pt: 4 }}>
             {[
               { stat: "10K+", label: "Active Users" },
               { stat: "99.9%", label: "Uptime" },
               { stat: "24/7", label: "Support" },
             ].map((item) => (
-              <div
-                key={item.label}
-                className="p-6 rounded-2xl bg-white/50 backdrop-blur-sm shadow-lg"
-              >
-                <div className="text-3xl font-bold text-purple-600">{item.stat}</div>
-                <div className="text-gray-600 mt-1">{item.label}</div>
-              </div>
+              <Grid item xs={12} md={4} key={item.label}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 4,
+                    borderRadius: 4,
+                    bgcolor: "rgba(255,255,255,0.5)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  <Typography variant="h4" fontWeight="bold" sx={{ color: "primary.main", mb: 1 }}>
+                    {item.stat}
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    {item.label}
+                  </Typography>
+                </Paper>
+              </Grid>
             ))}
-          </div>
-        </div>
-      </main>
-    </div>
+          </Grid>
+        </Box>
+      </Container>
+    </Box>
   )
 }

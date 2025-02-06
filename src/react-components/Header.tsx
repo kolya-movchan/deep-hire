@@ -1,7 +1,6 @@
-import { useState } from "react"
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { Box, Container, Typography, Button, Stack } from "@mui/material"
 import { checkAuthStatus, singOut } from "../hooks/auth/auth"
 
 export const Header = () => {
@@ -21,34 +20,75 @@ export const Header = () => {
   }, [])
 
   return (
-    <header className="border-b backdrop-blur-sm bg-white/70 sticky top-0 z-50">
-      <nav className="container mx-auto px-6 py-5 flex justify-between items-center">
-        <Link to="/">
-          <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-            AI Flex
-          </h1>
-        </Link>
-        <div className="space-x-4">
-          {isLoggedIn === null ? (
-            <></>
-          ) : isLoggedIn ? (
-            <button className="hover:bg-purple-50 text-purple-700" onClick={handleSignOut}>
-              Log Out
-            </button>
-          ) : (
-            <>
-              <Link to="/login">
-                <button className="hover:bg-purple-50 text-purple-700">Login</button>
-              </Link>
-              <Link to="/register">
-                <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+    <Box
+      component="header"
+      sx={{
+        borderBottom: 1,
+        borderColor: "divider",
+        backdropFilter: "blur(8px)",
+        bgcolor: "rgba(255,255,255,0.7)",
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Box sx={{ py: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{
+                background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              AI Flex
+            </Typography>
+          </Link>
+
+          <Stack direction="row" spacing={2}>
+            {isLoggedIn === null ? null : isLoggedIn ? (
+              <Button
+                onClick={handleSignOut}
+                sx={{
+                  color: "primary.main",
+                  "&:hover": { bgcolor: "primary.50" },
+                }}
+              >
+                Log Out
+              </Button>
+            ) : (
+              <>
+                <Button
+                  component={Link}
+                  to="/login"
+                  sx={{
+                    color: "primary.main",
+                    "&:hover": { bgcolor: "primary.50" },
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  component={Link}
+                  to="/register"
+                  variant="contained"
+                  sx={{
+                    background: "linear-gradient(to right, #9333EA, #4F46E5)",
+                    "&:hover": {
+                      background: "linear-gradient(to right, #7E22CE, #4338CA)",
+                    },
+                  }}
+                >
                   Register
-                </button>
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-    </header>
+                </Button>
+              </>
+            )}
+          </Stack>
+        </Box>
+      </Container>
+    </Box>
   )
 }

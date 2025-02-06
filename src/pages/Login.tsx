@@ -1,24 +1,18 @@
 import { useEffect } from "react"
-import { Amplify } from "aws-amplify"
 
 import { Link, useNavigate } from "react-router-dom"
 import config from "../../config.json"
 import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardContent } from "../components/ui/card"
 import { Input } from "../components/ui/input"
-import { logIn, navigateLoggedInUser } from "@/hooks/auth/auth"
+import { logIn } from "../hooks/auth/auth"
+import { configAmplify } from "../hooks/auth/config-amplify"
+import { navigateLoggedInUser } from "@/hooks/navigate-user"
 
 export const Login = () => {
   const navigate = useNavigate()
 
-  Amplify.configure({
-    Auth: {
-      Cognito: {
-        userPoolId: config.amplify.userPoolId,
-        userPoolClientId: config.amplify.userPoolClientId,
-      },
-    },
-  })
+  configAmplify()
 
   async function handleClick() {
     // console.log("username:", config.credentials.username)

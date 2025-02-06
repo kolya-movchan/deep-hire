@@ -1,4 +1,12 @@
-import { fetchAuthSession, signOut, signIn, getCurrentUser, AuthUser } from "aws-amplify/auth"
+import {
+  fetchAuthSession,
+  signOut,
+  signIn,
+  getCurrentUser,
+  AuthUser,
+  confirmSignUp,
+  signUp,
+} from "aws-amplify/auth"
 import { NavigateFunction } from "react-router-dom"
 
 export const logIn = async (username: string, password: string) => {
@@ -33,14 +41,6 @@ export const singOut = async (
   }
 }
 
-export const navigateLoggedInUser = async (navigate: NavigateFunction) => {
-  const user = await getCurrentUser()
-
-  if (user) {
-    navigate("/dashboard")
-  }
-}
-
 export const checkUser = async (
   setAuthUser: (user: AuthUser | null) => void,
   setIsLoading: (loading: boolean) => void
@@ -54,5 +54,43 @@ export const checkUser = async (
     setAuthUser(null)
   } finally {
     setIsLoading(false)
+  }
+}
+
+export interface RegisterInput {
+  username: string
+  email: string
+  password: string
+  fullName: string
+}
+
+export const register = async (input: RegisterInput) => {
+  try {
+    const signUpResult = await signUp({
+      username: input.email,
+      password: input.password,
+      options: {
+        userAttributes: {
+          email: input.email,
+          name: input.fullName,
+        },
+      },
+    })
+    return signUpResult
+  } catch (error) {
+    console.error("Registration error:", error)
+    throw error
+  }
+}
+
+export const confirmRegistration = async (username: string, confirmationCode: string) => {
+  try {
+    await confirmSignUp({
+      username,
+      confirmationCode,
+    })
+  } catch (error) {
+    console.error("Error confirming user:", error)
+    throw error
   }
 }

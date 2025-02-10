@@ -14,7 +14,10 @@ export default [
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        process: true, // Add process to globals
+      },
       parser: tsParser,
     },
     plugins: {

@@ -7,6 +7,7 @@ export function Dashboard() {
   const fetchDashboardData = useCallback(async () => {
     try {
       const response = await apiEndpoints.getUserData()
+      console.log(111, "user data dashboard:", response)
       setData(response)
     } catch (err) {
       console.log(err)
@@ -17,5 +18,5 @@ export function Dashboard() {
     fetchDashboardData()
   }, [fetchDashboardData])
 
-  return <div>Dashboard Data: {data as string}</div>
+  return <div>Dashboard Data {JSON.stringify(data)}</div>
 }

@@ -3,7 +3,7 @@ import { getToken } from "@/hooks/auth/auth"
 
 // Base API instance for other endpoints
 const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/slug`,
+  baseURL: import.meta.env.VITE_AWS_API_URL,
   //   withCredentials: true,
 })
 
@@ -11,6 +11,9 @@ const api = axios.create({
 const get = async <T>(url: string, params = {}) => {
   try {
     const token = await getToken()
+
+    console.log(111, token)
+
     if (!token) {
       throw new Error("Unable to get authentication token")
     }
@@ -71,13 +74,9 @@ const deleteRequest = async <T>(url: string): Promise<T> => {
 
 // API Endpoints
 const apiEndpoints = {
-  getUserData: () => get<unknown>("/user-data"),
-  postUserData: () => post<unknown>("/user-data"),
-  deleteUserData: () => deleteRequest<unknown>("/user-data"),
-  // sendMessage: (chatId: string, content: string) =>
-  //   post<unknown>(`/${chatId}/messages`, { content }),
-  // getAllMessages: (chatId: string) => get<unknown>(`/${chatId}/messages`),
-  // getAllChats: () => get<unknown>("/chats"),
+  getUserData: () => get<unknown>("/user"),
+  postUserData: () => post<unknown>("/user"),
+  deleteUserData: () => deleteRequest<unknown>("/user"),
 }
 
 export default apiEndpoints

@@ -10,6 +10,10 @@ import {
   Button,
   Paper,
   Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../hooks/auth/auth"
@@ -17,6 +21,7 @@ import { configAmplify } from "../hooks/auth/config-amplify"
 import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
+import { forgotPassword, forgotPasswordSubmit } from "../hooks/auth/auth"
 
 interface LoginForm {
   email: string
@@ -35,6 +40,11 @@ export const Login = () => {
     email: "",
     password: "",
   })
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false)
+  const [resetEmail, setResetEmail] = useState("")
+  const [confirmationCode, setConfirmationCode] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [isResetCodeSent, setIsResetCodeSent] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -54,6 +64,28 @@ export const Login = () => {
       navigate("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    try {
+      await forgotPassword(resetEmail)
+      setIsResetCodeSent(true)
+    } catch (error) {
+      console.error("Password reset error:", error)
+    }
+  }
+
+  const handleResetPasswordSubmit = async () => {
+    try {
+      await forgotPasswordSubmit(resetEmail, confirmationCode, newPassword)
+      setForgotPasswordOpen(false)
+      setIsResetCodeSent(false)
+      setResetEmail("")
+      setConfirmationCode("")
+      setNewPassword("")
+    } catch (error) {
+      console.error("Password reset confirmation error:", error)
     }
   }
 
@@ -145,6 +177,24 @@ export const Login = () => {
                   ),
                 }}
               />
+              <Button
+                onClick={() => setForgotPasswordOpen(true)}
+                size="small"
+                id="margin-none"
+                sx={{
+                  color: "#9333EA",
+                  textTransform: "none",
+                  p: 0,
+                  minWidth: "auto",
+                  alignSelf: "flex-end",
+                  "&:hover": {
+                    background: "transparent",
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                Forgot Password?
+              </Button>
 
               <Button
                 type="submit"
@@ -179,6 +229,66 @@ export const Login = () => {
           </Box>
         </Paper>
       </Container>
+
+      <Dialog open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)}>
+        <DialogTitle>{isResetCodeSent ? "Enter Reset Code" : "Reset Password"}</DialogTitle>
+        <DialogContent>
+          {!isResetCodeSent ? (
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+            />
+          ) : (
+            <Stack spacing={2}>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Confirmation Code"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={confirmationCode}
+                onChange={(e) => setConfirmationCode(e.target.value)}
+              />
+              <TextField
+                margin="dense"
+                label="New Password"
+                type="password"
+                fullWidth
+                variant="outlined"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setForgotPasswordOpen(false)
+              setIsResetCodeSent(false)
+              setResetEmail("")
+              setConfirmationCode("")
+              setNewPassword("")
+            }}
+            sx={{ color: "gray" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={isResetCodeSent ? handleResetPasswordSubmit : handleForgotPassword}
+            sx={{ color: "#9333EA" }}
+          >
+            {isResetCodeSent ? "Confirm Reset" : "Reset Password"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

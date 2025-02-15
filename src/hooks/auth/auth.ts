@@ -7,6 +7,8 @@ import {
   confirmSignUp,
   signUp,
   AuthSession,
+  resetPassword,
+  confirmResetPassword,
 } from "aws-amplify/auth"
 import { NavigateFunction } from "react-router-dom"
 import { RegisterInput } from "../../types/auth"
@@ -102,5 +104,37 @@ export async function getToken(): Promise<string | null> {
   } catch (error) {
     console.error("Error getting auth token:", error)
     return null
+  }
+}
+
+// Send confirmation code to user's email or phone number
+export async function forgotPassword(username: string) {
+  try {
+    const data = await resetPassword({ username })
+    console.log(data)
+    return data
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+// Add new function to confirm password reset
+export async function forgotPasswordSubmit(
+  username: string,
+  confirmationCode: string,
+  newPassword: string
+) {
+  try {
+    const data = await confirmResetPassword({
+      username,
+      confirmationCode,
+      newPassword,
+    })
+    console.log(data)
+    return data
+  } catch (err) {
+    console.log(err)
+    throw err
   }
 }

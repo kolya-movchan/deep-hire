@@ -1,4 +1,3 @@
- 
 import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { configAmplify } from "../hooks/auth/config-amplify"
@@ -15,6 +14,10 @@ import {
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { passwordRequirements } from "@/mocks/data/password-requirements"
+import { useNavigate } from "react-router-dom"
+import { AppDispatch } from "@/store"
+import { useDispatch } from "react-redux"
+import { checkAuth } from "@/store/auth-slice"
 
 interface RegisterForm {
   fullName: string
@@ -24,6 +27,9 @@ interface RegisterForm {
 
 export const Register = () => {
   configAmplify()
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
 
   const requirementsRef = useRef<HTMLDivElement>(null)
 
@@ -91,8 +97,10 @@ export const Register = () => {
     try {
       await confirmRegistration(formData.email, confirmationCode)
       console.log("User confirmed successfully!")
-      setIsConfirming(false)
       await logIn(formData.email, formData.password)
+      dispatch(checkAuth())
+      navigate("/dashboard")
+      setIsConfirming(false)
     } catch (error) {
       console.error("Error confirming user:", error)
     }

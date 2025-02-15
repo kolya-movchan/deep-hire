@@ -14,7 +14,9 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../hooks/auth/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
-import { useAuthCheck } from "@/hooks/auth/use-auth"
+import { checkAuth } from "@/store/auth-slice"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "@/store"
 
 interface LoginForm {
   email: string
@@ -25,7 +27,8 @@ export const Login = () => {
   const navigate = useNavigate()
   useNavigateLoggedInUser(navigate)
   configAmplify()
-  useAuthCheck()
+
+  const dispatch = useDispatch<AppDispatch>()
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginForm>({
@@ -45,6 +48,8 @@ export const Login = () => {
     e.preventDefault()
     try {
       await logIn(formData.email, formData.password)
+
+      dispatch(checkAuth())
 
       navigate("/dashboard")
     } catch (error) {

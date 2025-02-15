@@ -14,6 +14,7 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../hooks/auth/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
+import { useAuthCheck } from "@/hooks/auth/use-auth"
 
 interface LoginForm {
   email: string
@@ -23,14 +24,14 @@ interface LoginForm {
 export const Login = () => {
   const navigate = useNavigate()
   useNavigateLoggedInUser(navigate)
+  configAmplify()
+  useAuthCheck()
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
   })
-
-  configAmplify()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -44,6 +45,7 @@ export const Login = () => {
     e.preventDefault()
     try {
       await logIn(formData.email, formData.password)
+
       navigate("/dashboard")
     } catch (error) {
       console.error("Login error:", error)

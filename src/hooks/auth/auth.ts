@@ -48,6 +48,8 @@ export const logIn = async (username: string, password: string) => {
     password,
   })
 
+  console.log("signInResult:", signInResult)
+
   return signInResult
 }
 

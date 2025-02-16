@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom"
 import { AppDispatch } from "@/store"
 import { useDispatch } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
+import { useNavigateLoggedInUser } from "@/hooks/navigate-user"
 
 interface RegisterForm {
   fullName: string
@@ -29,6 +30,8 @@ export const Register = () => {
   configAmplify()
 
   const navigate = useNavigate()
+  useNavigateLoggedInUser(navigate)
+
   const dispatch = useDispatch<AppDispatch>()
 
   const requirementsRef = useRef<HTMLDivElement>(null)

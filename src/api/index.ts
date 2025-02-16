@@ -12,7 +12,7 @@ const get = async <T>(url: string, params = {}) => {
   try {
     const token = await getToken()
 
-    console.log(111, token)
+    console.log("token:", token)
 
     if (!token) {
       throw new Error("Unable to get authentication token")

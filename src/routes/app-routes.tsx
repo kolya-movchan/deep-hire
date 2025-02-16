@@ -26,6 +26,8 @@ export function AppRoutes(): JSX.Element {
 
   const { user, loading } = useSelector((state: RootState) => state.auth)
 
+  console.log({ user, loading })
+
   return (
     <Routes>
       {publicRoutes.map(({ path, element }) => (

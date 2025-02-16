@@ -10,7 +10,7 @@ export const useNavigateLoggedInUser = (navigate: NavigateFunction): void => {
 
   useEffect(() => {
     if (!isLoading && user) {
-      navigate("/dashboard")
+      navigate("/")
     }
   }, [isLoading, user, navigate])
 }

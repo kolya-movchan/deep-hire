@@ -119,23 +119,32 @@ export const Home = () => {
           p: 3,
         }}
       >
-        <Container maxWidth="md" sx={{ py: 4 }}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography variant="h3" fontWeight="bold" gutterBottom color="primary">
+        <Container
+          maxWidth="md"
+          sx={{
+            py: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 64px)",
+          }}
+        >
+          <Box sx={{ textAlign: "center", mb: 3, width: "100%" }}>
+            <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
               Resume Validation Tool
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
               Quick and accurate resume validation for recruiters
             </Typography>
 
-            <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+            <Paper elevation={2} sx={{ p: 3, mb: 3, maxWidth: "500px", mx: "auto" }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Button
                     variant="contained"
                     component="label"
                     startIcon={<CloudUpload />}
-                    fullWidth
+                    sx={{ maxWidth: "300px", width: "100%" }}
                   >
                     {resumeFile ? resumeFile.name : "Upload Resume"}
                     <input
@@ -148,11 +157,11 @@ export const Home = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    fullWidth
                     label="Or paste resume URL"
                     variant="outlined"
                     value={resumeUrl}
                     onChange={(e) => setResumeUrl(e.target.value)}
+                    sx={{ maxWidth: "300px", width: "100%" }}
                     InputProps={{
                       startAdornment: <LinkIcon sx={{ mr: 1, color: "text.secondary" }} />,
                     }}
@@ -161,15 +170,15 @@ export const Home = () => {
               </Grid>
             </Paper>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={2} sx={{ maxWidth: "600px", mx: "auto" }}>
               {[
                 { stat: "98%", label: "Accuracy" },
                 { stat: "2min", label: "Processing Time" },
                 { stat: "24/7", label: "Availability" },
               ].map((item) => (
                 <Grid item xs={4} key={item.label}>
-                  <Paper elevation={1} sx={{ p: 2 }}>
-                    <Typography variant="h5" fontWeight="bold" color="primary">
+                  <Paper elevation={1} sx={{ p: 1.5 }}>
+                    <Typography variant="h6" fontWeight="bold" color="primary">
                       {item.stat}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">

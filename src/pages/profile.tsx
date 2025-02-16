@@ -18,6 +18,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Button,
 } from "@mui/material"
 import {
   Assessment,
@@ -27,10 +28,29 @@ import {
   Settings,
   AddCircle,
 } from "@mui/icons-material"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { singOut } from "@/api/rest/auth"
+import { checkAuthStatus } from "@/api/rest/auth"
 
 export const Profile = () => {
   const [user, setUser] = useState<User | null>(null)
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const navigate = useNavigate()
+
+  console.log("isLoggedIn", isLoggedIn)
+
+  const handleSignOut = async () => {
+    singOut(setIsLoggedIn, navigate)
+  }
+
+  const handleAuthStatus = async () => {
+    checkAuthStatus(setIsLoggedIn)
+  }
+
+  useEffect(() => {
+    handleAuthStatus()
+  }, [])
 
   useEffect(() => {
     fetchUserData("90dcc94c-8031-7041-679f-21aa7b40b4a5")
@@ -128,7 +148,7 @@ export const Profile = () => {
               <Avatar sx={{ width: 80, height: 80, bgcolor: "#1976d2", fontSize: "2rem" }}>
                 {user.name[0].toUpperCase()}
               </Avatar>
-              <Box>
+              <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h3" fontWeight="bold" gutterBottom color="primary">
                   {user.name}
                 </Typography>
@@ -136,6 +156,14 @@ export const Profile = () => {
                   {user.email}
                 </Typography>
               </Box>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleSignOut}
+                sx={{ alignSelf: "flex-start" }}
+              >
+                Logout
+              </Button>
             </Stack>
             <Divider sx={{ mb: 4 }} />
 

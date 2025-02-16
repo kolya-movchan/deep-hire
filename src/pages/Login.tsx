@@ -14,6 +14,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../api/rest/auth"
@@ -22,6 +27,15 @@ import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
 import { forgotPassword, forgotPasswordSubmit } from "../api/rest/auth"
+import {
+  WorkOutline,
+  Person,
+  Settings,
+  Login as LoginIcon,
+  AppRegistration,
+} from "@mui/icons-material"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
 
 interface LoginForm {
   email: string
@@ -34,6 +48,7 @@ export const Login = () => {
   configAmplify()
 
   const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: RootState) => state.auth)
 
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginForm>({
@@ -45,6 +60,17 @@ export const Login = () => {
   const [confirmationCode, setConfirmationCode] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [isResetCodeSent, setIsResetCodeSent] = useState(false)
+
+  const sidebarItems = user
+    ? [
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+        { icon: <Settings />, text: "Settings", path: "/settings" },
+      ]
+    : [
+        { icon: <LoginIcon />, text: "Login", path: "/login" },
+        { icon: <AppRegistration />, text: "Register", path: "/register" },
+      ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -58,10 +84,8 @@ export const Login = () => {
     e.preventDefault()
     try {
       await logIn(formData.email, formData.password)
-
       dispatch(checkAuth())
-
-      navigate("/dashboard")
+      navigate("/")
     } catch (error) {
       console.error("Login error:", error)
     }
@@ -90,145 +114,174 @@ export const Login = () => {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #EEF2FF, #FFFFFF, #F3E8FF)",
-      }}
-    >
-      <Box
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Drawer
+        variant="permanent"
         sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          backdropFilter: "blur(8px)",
-          bgcolor: "rgba(255,255,255,0.7)",
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
+          width: 200,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 200,
+            boxSizing: "border-box",
+            bgcolor: "#f5f5f5",
+            display: "flex",
+            flexDirection: "column",
+          },
         }}
       >
-        <Container maxWidth="lg">
-          <Box sx={{ py: 2, display: "flex", alignItems: "center" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="h4"
-                fontWeight="bold"
-                sx={{
-                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                My App
-              </Typography>
-            </Link>
+        <Box sx={{ p: 2 }}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: "none",
+              color: "#1976d2",
+            }}
+          >
+            ResumeCheck
+          </Typography>
+        </Box>
+        <List>
+          {sidebarItems.map((item) => (
+            <ListItem
+              component={Link}
+              to={item.path}
+              key={item.text}
+              sx={{
+                color: "#666",
+                "&:hover": {
+                  bgcolor: "#e0e0e0",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: "#666" }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItem>
+          ))}
+        </List>
+
+        {user && (
+          <ListItem
+            component={Link}
+            to="/profile"
+            sx={{
+              mt: "auto",
+              color: "#666",
+              "&:hover": {
+                bgcolor: "#e0e0e0",
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "#666" }}>
+              <Person />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+        )}
+      </Drawer>
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: "#fff",
+          p: 3,
+        }}
+      >
+        <Container
+          maxWidth="md"
+          sx={{
+            py: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 64px)",
+          }}
+        >
+          <Box sx={{ textAlign: "center", mb: 3, width: "100%" }}>
+            <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
+              Welcome Back
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+              Please sign in to continue
+            </Typography>
+
+            <Paper elevation={2} sx={{ p: 3, mb: 3, maxWidth: "500px", mx: "auto" }}>
+              <Box component="form" onSubmit={handleLogin}>
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    variant="outlined"
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    variant="outlined"
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      ),
+                    }}
+                  />
+                  <Button
+                    onClick={() => setForgotPasswordOpen(true)}
+                    size="small"
+                    sx={{
+                      color: "#1976d2",
+                      textTransform: "none",
+                      p: 0,
+                      minWidth: "auto",
+                      alignSelf: "flex-end",
+                      "&:hover": {
+                        background: "transparent",
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    Forgot Password?
+                  </Button>
+
+                  <Button type="submit" fullWidth variant="contained" color="primary">
+                    Sign In
+                  </Button>
+
+                  <Typography variant="body2" color="text.secondary">
+                    Don't have an account?{" "}
+                    <Link
+                      to="/register"
+                      style={{
+                        color: "#1976d2",
+                        textDecoration: "none",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Register here
+                    </Link>
+                  </Typography>
+                </Stack>
+              </Box>
+            </Paper>
           </Box>
         </Container>
       </Box>
-
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Paper
-          elevation={0}
-          sx={{
-            maxWidth: "600px",
-            mx: "auto",
-            bgcolor: "rgba(255,255,255,0.7)",
-            backdropFilter: "blur(8px)",
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold" }}>
-            Welcome Back
-          </Typography>
-          <Typography variant="body1" align="center" color="text.secondary" gutterBottom>
-            Please sign in to continue
-          </Typography>
-
-          <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
-            <Stack spacing={3}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                variant="outlined"
-              />
-
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-                variant="outlined"
-                InputProps={{
-                  endAdornment: (
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  ),
-                }}
-              />
-              <Button
-                onClick={() => setForgotPasswordOpen(true)}
-                size="small"
-                id="margin-none"
-                sx={{
-                  color: "#9333EA",
-                  textTransform: "none",
-                  p: 0,
-                  minWidth: "auto",
-                  alignSelf: "flex-end",
-                  "&:hover": {
-                    background: "transparent",
-                    textDecoration: "underline",
-                  },
-                }}
-              >
-                Forgot Password?
-              </Button>
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
-                  "&:hover": {
-                    background: "linear-gradient(to right, #7E22CE, #4338CA)",
-                  },
-                }}
-              >
-                Sign In
-              </Button>
-            </Stack>
-          </Box>
-
-          <Box sx={{ mt: 3, textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                style={{
-                  color: "#9333EA",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
-              >
-                Register here
-              </Link>
-            </Typography>
-          </Box>
-        </Paper>
-      </Container>
 
       <Dialog open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)}>
         <DialogTitle>{isResetCodeSent ? "Enter Reset Code" : "Reset Password"}</DialogTitle>
@@ -283,7 +336,7 @@ export const Login = () => {
           </Button>
           <Button
             onClick={isResetCodeSent ? handleResetPasswordSubmit : handleForgotPassword}
-            sx={{ color: "#9333EA" }}
+            color="primary"
           >
             {isResetCodeSent ? "Confirm Reset" : "Reset Password"}
           </Button>

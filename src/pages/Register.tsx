@@ -11,14 +11,27 @@ import {
   Button,
   Paper,
   Stack,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { passwordRequirements } from "@/mocks/data/password-requirements"
 import { useNavigate } from "react-router-dom"
 import { AppDispatch } from "@/store"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
 import { useNavigateLoggedInUser } from "@/hooks/navigate-user"
+import { RootState } from "@/store"
+import {
+  WorkOutline,
+  Person,
+  Settings,
+  Login as LoginIcon,
+  AppRegistration,
+} from "@mui/icons-material"
 
 interface RegisterForm {
   fullName: string
@@ -33,6 +46,7 @@ export const Register = () => {
   useNavigateLoggedInUser(navigate)
 
   const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: RootState) => state.auth)
 
   const requirementsRef = useRef<HTMLDivElement>(null)
 
@@ -45,6 +59,17 @@ export const Register = () => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRequirements, setShowRequirements] = useState<boolean>(false)
+
+  const sidebarItems = user
+    ? [
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+        { icon: <Settings />, text: "Settings", path: "/settings" },
+      ]
+    : [
+        { icon: <LoginIcon />, text: "Login", path: "/login" },
+        { icon: <AppRegistration />, text: "Register", path: "/register" },
+      ]
 
   const requirements = useMemo(() => {
     return passwordRequirements.map((req) => ({
@@ -102,7 +127,7 @@ export const Register = () => {
       console.log("User confirmed successfully!")
       await logIn(formData.email, formData.password)
       dispatch(checkAuth())
-      navigate("/dashboard")
+      navigate("/")
       setIsConfirming(false)
     } catch (error) {
       console.error("Error confirming user:", error)
@@ -110,189 +135,208 @@ export const Register = () => {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #EEF2FF, #FFFFFF, #F3E8FF)",
-      }}
-    >
-      <Box
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Drawer
+        variant="permanent"
         sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          backdropFilter: "blur(8px)",
-          bgcolor: "rgba(255,255,255,0.7)",
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
+          width: 200,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 200,
+            boxSizing: "border-box",
+            bgcolor: "#f5f5f5",
+            display: "flex",
+            flexDirection: "column",
+          },
         }}
       >
-        <Container maxWidth="lg">
-          <Box sx={{ py: 2, display: "flex", alignItems: "center" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="h4"
-                fontWeight="bold"
-                sx={{
-                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                My App
-              </Typography>
-            </Link>
+        <Box sx={{ p: 2 }}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: "none",
+              color: "#1976d2",
+            }}
+          >
+            ResumeCheck
+          </Typography>
+        </Box>
+        <List>
+          {sidebarItems.map((item) => (
+            <ListItem
+              component={Link}
+              to={item.path}
+              key={item.text}
+              sx={{
+                color: "#666",
+                "&:hover": {
+                  bgcolor: "#e0e0e0",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: "#666" }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItem>
+          ))}
+        </List>
+
+        {user && (
+          <ListItem
+            component={Link}
+            to="/profile"
+            sx={{
+              mt: "auto",
+              color: "#666",
+              "&:hover": {
+                bgcolor: "#e0e0e0",
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "#666" }}>
+              <Person />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+        )}
+      </Drawer>
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: "#fff",
+          p: 3,
+        }}
+      >
+        <Container
+          maxWidth="md"
+          sx={{
+            py: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 64px)",
+          }}
+        >
+          <Box sx={{ textAlign: "center", mb: 3, width: "100%" }}>
+            <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
+              Create Account
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+              Please fill in your information to register
+            </Typography>
+
+            <Paper elevation={2} sx={{ p: 3, mb: 3, maxWidth: "500px", mx: "auto" }}>
+              {!isConfirming ? (
+                <Box component="form" onSubmit={handleRegister}>
+                  <Stack spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Full Name"
+                      name="fullName"
+                      placeholder="Enter your full name"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      required
+                      variant="outlined"
+                    />
+
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      variant="outlined"
+                    />
+
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                      variant="outlined"
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        ),
+                      }}
+                    />
+
+                    {showRequirements && (
+                      <Paper
+                        ref={requirementsRef}
+                        elevation={2}
+                        sx={{
+                          p: 2,
+                          width: "100%",
+                        }}
+                      >
+                        {requirements.map((req, i) => (
+                          <Typography
+                            key={i}
+                            variant="body2"
+                            sx={{
+                              color: req.met ? "success.main" : "error.main",
+                              mb: 0.5,
+                            }}
+                          >
+                            {req.text}
+                          </Typography>
+                        ))}
+                      </Paper>
+                    )}
+
+                    <Button type="submit" fullWidth variant="contained" color="primary">
+                      Create Account
+                    </Button>
+
+                    <Typography variant="body2" color="text.secondary">
+                      Already have an account?{" "}
+                      <Link
+                        to="/login"
+                        style={{
+                          color: "#1976d2",
+                          textDecoration: "none",
+                          fontWeight: 500,
+                        }}
+                      >
+                        Sign in here
+                      </Link>
+                    </Typography>
+                  </Stack>
+                </Box>
+              ) : (
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    label="Confirmation Code"
+                    placeholder="Enter confirmation code"
+                    value={confirmationCode}
+                    onChange={(e) => setConfirmationCode(e.target.value)}
+                    variant="outlined"
+                  />
+                  <Button onClick={handleConfirm} fullWidth variant="contained" color="primary">
+                    Confirm Account
+                  </Button>
+                </Stack>
+              )}
+            </Paper>
           </Box>
         </Container>
       </Box>
-
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Paper
-          elevation={0}
-          sx={{
-            maxWidth: "600px",
-            mx: "auto",
-            bgcolor: "rgba(255,255,255,0.7)",
-            backdropFilter: "blur(8px)",
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold" }}>
-            Create Account
-          </Typography>
-
-          {!isConfirming ? (
-            <Box component="form" onSubmit={handleRegister} sx={{ mt: 3 }}>
-              <Stack spacing={3}>
-                <TextField
-                  fullWidth
-                  label="Full Name"
-                  name="fullName"
-                  placeholder="Enter your full name"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  required
-                  variant="outlined"
-                />
-
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  variant="outlined"
-                />
-
-                <Box sx={{ position: "relative" }}>
-                  <TextField
-                    fullWidth
-                    label="Password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    variant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                  {showRequirements && (
-                    <Paper
-                      ref={requirementsRef}
-                      elevation={2}
-                      sx={{
-                        position: "absolute",
-                        zIndex: 10,
-                        mt: 1,
-                        p: 2,
-                        width: "100%",
-                      }}
-                    >
-                      {requirements.map((req, i) => (
-                        <Typography
-                          key={i}
-                          variant="body2"
-                          sx={{
-                            color: req.met ? "success.main" : "error.main",
-                            mb: 0.5,
-                          }}
-                        >
-                          {req.text}
-                        </Typography>
-                      ))}
-                    </Paper>
-                  )}
-                </Box>
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    background: "linear-gradient(to right, #9333EA, #4F46E5)",
-                    "&:hover": {
-                      background: "linear-gradient(to right, #7E22CE, #4338CA)",
-                    },
-                  }}
-                >
-                  Create Account
-                </Button>
-              </Stack>
-            </Box>
-          ) : (
-            <Stack spacing={3} sx={{ mt: 3 }}>
-              <TextField
-                fullWidth
-                label="Confirmation Code"
-                placeholder="Enter confirmation code"
-                value={confirmationCode}
-                onChange={(e) => setConfirmationCode(e.target.value)}
-                variant="outlined"
-              />
-              <Button
-                onClick={handleConfirm}
-                fullWidth
-                variant="contained"
-                sx={{
-                  background: "linear-gradient(to right, #9333EA, #4F46E5)",
-                  "&:hover": {
-                    background: "linear-gradient(to right, #7E22CE, #4338CA)",
-                  },
-                }}
-              >
-                Confirm Account
-              </Button>
-            </Stack>
-          )}
-
-          <Box sx={{ mt: 3, textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                style={{
-                  color: "#9333EA",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
-              >
-                Sign in here
-              </Link>
-            </Typography>
-          </Box>
-        </Paper>
-      </Container>
     </Box>
   )
 }

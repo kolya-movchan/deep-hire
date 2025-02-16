@@ -1,11 +1,12 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import { Home } from "../pages"
 import { Login } from "../pages/login"
 import { Register } from "../pages/register"
 import { Dashboard } from "../pages/dashboard"
-import { PrivateRoute } from "./private-route"
 import { useAuthCheck } from "../hooks/auth/use-auth"
 import { JSX } from "react"
+import { useSelector } from "react-redux"
+import { RootState } from "../store"
 
 type RouteConfig = {
   path: string
@@ -23,17 +24,29 @@ const authRoutes: readonly RouteConfig[] = [{ path: "/dashboard", element: <Dash
 export function AppRoutes(): JSX.Element {
   useAuthCheck()
 
+  const { user, loading } = useSelector((state: RootState) => state.auth)
+
   return (
     <Routes>
       {publicRoutes.map(({ path, element }) => (
         <Route key={path} path={path} element={element} />
       ))}
 
-      <Route element={<PrivateRoute />}>
-        {authRoutes.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
-      </Route>
+      {authRoutes.map(({ path, element }) => {
+        const renderElement = () => {
+          if (loading) {
+            return <p>Loading...</p>
+          }
+
+          if (!user) {
+            return <Navigate to="/login" replace />
+          }
+
+          return element
+        }
+
+        return <Route key={path} path={path} element={renderElement()} />
+      })}
     </Routes>
   )
 }

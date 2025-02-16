@@ -50,15 +50,27 @@ export const Header = () => {
 
           <Stack direction="row" spacing={2}>
             {isLoggedIn === null ? null : isLoggedIn ? (
-              <Button
-                onClick={handleSignOut}
-                sx={{
-                  color: "primary.main",
-                  "&:hover": { bgcolor: "primary.50" },
-                }}
-              >
-                Log Out
-              </Button>
+              <>
+                <Button
+                  component={Link}
+                  to="/dashboard"
+                  sx={{
+                    color: "primary.main",
+                    "&:hover": { bgcolor: "primary.50" },
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  onClick={handleSignOut}
+                  sx={{
+                    color: "primary.main",
+                    "&:hover": { bgcolor: "primary.50" },
+                  }}
+                >
+                  Log Out
+                </Button>
+              </>
             ) : (
               <>
                 <Button

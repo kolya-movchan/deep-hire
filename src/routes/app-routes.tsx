@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom"
 import { Home } from "../pages"
 import { Login } from "../pages/login"
 import { Register } from "../pages/register"
-import { Dashboard } from "../pages/dashboard"
+import { Profile } from "../pages/profile"
 import { useAuthCheck } from "../hooks/auth/use-auth"
 import { JSX } from "react"
 import { useSelector } from "react-redux"
@@ -19,7 +19,7 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/register", element: <Register /> },
 ] as const
 
-const authRoutes: readonly RouteConfig[] = [{ path: "/dashboard", element: <Dashboard /> }] as const
+const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const
 
 export function AppRoutes(): JSX.Element {
   useAuthCheck()

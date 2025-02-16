@@ -31,10 +31,12 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 import { singOut } from "@/api/rest/auth"
 import { checkAuthStatus } from "@/api/rest/auth"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
 
 export const Profile = () => {
   const [user, setUser] = useState<User | null>(null)
-
+  const userId = useSelector((state: RootState) => state?.auth?.user?.userId)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const navigate = useNavigate()
 
@@ -53,10 +55,12 @@ export const Profile = () => {
   }, [])
 
   useEffect(() => {
-    fetchUserData("90dcc94c-8031-7041-679f-21aa7b40b4a5")
-      .then((data) => setUser(data))
-      .catch((err) => console.error(err))
-  }, [])
+    if (userId) {
+      fetchUserData(userId)
+        .then((data) => setUser(data))
+        .catch((err) => console.error(err))
+    }
+  }, [userId])
 
   const sidebarItems = [
     { icon: <AddCircle />, text: "New Analysis", path: "/", highlight: true },

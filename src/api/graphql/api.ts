@@ -1,7 +1,6 @@
 import client from "./client"
 import { GET_USER_DATA } from "./queries"
 
-// Fetch User Data from AppSync
 export const fetchUserData = async (userId: string) => {
   try {
     const { data } = await client.query({

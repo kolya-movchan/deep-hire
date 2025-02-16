@@ -16,12 +16,12 @@ import {
   DialogActions,
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
-import { logIn } from "../hooks/auth/auth"
+import { logIn } from "../api/rest/auth"
 import { configAmplify } from "../hooks/auth/config-amplify"
 import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
-import { forgotPassword, forgotPasswordSubmit } from "../hooks/auth/auth"
+import { forgotPassword, forgotPasswordSubmit } from "../api/rest/auth"
 
 interface LoginForm {
   email: string

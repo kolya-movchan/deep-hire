@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Box, Container, Typography, Button, Stack } from "@mui/material"
-import { checkAuthStatus, singOut } from "../hooks/auth/auth"
+import { checkAuthStatus, singOut } from "../api/rest/auth"
 
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)

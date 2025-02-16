@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { configAmplify } from "../hooks/auth/config-amplify"
-import { register, confirmRegistration, logIn } from "../hooks/auth/auth"
+import { register, confirmRegistration, logIn } from "../api/rest/auth"
 import {
   TextField,
   IconButton,

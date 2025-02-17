@@ -19,7 +19,6 @@ import {
   Link as LinkIcon,
   Person,
   Login,
-  AppRegistration,
   WorkOutline,
   Settings,
 } from "@mui/icons-material"
@@ -37,10 +36,7 @@ export const Home = () => {
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
-    : [
-        { icon: <Login />, text: "Login", path: "/login" },
-        { icon: <AppRegistration />, text: "Register", path: "/register" },
-      ]
+    : [{ icon: <Login />, text: "Login", path: "/login" }]
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -169,25 +165,6 @@ export const Home = () => {
                 </Grid>
               </Grid>
             </Paper>
-
-            <Grid container spacing={2} sx={{ maxWidth: "600px", mx: "auto" }}>
-              {[
-                { stat: "98%", label: "Accuracy" },
-                { stat: "2min", label: "Processing Time" },
-                { stat: "24/7", label: "Availability" },
-              ].map((item) => (
-                <Grid item xs={4} key={item.label}>
-                  <Paper elevation={1} sx={{ p: 1.5 }}>
-                    <Typography variant="h6" fontWeight="bold" color="primary">
-                      {item.stat}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.label}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              ))}
-            </Grid>
           </Box>
         </Container>
       </Box>

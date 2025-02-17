@@ -38,7 +38,7 @@ export const Home = () => {
       setResumeFile(file)
 
       try {
-        const url = await uploadFile(file, user?.id)
+        const url = await uploadFile(file, user?.userId)
 
         console.log("Uploaded file to:", url)
         // onUploadComplete(url)

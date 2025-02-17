@@ -1,6 +1,6 @@
 import App from "./app"
 import "./index.css"
 import { createRoot } from "react-dom/client"
-import "./amplify-config"
+import "./utils/config-amplify"
 
 createRoot(document.getElementById("root")!).render(<App />)

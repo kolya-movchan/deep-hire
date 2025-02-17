@@ -22,7 +22,7 @@ import {
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../api/rest/auth"
-import { configAmplify } from "../hooks/auth/config-amplify"
+import { configAmplify } from "../utils/config-amplify"
 import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"

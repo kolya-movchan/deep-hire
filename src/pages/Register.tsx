@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Link } from "react-router-dom"
-import { configAmplify } from "../hooks/auth/config-amplify"
+import { configAmplify } from "../utils/config-amplify"
 import { register, confirmRegistration, logIn } from "../api/rest/auth"
 import {
   TextField,

@@ -1,8 +1,8 @@
 import { NavigateFunction } from "react-router-dom"
 import { useSelector } from "react-redux"
-import { AuthState } from "@/store/auth-slice"
 import { RootState } from "@/store"
 import { useEffect } from "react"
+import { AuthState } from "@/types/auth"
 
 export const useNavigateLoggedInUser = (navigate: NavigateFunction): void => {
   const user = useSelector<RootState, AuthState["user"]>((state) => state.auth.user)

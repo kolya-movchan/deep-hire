@@ -25,13 +25,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
 import { useNavigateLoggedInUser } from "@/hooks/navigate-user"
 import { RootState } from "@/store"
-import {
-  WorkOutline,
-  Person,
-  Settings,
-  Login as LoginIcon,
-  AppRegistration,
-} from "@mui/icons-material"
+import { WorkOutline, Person, Settings, Login as LoginIcon } from "@mui/icons-material"
+import { createUser } from "@/api/graphql/api"
 
 interface RegisterForm {
   fullName: string
@@ -43,13 +38,11 @@ export const Register = () => {
   configAmplify()
 
   const navigate = useNavigate()
-  useNavigateLoggedInUser(navigate)
-
   const dispatch = useDispatch<AppDispatch>()
   const { user } = useSelector((state: RootState) => state.auth)
-
   const requirementsRef = useRef<HTMLDivElement>(null)
 
+  // State declarations
   const [formData, setFormData] = useState<RegisterForm>({
     fullName: "",
     email: "",
@@ -60,17 +53,10 @@ export const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRequirements, setShowRequirements] = useState<boolean>(false)
 
-  const sidebarItems = user
-    ? [
-        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-        { icon: <Settings />, text: "Settings", path: "/settings" },
-      ]
-    : [
-        { icon: <LoginIcon />, text: "Login", path: "/login" },
-        { icon: <AppRegistration />, text: "Register", path: "/register" },
-      ]
+  // Navigation hook for logged in users
+  useNavigateLoggedInUser(navigate)
 
+  // Memoized values
   const requirements = useMemo(() => {
     return passwordRequirements.map((req) => ({
       ...req,
@@ -78,17 +64,15 @@ export const Register = () => {
     }))
   }, [formData.password])
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (requirementsRef.current && !requirementsRef.current.contains(event.target as Node)) {
-        setShowRequirements(false)
-      }
-    }
+  const sidebarItems = user
+    ? [
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+        { icon: <Settings />, text: "Settings", path: "/settings" },
+      ]
+    : [{ icon: <LoginIcon />, text: "Login", path: "/login" }]
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
-
+  // Event handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -126,6 +110,7 @@ export const Register = () => {
       await confirmRegistration(formData.email, confirmationCode)
       console.log("User confirmed successfully!")
       await logIn(formData.email, formData.password)
+      await createUser(formData.email, formData.fullName)
       dispatch(checkAuth())
       navigate("/")
       setIsConfirming(false)
@@ -133,6 +118,18 @@ export const Register = () => {
       console.error("Error confirming user:", error)
     }
   }
+
+  // Side effects
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (requirementsRef.current && !requirementsRef.current.contains(event.target as Node)) {
+        setShowRequirements(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client"
 
-export const GET_USER_DATA = gql`
+export const GET_FULL_USER_DATA = gql`
   query GetUserData($userId: String!) {
     getUserData(userId: $userId) {
       userId

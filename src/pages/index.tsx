@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material"
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { Link } from "react-router-dom"
 import {
   CloudUpload,
@@ -24,11 +24,29 @@ import {
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
+import { useFileUpload } from "../hooks/use-file-upload"
 
 export const Home = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [resumeUrl, setResumeUrl] = useState("")
   const { user } = useSelector((state: RootState) => state.auth)
+  const { uploadFile, isUploading } = useFileUpload()
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file && file.type === "application/pdf") {
+      setResumeFile(file)
+
+      try {
+        const url = await uploadFile(file, user?.id)
+
+        console.log("Uploaded file to:", url)
+        // onUploadComplete(url)
+      } catch (err) {
+        console.error("Upload failed:", err)
+      }
+    }
+  }
 
   const sidebarItems = user
     ? [
@@ -146,8 +164,9 @@ export const Home = () => {
                     <input
                       type="file"
                       hidden
-                      accept=".pdf,.doc,.docx"
-                      onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                      disabled={isUploading}
                     />
                   </Button>
                 </Grid>

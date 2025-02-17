@@ -29,21 +29,21 @@ import {
   AddCircle,
 } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
-import { singOut } from "@/api/rest/auth"
+import { signOut } from "@/api/rest/auth"
 import { checkAuthStatus } from "@/api/rest/auth"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/store"
 
 export const Profile = () => {
   const [user, setUser] = useState<User | null>(null)
   const userId = useSelector((state: RootState) => state?.auth?.user?.userId)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const navigate = useNavigate()
-
+  const dispatch = useDispatch<AppDispatch>()
   console.log("isLoggedIn", isLoggedIn)
 
   const handleSignOut = async () => {
-    singOut(setIsLoggedIn, navigate)
+    signOut(setIsLoggedIn, navigate, dispatch)
   }
 
   const handleAuthStatus = async () => {

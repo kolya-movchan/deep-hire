@@ -1,6 +1,5 @@
 import {
   fetchAuthSession,
-  signOut,
   signIn,
   getCurrentUser,
   AuthUser,
@@ -12,6 +11,9 @@ import {
 } from "aws-amplify/auth"
 import { NavigateFunction } from "react-router-dom"
 import { RegisterInput } from "../../types/auth"
+import { logoutUser } from "@/store/auth-slice"
+import { Dispatch } from "react"
+import { AsyncThunkAction } from "@reduxjs/toolkit"
 
 export const register = async (input: RegisterInput) => {
   try {
@@ -55,12 +57,23 @@ export const logIn = async (username: string, password: string) => {
   return signInResult
 }
 
-export const singOut = async (
+export const signOut = async (
   setIsLoggedIn: (value: boolean | null) => void,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  dispatch: Dispatch<
+    AsyncThunkAction<
+      null,
+      void,
+      {
+        extra: {
+          navigate: NavigateFunction
+        }
+      }
+    >
+  >
 ) => {
   try {
-    await signOut()
+    dispatch(logoutUser())
     setIsLoggedIn(false)
     navigate("/")
   } catch (error) {

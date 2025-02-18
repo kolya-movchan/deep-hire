@@ -1,13 +1,36 @@
 import { v4 as uuidv4 } from "uuid"
+import client from "../api/graphql/client"
+import {
+  CREATE_ANON_USER,
+  CreateAnonUserResponse,
+  CreateAnonUserVariables,
+} from "../api/graphql/mutations"
 
-export const getAnonUserId = () => {
+export const getAnonUserId = async (): Promise<string> => {
   const storedId = localStorage.getItem("user_id")
 
   if (storedId) {
-    return storedId as string
+    return storedId
   }
 
-  const newId = uuidv4()
-  localStorage.setItem("user_id", `anon-${newId}`)
-  return newId
+  const newId = `anon-${uuidv4()}`
+
+  try {
+    const { data } = await client.mutate<CreateAnonUserResponse, CreateAnonUserVariables>({
+      mutation: CREATE_ANON_USER,
+      variables: {
+        id: newId,
+      },
+    })
+
+    if (data?.createAnonUser.userId) {
+      localStorage.setItem("user_id", newId)
+      return newId
+    }
+
+    throw new Error("Failed to create anonymous user")
+  } catch (error) {
+    console.error("Error creating anonymous user:", error)
+    throw error
+  }
 }

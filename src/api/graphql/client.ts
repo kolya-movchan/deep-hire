@@ -8,15 +8,28 @@ const httpLink = createHttpLink({
 })
 
 // Create the auth link
-const authLink = setContext(async (_, { headers }) => {
-  // Get the token on each request
-  const token = await getToken()
+const authLink = setContext(async (_, { headers, operationName }) => {
+  console.log(111, operationName)
 
+  // For anonymous user creation, use API key
+  if (operationName === "CreateAnonUser") {
+    return {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_SYNC_API_KEY,
+      },
+    }
+  }
+
+  // For all other operations, use bearer token
+  const token = await getToken()
   return {
     headers: {
       ...headers,
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "", // Added Bearer prefix
+      Authorization: token ? `Bearer ${token}` : "",
+      "x-api-key": import.meta.env.VITE_APP_SYNC_API_KEY,
     },
   }
 })

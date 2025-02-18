@@ -8,3 +8,21 @@ export const CREATE_USER = gql`
     }
   }
 `
+
+export const CREATE_ANON_USER = gql`
+  mutation CreateAnonUser($id: String!) {
+    createAnonUser(userId: $id) {
+      userId
+    }
+  }
+`
+
+export type CreateAnonUserResponse = {
+  createAnonUser: {
+    userId: string
+  }
+}
+
+export type CreateAnonUserVariables = {
+  id: string
+}

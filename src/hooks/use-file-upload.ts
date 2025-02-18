@@ -5,6 +5,11 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity"
 import { v4 as uuidv4 } from "uuid"
 import { getAnonUserId } from "../helpers/get-anon-user"
+import { CheckCreditsResponse, CreditCosts } from "@/types/credits"
+import client from "@/api/graphql/client"
+import { CHECK_CREDITS } from "@/api/graphql/mutations"
+import { CreditAction } from "@/types/credits"
+import { CheckCreditsVariables } from "@/api/graphql/types"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -26,7 +31,7 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const user_id = userId ?? getAnonUserId()
+    const user_id = userId ?? (await getAnonUserId())
 
     console.log("user_id", user_id)
 
@@ -35,6 +40,20 @@ export const useFileUpload = () => {
     const fileKey = `uploads/${uniqueFileId}-${file.name}`
 
     try {
+      const { data } = await client.mutate<CheckCreditsResponse, CheckCreditsVariables>({
+        mutation: CHECK_CREDITS,
+        variables: {
+          userId: user_id,
+          action: CreditAction.PARSE_CV,
+          requiredCredits: CreditCosts[CreditAction.PARSE_CV],
+        },
+        context: {
+          operationName: "CheckCredits",
+        },
+      })
+
+      console.log(111, data)
+
       // Generate a pre-signed URL
       const command = new PutObjectCommand({
         Bucket: BUCKET_NAME,

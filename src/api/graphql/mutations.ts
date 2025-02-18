@@ -1,15 +1,5 @@
 import { gql } from "@apollo/client"
 
-export type CreateAnonUserResponse = {
-  createAnonUser: {
-    userId: string
-  }
-}
-
-export type CreateAnonUserVariables = {
-  id: string
-}
-
 export const CREATE_USER = gql`
   mutation CreateUser($email: String!, $name: String!) {
     createUser(email: $email, name: $name) {
@@ -25,6 +15,16 @@ export const CREATE_ANON_USER = gql`
       userId
       role
       credits
+    }
+  }
+`
+
+export const CHECK_CREDITS = gql`
+  mutation CheckCredits($userId: String!, $action: String!, $requiredCredits: Int!) {
+    checkCredits(userId: $userId, action: $action, requiredCredits: $requiredCredits) {
+      allowed
+      credits
+      message
     }
   }
 `

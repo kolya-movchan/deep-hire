@@ -6,3 +6,27 @@ export interface User {
   name: string
   createdAt: string
 }
+
+export type CreateAnonUserResponse = {
+  createAnonUser: {
+    userId: string
+  }
+}
+
+export type CreateAnonUserVariables = {
+  id: string
+}
+
+export type CheckCreditsResponse = {
+  checkCredits: {
+    allowed: boolean
+    credits: number
+    message?: string
+  }
+}
+
+export type CheckCreditsVariables = {
+  userId: string
+  action: string
+  requiredCredits: number
+}

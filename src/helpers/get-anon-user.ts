@@ -1,10 +1,8 @@
 import { v4 as uuidv4 } from "uuid"
 import client from "../api/graphql/client"
-import {
-  CREATE_ANON_USER,
-  CreateAnonUserResponse,
-  CreateAnonUserVariables,
-} from "../api/graphql/mutations"
+import { CREATE_ANON_USER } from "../api/graphql/mutations"
+
+import { CreateAnonUserResponse, CreateAnonUserVariables } from "../api/graphql/types"
 
 export const getAnonUserId = async (): Promise<string> => {
   const storedId = localStorage.getItem("user_id")

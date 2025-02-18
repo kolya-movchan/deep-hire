@@ -8,6 +8,6 @@ export const getAnonUserId = () => {
   }
 
   const newId = uuidv4()
-  localStorage.setItem("user_id", newId)
+  localStorage.setItem("user_id", `anon-${newId}`)
   return newId
 }

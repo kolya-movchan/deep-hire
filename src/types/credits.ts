@@ -9,7 +9,10 @@ export const CreditCosts: Record<CreditAction, number> = {
 }
 
 export interface CheckCreditsResponse {
-  allowed: boolean
-  credits: number
-  message?: string
+  checkCredits: {
+    allowed: boolean
+    credits: number
+    message?: string
+    __typename: string
+  }
 }

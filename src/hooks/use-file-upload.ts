@@ -35,10 +35,6 @@ export const useFileUpload = () => {
 
     console.log("user_id", user_id)
 
-    const uniqueFileId = uuidv4()
-
-    const fileKey = `uploads/${uniqueFileId}-${file.name}`
-
     try {
       const { data } = await client.mutate<CheckCreditsResponse, CheckCreditsVariables>({
         mutation: CHECK_CREDITS,
@@ -52,7 +48,13 @@ export const useFileUpload = () => {
         },
       })
 
-      console.log(111, data)
+      if (!data?.checkCredits.allowed) {
+        throw new Error("Not enough credits")
+      }
+
+      const uniqueFileId = uuidv4()
+
+      const fileKey = `uploads/${uniqueFileId}-${file.name}`
 
       // Generate a pre-signed URL
       const command = new PutObjectCommand({

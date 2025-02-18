@@ -28,9 +28,11 @@ export const useFileUpload = () => {
 
     const user_id = userId ?? getAnonUserId()
 
+    console.log("user_id", user_id)
+
     const uniqueFileId = uuidv4()
 
-    const fileKey = `uploads/${user_id}/${uniqueFileId}-${file.name}`
+    const fileKey = `uploads/${uniqueFileId}-${file.name}`
 
     try {
       // Generate a pre-signed URL

@@ -13,6 +13,8 @@ export const CREATE_ANON_USER = gql`
   mutation CreateAnonUser($id: String!) {
     createAnonUser(userId: $id) {
       userId
+      role
+      credits
     }
   }
 `

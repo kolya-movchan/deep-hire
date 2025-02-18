@@ -9,9 +9,7 @@ const httpLink = createHttpLink({
 
 // Create the auth link
 const authLink = setContext(async (_, { headers, operationName }) => {
-  console.log(111, operationName)
-
-  // For anonymous user creation, use API key
+  // For anonymous user creation, use only API key
   if (operationName === "CreateAnonUser") {
     return {
       headers: {
@@ -22,14 +20,13 @@ const authLink = setContext(async (_, { headers, operationName }) => {
     }
   }
 
-  // For all other operations, use bearer token
+  // For all other operations, use bearer token without API key
   const token = await getToken()
   return {
     headers: {
       ...headers,
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : "",
-      "x-api-key": import.meta.env.VITE_APP_SYNC_API_KEY,
     },
   }
 })

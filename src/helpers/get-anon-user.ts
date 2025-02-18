@@ -21,6 +21,9 @@ export const getAnonUserId = async (): Promise<string> => {
       variables: {
         id: newId,
       },
+      context: {
+        operationName: "CreateAnonUser",
+      },
     })
 
     if (data?.createAnonUser.userId) {

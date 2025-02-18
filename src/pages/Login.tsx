@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
-import { useNavigateLoggedInUser } from "@/hooks/navigate-user"
+import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
 import {
   TextField,
   IconButton,

@@ -4,6 +4,7 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-id
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity"
 import { v4 as uuidv4 } from "uuid"
+import { getAnonUserId } from "../helpers/get-anon-user"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -25,11 +26,11 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const uniqueId = uuidv4()
+    const user_id = userId ?? getAnonUserId()
 
-    const fileKey = userId
-      ? `uploads/${userId}/${uniqueId}-${file.name}`
-      : `uploads/${uniqueId}-${file.name}`
+    const uniqueFileId = uuidv4()
+
+    const fileKey = `uploads/${user_id}/${uniqueFileId}-${file.name}`
 
     try {
       // Generate a pre-signed URL

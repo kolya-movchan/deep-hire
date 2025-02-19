@@ -28,3 +28,14 @@ export const CHECK_CREDITS = gql`
     }
   }
 `
+
+export const DEDUCT_CREDITS = gql`
+  mutation DeductCredits($userId: String!, $action: String!, $requiredCredits: Int!) {
+    deductCredits(userId: $userId, action: $action, requiredCredits: $requiredCredits) {
+      message
+      creditsRequired
+      creditsUsed
+      balance
+    }
+  }
+`

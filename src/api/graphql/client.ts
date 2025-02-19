@@ -10,7 +10,11 @@ const httpLink = createHttpLink({
 // Create the auth link
 const authLink = setContext(async (_, { headers, operationName }) => {
   // For anonymous user creation, use only API key
-  if (operationName === "CreateAnonUser" || operationName === "CheckCredits") {
+  if (
+    operationName === "CreateAnonUser" ||
+    operationName === "CheckCredits" ||
+    operationName === "DeductCredits"
+  ) {
     return {
       headers: {
         ...headers,

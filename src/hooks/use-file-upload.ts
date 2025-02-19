@@ -7,9 +7,10 @@ import { v4 as uuidv4 } from "uuid"
 import { getAnonUserId } from "../helpers/get-anon-user"
 import { CheckCreditsResponse, CreditCosts } from "@/types/credits"
 import client from "@/api/graphql/client"
-import { CHECK_CREDITS } from "@/api/graphql/mutations"
+import { CHECK_CREDITS, DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { CreditAction } from "@/types/credits"
 import { CheckCreditsVariables } from "@/api/graphql/types"
+import { DeductCreditsResponse, DeductCreditsVariables } from "@/api/graphql/types"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -71,6 +72,23 @@ export const useFileUpload = () => {
         body: file,
         headers: { "Content-Type": file.type },
       })
+
+      // Deduct credits after successful upload
+      const deductResponse = await client.mutate<DeductCreditsResponse, DeductCreditsVariables>({
+        mutation: DEDUCT_CREDITS,
+        variables: {
+          userId: user_id,
+          action: CreditAction.PARSE_CV,
+          requiredCredits: CreditCosts[CreditAction.PARSE_CV],
+        },
+        context: {
+          operationName: "DeductCredits",
+        },
+      })
+
+      if (!deductResponse.data) {
+        throw new Error("Failed to deduct credits")
+      }
 
       if (!uploadResponse.ok) {
         throw new Error("Upload failed")

@@ -30,3 +30,18 @@ export type CheckCreditsVariables = {
   action: string
   requiredCredits: number
 }
+
+export type DeductCreditsResponse = {
+  deductCredits: {
+    message: string
+    creditsRequired: number
+    creditsUsed: number
+    balance: number
+  }
+}
+
+export type DeductCreditsVariables = {
+  userId: string
+  action: string
+  creditsToDeduct: number
+}

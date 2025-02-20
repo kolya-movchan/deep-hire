@@ -10,6 +10,7 @@ import {
 import { getAnonUserId } from "../helpers/get-anon-user"
 import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { GET_CREDITS } from "@/api/graphql/queries"
+import { RootState } from "@/store"
 
 const initialState: CreditsState = {
   balance: null,
@@ -17,10 +18,13 @@ const initialState: CreditsState = {
   error: null,
 }
 
-export const fetchCredits = createAsyncThunk("credits/fetchCredits", async () => {
+export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (_, { getState }) => {
   console.log("Fetching credits...")
-  const userId = await getAnonUserId()
-  console.log("User ID:", userId)
+
+  const state = getState() as RootState
+  const userId = state.auth.user?.userId || (await getAnonUserId())
+
+  console.log("Using user ID:", userId)
 
   const { data } = await client.query<GetCreditsResponse, GetCreditsVariables>({
     query: GET_CREDITS,

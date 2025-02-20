@@ -25,15 +25,15 @@ const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profil
 export function AppRoutes(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>()
 
-  useEffect(() => {
-    dispatch(checkAuth())
-    dispatch(fetchCredits())
-  }, [dispatch])
-
   const { user, loading } = useSelector((state: RootState) => state.auth)
   const { balance } = useSelector((state: RootState) => state.credits)
 
-  console.log({ user, loading, balance })
+  useEffect(() => {
+    dispatch(checkAuth())
+    dispatch(fetchCredits(user?.userId ?? ""))
+  }, [dispatch, user?.userId])
+
+  console.log(JSON.stringify({ user, loading, balance }, null, 2))
 
   return (
     <Routes>

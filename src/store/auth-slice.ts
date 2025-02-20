@@ -11,7 +11,8 @@ const initialState: AuthState = {
 // ✅ Async action to check authentication status
 export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
   try {
-    return await getCurrentUser()
+    const user = await getCurrentUser()
+    return { userId: user?.userId, username: user?.username }
   } catch {
     return null
   }

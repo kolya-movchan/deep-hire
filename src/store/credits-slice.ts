@@ -39,6 +39,7 @@ export const fetchCredits = createAsyncThunk("credits/fetchCredits", async () =>
 })
 
 export const deductCredits = createAsyncThunk("credits/deductCredits", async (userId: string) => {
+  console.log("Deducting credits for user:", userId)
   const { data } = await client.mutate<DeductCreditsResponse, DeductCreditsVariables>({
     mutation: DEDUCT_CREDITS,
     variables: {
@@ -50,6 +51,7 @@ export const deductCredits = createAsyncThunk("credits/deductCredits", async (us
       operationName: "DeductCredits",
     },
   })
+  console.log("Deduct credits response:", data)
   if (!data) {
     throw new Error("Failed to deduct credits")
   }
@@ -75,13 +77,24 @@ const creditsSlice = createSlice({
         state.error = action.error.message ?? "Failed to fetch credits"
       })
       .addCase(deductCredits.pending, (state) => {
+        console.log("Deduct credits pending. Current state:", state)
         state.loading = true
         state.error = null
       })
-      .addCase(deductCredits.fulfilled, (state) => {
+      .addCase(deductCredits.fulfilled, (state, action) => {
+        console.log("Deduct credits fulfilled. Action payload:", action.payload)
+        console.log("Current balance:", state.balance)
         state.loading = false
+        if (state.balance !== null) {
+          const newBalance = state.balance - action.payload.deductCredits.creditsUsed
+          console.log("New balance will be:", newBalance)
+          state.balance = newBalance
+        } else {
+          console.warn("Cannot update balance: current balance is null")
+        }
       })
       .addCase(deductCredits.rejected, (state, action) => {
+        console.error("Deduct credits rejected:", action.error)
         state.loading = false
         state.error = action.error.message ?? "Failed to deduct credits"
       })

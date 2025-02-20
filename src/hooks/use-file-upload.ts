@@ -6,10 +6,11 @@ import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity"
 import { v4 as uuidv4 } from "uuid"
 import { getAnonUserId } from "../helpers/get-anon-user"
 import { CreditCosts } from "@/types/credits"
-import client from "@/api/graphql/client"
-import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { CreditAction } from "@/types/credits"
-import { DeductCreditsResponse, DeductCreditsVariables } from "@/api/graphql/types"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { deductCredits } from "@/store/credits-slice"
+import { useAppDispatch } from "@/store/hooks"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -24,6 +25,9 @@ const s3Client = new S3Client({
 })
 
 export const useFileUpload = () => {
+  const { balance } = useSelector((state: RootState) => state.credits)
+  const dispatch = useAppDispatch()
+
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
@@ -36,9 +40,11 @@ export const useFileUpload = () => {
     console.log("user_id", user_id)
 
     try {
-      // if (!balance) {
-      //   throw new Error("Not enough credits")
-      // }
+      console.log("balance ===>", balance)
+
+      if (balance && balance < CreditCosts[CreditAction.PARSE_CV]) {
+        throw new Error("Not enough credits")
+      }
 
       const uniqueFileId = uuidv4()
 
@@ -60,20 +66,9 @@ export const useFileUpload = () => {
         headers: { "Content-Type": file.type },
       })
 
-      // Deduct credits after successful upload
-      const deductResponse = await client.mutate<DeductCreditsResponse, DeductCreditsVariables>({
-        mutation: DEDUCT_CREDITS,
-        variables: {
-          userId: user_id,
-          action: CreditAction.PARSE_CV,
-          requiredCredits: CreditCosts[CreditAction.PARSE_CV],
-        },
-        context: {
-          operationName: "DeductCredits",
-        },
-      })
+      const deductResponse = await dispatch(deductCredits(user_id))
 
-      if (!deductResponse.data) {
+      if (!deductResponse.payload) {
         throw new Error("Failed to deduct credits")
       }
 

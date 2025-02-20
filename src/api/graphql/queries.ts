@@ -11,3 +11,12 @@ export const GET_FULL_USER_DATA = gql`
     }
   }
 `
+
+export const GET_CREDITS = gql`
+  query GetCredits($userId: String!) {
+    getCredits(userId: $userId) {
+      balance
+      message
+    }
+  }
+`

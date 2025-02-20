@@ -16,9 +16,5 @@ export type PasswordRequirement = {
 export interface AuthState {
   user: AuthUser | null
   loading: boolean
-}
-
-export const initialState: AuthState = {
-  user: null,
-  loading: true,
+  error: string | null
 }

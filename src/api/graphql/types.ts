@@ -17,18 +17,15 @@ export type CreateAnonUserVariables = {
   id: string
 }
 
-export type CheckCreditsResponse = {
-  checkCredits: {
-    allowed: boolean
-    credits: number
+export type GetCreditsResponse = {
+  getCredits: {
+    balance: number
     message?: string
   }
 }
 
-export type CheckCreditsVariables = {
+export type GetCreditsVariables = {
   userId: string
-  action: string
-  requiredCredits: number
 }
 
 export type DeductCreditsResponse = {
@@ -43,5 +40,5 @@ export type DeductCreditsResponse = {
 export type DeductCreditsVariables = {
   userId: string
   action: string
-  creditsToDeduct: number
+  requiredCredits: number
 }

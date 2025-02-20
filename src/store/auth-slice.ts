@@ -1,6 +1,12 @@
-import { initialState } from "@/types/auth"
+import { AuthState } from "@/types/auth"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { getCurrentUser, signOut } from "aws-amplify/auth"
+
+const initialState: AuthState = {
+  user: null,
+  loading: true,
+  error: null,
+}
 
 // ✅ Async action to check authentication status
 export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
@@ -33,6 +39,7 @@ export const authSlice = createSlice({
       .addCase(checkAuth.rejected, (state) => {
         state.user = null
         state.loading = false
+        state.error = "Failed to check authentication status"
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null

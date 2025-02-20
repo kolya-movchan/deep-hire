@@ -5,11 +5,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity"
 import { v4 as uuidv4 } from "uuid"
 import { getAnonUserId } from "../helpers/get-anon-user"
-import { CheckCreditsResponse, CreditCosts } from "@/types/credits"
+import { CreditCosts } from "@/types/credits"
 import client from "@/api/graphql/client"
-import { CHECK_CREDITS, DEDUCT_CREDITS } from "@/api/graphql/mutations"
+import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { CreditAction } from "@/types/credits"
-import { CheckCreditsVariables } from "@/api/graphql/types"
 import { DeductCreditsResponse, DeductCreditsVariables } from "@/api/graphql/types"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
@@ -37,21 +36,9 @@ export const useFileUpload = () => {
     console.log("user_id", user_id)
 
     try {
-      const { data } = await client.mutate<CheckCreditsResponse, CheckCreditsVariables>({
-        mutation: CHECK_CREDITS,
-        variables: {
-          userId: user_id,
-          action: CreditAction.PARSE_CV,
-          requiredCredits: CreditCosts[CreditAction.PARSE_CV],
-        },
-        context: {
-          operationName: "CheckCredits",
-        },
-      })
-
-      if (!data?.checkCredits.allowed) {
-        throw new Error("Not enough credits")
-      }
+      // if (!balance) {
+      //   throw new Error("Not enough credits")
+      // }
 
       const uniqueFileId = uuidv4()
 

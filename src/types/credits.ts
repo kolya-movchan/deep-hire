@@ -8,11 +8,16 @@ export const CreditCosts: Record<CreditAction, number> = {
   // Add costs for other actions
 }
 
-export interface CheckCreditsResponse {
-  checkCredits: {
-    allowed: boolean
-    credits: number
+export interface GetCreditsResponse {
+  getCredits: {
+    balance: number
     message?: string
     __typename: string
   }
+}
+
+export type CreditsState = {
+  balance: number | null
+  loading: boolean
+  error: string | null
 }

@@ -3,10 +3,11 @@ import { Home } from "../pages"
 import { Login } from "../pages/login"
 import { Register } from "../pages/register"
 import { Profile } from "../pages/profile"
-import { useAuthCheck } from "../hooks/auth/use-auth"
-import { JSX } from "react"
-import { useSelector } from "react-redux"
-import { RootState } from "../store"
+import { JSX, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../store"
+import { fetchCredits } from "@/store/credits-slice"
+import { checkAuth } from "@/store/auth-slice"
 
 type RouteConfig = {
   path: string
@@ -22,11 +23,17 @@ const publicRoutes: readonly RouteConfig[] = [
 const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const
 
 export function AppRoutes(): JSX.Element {
-  useAuthCheck()
+  const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    dispatch(checkAuth())
+    dispatch(fetchCredits())
+  }, [dispatch])
 
   const { user, loading } = useSelector((state: RootState) => state.auth)
+  const { balance } = useSelector((state: RootState) => state.credits)
 
-  console.log({ user, loading })
+  console.log({ user, loading, balance })
 
   return (
     <Routes>

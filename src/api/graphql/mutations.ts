@@ -19,16 +19,6 @@ export const CREATE_ANON_USER = gql`
   }
 `
 
-export const CHECK_CREDITS = gql`
-  mutation CheckCredits($userId: String!, $action: String!, $requiredCredits: Int!) {
-    checkCredits(userId: $userId, action: $action, requiredCredits: $requiredCredits) {
-      allowed
-      credits
-      message
-    }
-  }
-`
-
 export const DEDUCT_CREDITS = gql`
   mutation DeductCredits($userId: String!, $action: String!, $requiredCredits: Int!) {
     deductCredits(userId: $userId, action: $action, requiredCredits: $requiredCredits) {

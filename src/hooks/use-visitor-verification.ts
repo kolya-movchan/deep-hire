@@ -1,16 +1,23 @@
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
 import client from "@/api/graphql/client"
 import { VERIFY_VISITOR } from "@/api/graphql/mutations"
-import { VerifyVisitorMutation, VerifyVisitorVariables } from "@/api/graphql/types"
+import {
+  VerificationResult,
+  VerifyVisitorMutation,
+  VerifyVisitorVariables,
+} from "@/api/graphql/types"
+import { useState } from "react"
 
 export function useVisitorVerification() {
   const {
     isLoading,
     // error,
-    data: visitorData,
+    data,
   } = useVisitorData({ extendedResult: false }, { immediate: true })
 
-  const visitorId = visitorData?.visitorId || ""
+  const [visitorData, setVisitorData] = useState<VerificationResult | null>(null)
+
+  const visitorId = data?.visitorId || ""
 
   const validateVisitor = async () => {
     const { data } = await client.mutate<VerifyVisitorMutation, VerifyVisitorVariables>({
@@ -23,14 +30,16 @@ export function useVisitorVerification() {
       },
     })
 
-    return data?.verifyVisitor
+    if (data?.verifyVisitor) {
+      setVisitorData(data?.verifyVisitor)
+    }
   }
 
-  if (!isLoading) {
+  if (data && !isLoading && !visitorData) {
     validateVisitor()
   }
 
-  console.log("Visitor data ===>", visitorData?.visitorId)
+  console.log("Visitor data ===>", visitorData)
 
-  return { visitorId: visitorData?.visitorId }
+  return { visitor: visitorData }
 }

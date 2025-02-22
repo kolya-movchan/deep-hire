@@ -5,7 +5,7 @@ export interface VisitorId {
 
 export interface VerificationResult {
   isAllowed: boolean
-  visitorId: string
+  fingerprintId: string
   balance: number
 }
 

@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store"
 import { fetchCredits } from "@/store/credits-slice"
 import { checkAuth } from "@/store/auth-slice"
-import { useVisitorVerification } from "@/hooks/use-visitor-verification"
 
 type RouteConfig = {
   path: string
@@ -28,23 +27,6 @@ export function AppRoutes(): JSX.Element {
 
   const { user, loading } = useSelector((state: RootState) => state.auth)
   const { balance } = useSelector((state: RootState) => state.credits)
-  const { visitorId } = useVisitorVerification()
-
-  // useEffect(() => {
-  //   const verifyVisitor = async () => {
-  //     const verificationResult = await verify()
-  //     if (!verificationResult.isAllowed) {
-  //       throw new Error(verificationResult.reason ?? "Upload not allowed")
-  //     }
-  //   }
-  //   verifyVisitor()
-  // }, [verify])
-
-  // const { isLoading, error, data, getData } = useVisitorData(
-  // const { isLoading, error, data, getData } = useVisitorData(
-  //   { extendedResult: true },
-  //   { immediate: true }
-  // )
 
   useEffect(() => {
     dispatch(checkAuth())

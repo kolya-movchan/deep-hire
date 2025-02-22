@@ -1,5 +1,5 @@
 import { AuthState } from "@/types/state"
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { getCurrentUser, signOut } from "aws-amplify/auth"
 
 const initialState: AuthState = {

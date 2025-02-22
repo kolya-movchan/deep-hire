@@ -37,16 +37,19 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const user_id = userId || visitorId ? `anon-${visitorId}` : null
+    const anonUser = visitorId ? `anon-${visitorId}` : null
+    const user_id = userId || anonUser
+
     console.log("visitor ===>", visitorId)
-    console.log("user_id ===>", user_id)
+    console.log(111, "user", userId)
+    console.log(111, "user_id ===>", user_id)
 
     try {
       console.log("balance ===>", balance)
 
       if (user_id) {
-        console.log(111, balance)
-        console.log(111, CreditCosts[CreditAction.PARSE_CV])
+        // console.log(111, balance)
+        // console.log(111, CreditCosts[CreditAction.PARSE_CV])
 
         if (balance && balance < CreditCosts[CreditAction.PARSE_CV]) {
           throw new Error("Not enough credits")

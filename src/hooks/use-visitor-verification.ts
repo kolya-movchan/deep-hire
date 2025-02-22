@@ -14,7 +14,7 @@ export function useVisitorVerification() {
     { immediate: true }
   )
   const dispatch = useDispatch()
-  const visitorData = useSelector((state: RootState) => state.auth.fingerprintId)
+  const visitorData = useSelector((state: RootState) => state.visitor.fingerprintId)
 
   console.log("fingerprintData ===>", fingerprintData)
 

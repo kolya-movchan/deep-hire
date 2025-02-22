@@ -4,7 +4,7 @@ import { AuthState } from "@/types/state"
 import creditsReducer from "./credits-slice"
 import { CreditsState } from "@/types/state"
 import visitorReducer from "./visitor-slice"
-import { VisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
+import { VisitorState } from "@/types/state"
 
 export const store = configureStore({
   reducer: {
@@ -16,7 +16,7 @@ export const store = configureStore({
 
 export type RootState = {
   auth: AuthState
-  visitor: VisitorData
+  visitor: VisitorState
   credits: CreditsState
 }
 

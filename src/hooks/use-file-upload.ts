@@ -28,7 +28,7 @@ export const useFileUpload = () => {
   const { balance } = useSelector((state: RootState) => state.credits)
   const dispatch = useAppDispatch()
 
-  const { visitorId } = useVisitorVerification()
+  const { fingerPrintId } = useVisitorVerification()
 
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -37,10 +37,10 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const anonUser = visitorId ? `anon-${visitorId}` : null
+    const anonUser = fingerPrintId ? `anon-${fingerPrintId}` : null
     const user_id = userId || anonUser
 
-    console.log("visitor ===>", visitorId)
+    console.log("visitor ===>", fingerPrintId)
     console.log(111, "user", userId)
     console.log(111, "user_id ===>", user_id)
 

@@ -57,7 +57,7 @@ export function useVisitorVerification() {
     }
   }, [fingerprintData, fingerprintLoading, visitorId, visitorData, dispatch])
 
-  return { visitorId }
+  return { fingerPrintId: visitorId }
 }
 
 // import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"

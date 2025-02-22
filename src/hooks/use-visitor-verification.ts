@@ -16,6 +16,8 @@ export function useVisitorVerification() {
   const dispatch = useDispatch()
   const visitorData = useSelector((state: RootState) => state.auth.fingerprintId)
 
+  console.log("fingerprintData ===>", fingerprintData)
+
   const visitorId = fingerprintData?.visitorId || ""
 
   useEffect(() => {
@@ -38,6 +40,9 @@ export function useVisitorVerification() {
               fingerprintId: visitorId,
             })
           )
+
+          console.log("Verify Visitor ===>", data.verifyVisitor)
+
           dispatch(updateBalance(data.verifyVisitor.balance))
         }
       } catch (error) {

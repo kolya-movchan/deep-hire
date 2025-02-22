@@ -10,11 +10,3 @@ export type PasswordRequirement = {
   regex: RegExp
   met: boolean
 }
-
-export interface AuthState {
-  user: { userId: string; username: string } | null
-  fingerprintId: string | null
-  loading: boolean
-  visitorLoading: boolean
-  error: string | null
-}

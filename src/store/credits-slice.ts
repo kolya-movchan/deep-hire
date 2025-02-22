@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
 import client from "@/api/graphql/client"
-import { CreditAction, CreditCosts, CreditsState } from "@/types/credits"
+import { CreditAction, CreditCosts } from "@/types/credits"
+import { CreditsState } from "@/types/state"
 import {
   DeductCreditsResponse,
   DeductCreditsVariables,

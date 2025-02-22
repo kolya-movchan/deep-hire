@@ -5,7 +5,7 @@ import { VerifyVisitorMutation, VerifyVisitorVariables } from "@/api/graphql/typ
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useEffect } from "react"
-import { setNewVisitorData, setVisitorError, setVisitorLoading } from "@/store/auth-slice"
+import { setNewVisitorData, setVisitorError, setVisitorLoading } from "@/store/visitor-slice"
 import { updateBalance } from "@/store/credits-slice"
 
 export function useVisitorVerification() {

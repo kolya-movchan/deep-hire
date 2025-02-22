@@ -1,17 +1,11 @@
-import { AuthState } from "@/types/auth"
+import { AuthState } from "@/types/state"
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import { getCurrentUser, signOut } from "aws-amplify/auth"
 
-interface VisitorData {
-  fingerprintId: string
-}
-
 const initialState: AuthState = {
   user: null,
-  fingerprintId: null,
   loading: true,
   error: null,
-  visitorLoading: false,
 }
 
 // ✅ Async action to check authentication status
@@ -40,17 +34,7 @@ export const setVisitorData = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setNewVisitorData: (state, action: PayloadAction<VisitorData>) => {
-      state.fingerprintId = action.payload.fingerprintId
-    },
-    setVisitorLoading: (state, action: PayloadAction<boolean>) => {
-      state.visitorLoading = action.payload
-    },
-    setVisitorError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(checkAuth.pending, (state) => {
@@ -68,17 +52,7 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null
       })
-      .addCase(setVisitorData.pending, (state) => {
-        state.fingerprintId = null
-      })
-      .addCase(setVisitorData.fulfilled, (state, action) => {
-        state.fingerprintId = action.payload
-      })
-      .addCase(setVisitorData.rejected, (state) => {
-        state.fingerprintId = null
-      })
   },
 })
 
-export const { setNewVisitorData, setVisitorLoading, setVisitorError } = authSlice.actions
 export default authSlice.reducer

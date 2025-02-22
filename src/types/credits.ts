@@ -15,9 +15,3 @@ export interface GetCreditsResponse {
     __typename: string
   }
 }
-
-export type CreditsState = {
-  balance: number | null
-  loading: boolean
-  error: string | null
-}

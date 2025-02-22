@@ -4,7 +4,6 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-id
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity"
 import { v4 as uuidv4 } from "uuid"
-import { getAnonUserId } from "../helpers/get-anon-user"
 import { CreditCosts } from "@/types/credits"
 import { CreditAction } from "@/types/credits"
 import { useSelector } from "react-redux"
@@ -35,7 +34,7 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const user_id = userId ?? (await getAnonUserId())
+    const user_id = userId ?? "fingerprint"
 
     console.log("user_id", user_id)
 

@@ -7,7 +7,6 @@ import {
   GetCreditsResponse,
   GetCreditsVariables,
 } from "@/api/graphql/types"
-import { getAnonUserId } from "../helpers/get-anon-user"
 import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { GET_CREDITS } from "@/api/graphql/queries"
 
@@ -20,7 +19,7 @@ const initialState: CreditsState = {
 export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (id: string) => {
   console.log("Fetching credits...")
 
-  const userId = id || (await getAnonUserId())
+  const userId = id || "fingerprint"
 
   console.log("Using user ID:", userId)
 

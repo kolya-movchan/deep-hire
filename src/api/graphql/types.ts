@@ -1,3 +1,22 @@
+export interface VisitorId {
+  visitorId: string
+  requestId: string
+}
+
+export interface VerificationResult {
+  isAllowed: boolean
+  visitorId: string
+  balance: number
+}
+
+export interface VerifyVisitorMutation {
+  verifyVisitor: VerificationResult
+}
+
+export interface VerifyVisitorVariables {
+  visitorId: string
+}
+
 export interface User {
   userId: string
   email: string

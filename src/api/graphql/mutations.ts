@@ -1,5 +1,15 @@
 import { gql } from "@apollo/client"
 
+export const VERIFY_VISITOR = gql`
+  mutation VerifyVisitor($visitorId: String!) {
+    verifyVisitor(visitorId: $visitorId) {
+      isAllowed
+      fingerprintId
+      balance
+    }
+  }
+`
+
 export const CREATE_USER = gql`
   mutation CreateUser($email: String!, $name: String!) {
     createUser(email: $email, name: $name) {
@@ -8,7 +18,7 @@ export const CREATE_USER = gql`
     }
   }
 `
-
+// not used
 export const CREATE_ANON_USER = gql`
   mutation CreateAnonUser($id: String!) {
     createAnonUser(userId: $id) {

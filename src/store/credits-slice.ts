@@ -33,7 +33,7 @@ export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (id: 
     },
   })
 
-  console.log("Credits response:", data)
+  console.log("Credits response:", data?.getCredits)
   const credits = data?.getCredits.balance ?? 0
   console.log("Returning credits:", credits)
   return credits

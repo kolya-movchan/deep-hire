@@ -28,7 +28,7 @@ export const useFileUpload = () => {
   const { balance } = useSelector((state: RootState) => state.credits)
   const dispatch = useAppDispatch()
 
-  const { visitor } = useVisitorVerification()
+  const { visitorId } = useVisitorVerification()
 
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -37,14 +37,16 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const user_id = userId ?? visitor?.fingerprintId
-    console.log("visitor ===>", visitor)
+    const user_id = userId || visitorId ? `anon-${visitorId}` : null
+    console.log("visitor ===>", visitorId)
     console.log("user_id ===>", user_id)
 
     try {
       console.log("balance ===>", balance)
 
       if (user_id) {
+        console.log(111, balance)
+
         if (balance && balance < CreditCosts[CreditAction.PARSE_CV]) {
           throw new Error("Not enough credits")
         }

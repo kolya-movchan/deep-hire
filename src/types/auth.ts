@@ -1,5 +1,3 @@
-import { AuthUser } from "aws-amplify/auth"
-
 export interface RegisterInput {
   username: string
   email: string
@@ -14,7 +12,9 @@ export type PasswordRequirement = {
 }
 
 export interface AuthState {
-  user: AuthUser | null
+  user: { userId: string; username: string } | null
+  fingerprintId: string | null
   loading: boolean
+  visitorLoading: boolean
   error: string | null
 }

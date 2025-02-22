@@ -62,7 +62,11 @@ export const deductCredits = createAsyncThunk("credits/deductCredits", async (us
 const creditsSlice = createSlice({
   name: "credits",
   initialState,
-  reducers: {},
+  reducers: {
+    updateBalance: (state, action: PayloadAction<number>) => {
+      state.balance = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCredits.pending, (state) => {
@@ -102,4 +106,5 @@ const creditsSlice = createSlice({
   },
 })
 
+export const { updateBalance } = creditsSlice.actions
 export default creditsSlice.reducer

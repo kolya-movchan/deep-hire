@@ -10,6 +10,8 @@ import {
 } from "@/api/graphql/types"
 import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { GET_CREDITS } from "@/api/graphql/queries"
+import { RootState } from "./store"
+import { useSelector } from "react-redux"
 
 const initialState: CreditsState = {
   balance: null,
@@ -20,7 +22,9 @@ const initialState: CreditsState = {
 export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (id: string) => {
   console.log("Fetching credits...")
 
-  const userId = id || "fingerprint"
+  const { fingerprintId } = useSelector((state: RootState) => state.state.visitor)
+
+  const userId = id || fingerprintId
 
   console.log("Using user ID:", userId)
 

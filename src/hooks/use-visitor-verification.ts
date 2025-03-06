@@ -61,3 +61,4 @@ export function useVisitorVerification() {
 
   return { fingerPrintId: visitorId }
 }
+

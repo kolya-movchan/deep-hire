@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "husky": {

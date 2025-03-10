@@ -9,13 +9,19 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "format && git add -A ."
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",

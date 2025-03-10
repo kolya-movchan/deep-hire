@@ -64,6 +64,7 @@ export const useFileUpload = () => {
           Bucket: BUCKET_NAME,
           Key: fileKey,
           ContentType: file.type,
+          Metadata: { userId: user_id },
         })
 
         const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 })

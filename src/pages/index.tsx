@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import {
   CloudUpload,
@@ -29,6 +29,7 @@ import { useFileUpload } from "../hooks/use-file-upload"
 export const Home = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [resumeUrl, setResumeUrl] = useState("")
+  const [urlError, setUrlError] = useState("")
   const { user } = useSelector((state: RootState) => state.auth)
   const { uploadFile, isUploading } = useFileUpload()
 
@@ -36,15 +37,16 @@ export const Home = () => {
     const file = event.target.files?.[0]
     if (file && file.type === "application/pdf") {
       setResumeFile(file)
+    }
+  }
 
-      try {
-        const url = await uploadFile(file, user?.userId)
-
-        console.log("Uploaded file to:", url)
-        // onUploadComplete(url)
-      } catch (err) {
-        console.error("Upload failed:", err)
-      }
+  const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value
+    setResumeUrl(url)
+    if (url && !url.startsWith("https://")) {
+      setUrlError("URL must start with https://")
+    } else {
+      setUrlError("")
     }
   }
 
@@ -55,6 +57,19 @@ export const Home = () => {
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
     : [{ icon: <Login />, text: "Login", path: "/login" }]
+
+  const uploadResume = useCallback(async () => {
+    if (resumeUrl && resumeFile) {
+      try {
+        const url = await uploadFile(resumeFile, user?.userId)
+
+        console.log("Uploaded file to:", url)
+        // onUploadComplete(url)
+      } catch (err) {
+        console.error("Upload failed:", err)
+      }
+    }
+  }, [resumeUrl, resumeFile, user?.userId, uploadFile])
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -172,15 +187,27 @@ export const Home = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    label="Or paste resume URL"
+                    label="Paste URL of vacancy here"
                     variant="outlined"
                     value={resumeUrl}
-                    onChange={(e) => setResumeUrl(e.target.value)}
+                    onChange={handleUrlChange}
+                    error={!!urlError}
+                    helperText={urlError}
                     sx={{ maxWidth: "300px", width: "100%" }}
                     InputProps={{
                       startAdornment: <LinkIcon sx={{ mr: 1, color: "text.secondary" }} />,
                     }}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    onClick={uploadResume}
+                    disabled={!resumeFile || !resumeUrl || !!urlError || isUploading}
+                    sx={{ maxWidth: "300px", width: "100%" }}
+                  >
+                    {isUploading ? "Uploading..." : "Submit"}
+                  </Button>
                 </Grid>
               </Grid>
             </Paper>

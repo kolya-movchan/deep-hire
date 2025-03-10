@@ -41,8 +41,8 @@ export const useFileUpload = () => {
     const user_id = userId || anonUser
 
     console.log("visitor ===>", fingerPrintId)
-    console.log(111, "user", userId)
-    console.log(111, "user_id ===>", user_id)
+    console.log("user ===>", userId)
+    console.log("user_id ===>", user_id)
 
     try {
       console.log("balance ===>", balance)
@@ -67,6 +67,8 @@ export const useFileUpload = () => {
         })
 
         const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 })
+
+        console.log("signedUrl ===>", signedUrl)
 
         // Upload directly via Fetch API
         const uploadResponse = await fetch(signedUrl, {

@@ -33,7 +33,7 @@ export const useFileUpload = () => {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const uploadFile = async (file: File, userId?: string) => {
+  const uploadFile = async (file: File, vacancyUrl: string, userId?: string) => {
     setIsUploading(true)
     setError(null)
 
@@ -64,7 +64,7 @@ export const useFileUpload = () => {
           Bucket: BUCKET_NAME,
           Key: fileKey,
           ContentType: file.type,
-          Metadata: { userId: user_id },
+          Metadata: { userId: user_id, vacancyUrl },
         })
 
         const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 })
@@ -100,6 +100,3 @@ export const useFileUpload = () => {
 
   return { uploadFile, isUploading, error }
 }
-
-
-

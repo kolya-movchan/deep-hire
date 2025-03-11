@@ -28,7 +28,7 @@ import { useFileUpload } from "../hooks/use-file-upload"
 
 export const Home = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null)
-  const [resumeUrl, setResumeUrl] = useState("")
+  const [vacancyUrl, setVacancyUrl] = useState("")
   const [urlError, setUrlError] = useState("")
   const { user } = useSelector((state: RootState) => state.auth)
   const { uploadFile, isUploading } = useFileUpload()
@@ -42,7 +42,7 @@ export const Home = () => {
 
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value
-    setResumeUrl(url)
+    setVacancyUrl(url)
     if (url && !url.startsWith("https://")) {
       setUrlError("URL must start with https://")
     } else {
@@ -58,10 +58,10 @@ export const Home = () => {
       ]
     : [{ icon: <Login />, text: "Login", path: "/login" }]
 
-  const uploadResume = useCallback(async () => {
-    if (resumeUrl && resumeFile) {
+  const uploadResume = async () => {
+    if (vacancyUrl && resumeFile) {
       try {
-        const url = await uploadFile(resumeFile, user?.userId)
+        const url = await uploadFile(resumeFile, vacancyUrl, user?.userId)
 
         console.log("Uploaded file to:", url)
         // onUploadComplete(url)
@@ -69,7 +69,7 @@ export const Home = () => {
         console.error("Upload failed:", err)
       }
     }
-  }, [resumeUrl, resumeFile, user?.userId, uploadFile])
+  }
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -189,7 +189,7 @@ export const Home = () => {
                   <TextField
                     label="Paste URL of vacancy here"
                     variant="outlined"
-                    value={resumeUrl}
+                    value={vacancyUrl}
                     onChange={handleUrlChange}
                     error={!!urlError}
                     helperText={urlError}
@@ -203,7 +203,7 @@ export const Home = () => {
                   <Button
                     variant="contained"
                     onClick={uploadResume}
-                    disabled={!resumeFile || !resumeUrl || !!urlError || isUploading}
+                    disabled={!resumeFile || !vacancyUrl || !!urlError || isUploading}
                     sx={{ maxWidth: "300px", width: "100%" }}
                   >
                     {isUploading ? "Uploading..." : "Submit"}

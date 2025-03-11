@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store"
 import { fetchCredits } from "@/store/credits-slice"
 import { checkAuth } from "@/store/auth-slice"
+import { CvAnalysis } from "../pages/cv-analysis"
 
 type RouteConfig = {
   path: string
@@ -18,6 +19,7 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
+  { path: "/cv-analysis", element: <CvAnalysis /> },
 ] as const
 
 const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const

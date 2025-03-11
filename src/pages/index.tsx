@@ -12,8 +12,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material"
-import { ChangeEvent, useCallback, useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { ChangeEvent, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import {
   CloudUpload,
   Link as LinkIcon,
@@ -32,6 +32,7 @@ export const Home = () => {
   const [urlError, setUrlError] = useState("")
   const { user } = useSelector((state: RootState) => state.auth)
   const { uploadFile, isUploading } = useFileUpload()
+  const navigate = useNavigate()
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -62,9 +63,14 @@ export const Home = () => {
     if (vacancyUrl && resumeFile) {
       try {
         const url = await uploadFile(resumeFile, vacancyUrl, user?.userId)
-
         console.log("Uploaded file to:", url)
-        // onUploadComplete(url)
+
+        // Clear the inputs
+        setResumeFile(null)
+        setVacancyUrl("")
+
+        // Redirect to analysis page
+        navigate("/cv-analysis")
       } catch (err) {
         console.error("Upload failed:", err)
       }

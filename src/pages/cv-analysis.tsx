@@ -14,7 +14,6 @@ import {
   Divider,
   Card,
   CardContent,
-  Rating,
   LinearProgress,
   Stack,
 } from "@mui/material"
@@ -32,6 +31,9 @@ import {
   CheckCircle,
   Build,
   Star,
+  Warning,
+  ThumbUp,
+  ThumbDown,
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -69,10 +71,36 @@ interface CandidateData {
   experience: Experience[]
   skills: string[]
   tools: string[]
-  matchScore?: number
 }
 
-// Mock data for demonstration
+interface ExperienceMatch {
+  yearsOfExperience: number
+  requiredExperience: string
+  match: string
+}
+
+interface SoftSkillsAnalysis {
+  matched: string[]
+  missing: string[]
+}
+
+interface FinalRecommendation {
+  suitability: string
+  reason: string
+}
+
+interface MatchingData {
+  matchScore: number
+  matchedSkills: string[]
+  unmatchedSkills: string[]
+  experienceMatch: ExperienceMatch
+  softSkillsAnalysis: SoftSkillsAnalysis
+  potentialRisks: string[]
+  finalRecommendation: FinalRecommendation
+  createdAt: string
+}
+
+// Mock data for candidate profile
 const mockCandidateData: CandidateData = {
   id: "11390d87-bcec-4831-add8-ed88c71fd0b8-Viktoriia Mkrtchian QA CV.pdf",
   userId: "anon-v1.1.3169+d01562dc2",
@@ -148,7 +176,33 @@ const mockCandidateData: CandidateData = {
     "DBeaver",
     "SQL",
   ],
-  matchScore: 78,
+}
+
+// Mock data for matching analysis
+const mockMatchingData: MatchingData = {
+  matchScore: 70,
+  matchedSkills: ["QA testing", "Test documentation", "Defect reporting", "API testing", "SQL"],
+  unmatchedSkills: ["Operations management", "Product scaling", "Legal knowledge"],
+  experienceMatch: {
+    yearsOfExperience: 2,
+    requiredExperience: "Not specified",
+    match: "Yes",
+  },
+  softSkillsAnalysis: {
+    matched: ["Communication skills", "Team player"],
+    missing: ["Leadership"],
+  },
+  potentialRisks: [
+    "Lack of direct operations management experience",
+    "No background in product scaling",
+    "Legal background may not be directly applicable",
+  ],
+  finalRecommendation: {
+    suitability: "Not Recommended",
+    reason:
+      "While the candidate has strong QA skills, they lack the specific operations and product scaling experience required for this Operations Manager role.",
+  },
+  createdAt: "2023-06-14T12:00:00Z",
 }
 
 // Component for displaying match score
@@ -199,12 +253,14 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
 export const CvAnalysis: FC = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const [candidateData, setCandidateData] = useState<CandidateData | null>(null)
+  const [matchingData, setMatchingData] = useState<MatchingData | null>(null)
 
   // Simulate fetching data
   useEffect(() => {
     // In a real app, you would fetch this data from an API
     setTimeout(() => {
       setCandidateData(mockCandidateData)
+      setMatchingData(mockMatchingData)
     }, 1000)
   }, [])
 
@@ -298,7 +354,7 @@ export const CvAnalysis: FC = () => {
             Candidate Analysis
           </Typography>
 
-          {!candidateData ? (
+          {!candidateData || !matchingData ? (
             <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Loading candidate data...
@@ -381,7 +437,7 @@ export const CvAnalysis: FC = () => {
               </Paper>
 
               {/* Match Score */}
-              {candidateData.matchScore && <MatchScoreCard score={candidateData.matchScore} />}
+              {matchingData.matchScore && <MatchScoreCard score={matchingData.matchScore} />}
 
               <Grid container spacing={3}>
                 {/* Left Column */}
@@ -507,6 +563,74 @@ export const CvAnalysis: FC = () => {
                     </Stack>
                   </Paper>
 
+                  {/* Matched Skills */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ mb: 2, display: "flex", alignItems: "center" }}>
+                      <ThumbUp sx={{ mr: 1, color: "#4caf50" }} />
+                      Matched Skills
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      {matchingData.matchedSkills.map((skill, index) => (
+                        <Chip
+                          key={index}
+                          label={skill}
+                          sx={{
+                            m: 0.5,
+                            bgcolor: "#e8f5e9",
+                            color: "#2e7d32",
+                            fontWeight: "medium",
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </Paper>
+
+                  {/* Unmatched Skills */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ mb: 2, display: "flex", alignItems: "center" }}>
+                      <ThumbDown sx={{ mr: 1, color: "#f44336" }} />
+                      Missing Skills
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      {matchingData.unmatchedSkills.map((skill, index) => (
+                        <Chip
+                          key={index}
+                          label={skill}
+                          sx={{
+                            m: 0.5,
+                            bgcolor: "#ffebee",
+                            color: "#d32f2f",
+                            fontWeight: "medium",
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </Paper>
+
+                  {/* Potential Risks */}
+                  <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                    <Typography variant="h5" sx={{ mb: 2, display: "flex", alignItems: "center" }}>
+                      <Warning sx={{ mr: 1, color: "#ff9800" }} />
+                      Potential Risks
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+
+                    <List dense>
+                      {matchingData.potentialRisks.map((risk, index) => (
+                        <ListItem key={index} sx={{ py: 0.5 }}>
+                          <ListItemIcon sx={{ minWidth: 30 }}>
+                            <Warning fontSize="small" color="warning" />
+                          </ListItemIcon>
+                          <ListItemText primary={risk} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Paper>
+
                   {/* Recommendation */}
                   <Paper
                     elevation={2}
@@ -522,15 +646,22 @@ export const CvAnalysis: FC = () => {
                       Recommendation
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2 }}>
-                      Based on the candidate's profile and the job requirements, we recommend:
+                      Based on the candidate's profile and the job requirements:
                     </Typography>
-                    <Typography variant="h6" sx={{ color: "#2e7d32", fontWeight: "bold" }}>
-                      Proceed to Interview
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color:
+                          matchingData.finalRecommendation.suitability === "Recommended"
+                            ? "#2e7d32"
+                            : "#d32f2f",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {matchingData.finalRecommendation.suitability}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      The candidate has strong QA experience with relevant tools and technologies.
-                      Consider focusing on their practical experience with mobile testing and API
-                      testing during the interview.
+                      {matchingData.finalRecommendation.reason}
                     </Typography>
                   </Paper>
                 </Grid>

@@ -56,8 +56,9 @@ export const useFileUpload = () => {
         }
 
         const uniqueFileId = uuidv4()
-
-        const fileKey = `uploads/${uniqueFileId}-${file.name}`
+        const fileId = file.name.replace(/\s+/g, "-").replace(/\.[^/.]+$/, "")
+        const fileKey = `uploads/${uniqueFileId}-${fileId}`
+        const fileSlug = `${uniqueFileId}-${fileId}`
 
         // Generate a pre-signed URL
         const command = new PutObjectCommand({
@@ -89,7 +90,14 @@ export const useFileUpload = () => {
         }
 
         setIsUploading(false)
-        return `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${fileKey}`
+
+        console.log("fileUrl ===>", `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${fileKey}`)
+        console.log("fileSlug ===>", fileSlug)
+
+        return {
+          fileUrl: `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${fileKey}`,
+          fileSlug,
+        }
       }
     } catch (err) {
       setError(err as Error)

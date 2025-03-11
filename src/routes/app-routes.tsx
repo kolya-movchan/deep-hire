@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "../store"
 import { fetchCredits } from "@/store/credits-slice"
 import { checkAuth } from "@/store/auth-slice"
 import { CvAnalysis } from "../pages/cv-analysis"
+import { createBrowserRouter } from "react-router-dom"
 
 type RouteConfig = {
   path: string
@@ -43,6 +44,8 @@ export function AppRoutes(): JSX.Element {
         <Route key={path} path={path} element={element} />
       ))}
 
+      <Route path="/cv-analysis/:fileSlug" element={<CvAnalysis />} />
+
       {authRoutes.map(({ path, element }) => {
         const renderElement = () => {
           if (loading) {
@@ -61,3 +64,26 @@ export function AppRoutes(): JSX.Element {
     </Routes>
   )
 }
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/cv-analysis/:fileSlug",
+    element: <CvAnalysis />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+])

@@ -62,15 +62,16 @@ export const Home = () => {
   const uploadResume = async () => {
     if (vacancyUrl && resumeFile) {
       try {
-        const url = await uploadFile(resumeFile, vacancyUrl, user?.userId)
-        console.log("Uploaded file to:", url)
+        const { fileUrl, fileSlug } = (await uploadFile(resumeFile, vacancyUrl, user?.userId)) || {}
+        console.log("Uploaded file to:", fileUrl)
+        console.log("File SLUG ===>", fileSlug)
 
         // Clear the inputs
         setResumeFile(null)
         setVacancyUrl("")
 
         // Redirect to analysis page
-        navigate("/cv-analysis")
+        navigate(`/cv-analysis/${fileSlug}`)
       } catch (err) {
         console.error("Upload failed:", err)
       }

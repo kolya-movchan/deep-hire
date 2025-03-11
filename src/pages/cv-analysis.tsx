@@ -17,7 +17,7 @@ import {
   LinearProgress,
   Stack,
 } from "@mui/material"
-import { Link } from "react-router-dom"
+import { Link, useParams, Navigate } from "react-router-dom"
 import {
   Person,
   Login,
@@ -37,173 +37,8 @@ import {
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { FC, useEffect, useState } from "react"
-
-// Types for candidate data
-interface Contact {
-  phone: string
-  email: string
-  location: string
-}
-
-interface Education {
-  degree: string
-  field: string
-  institution: string
-  date: string
-}
-
-interface Experience {
-  title: string
-  company: string
-  date: string
-  responsibilities?: string[]
-}
-
-interface CandidateData {
-  id: string
-  userId: string
-  name: string
-  title: string
-  contact: Contact
-  summary: string
-  education: Education[]
-  experience: Experience[]
-  skills: string[]
-  tools: string[]
-}
-
-interface ExperienceMatch {
-  yearsOfExperience: number
-  requiredExperience: string
-  match: string
-}
-
-interface SoftSkillsAnalysis {
-  matched: string[]
-  missing: string[]
-}
-
-interface FinalRecommendation {
-  suitability: string
-  reason: string
-}
-
-interface MatchingData {
-  matchScore: number
-  matchedSkills: string[]
-  unmatchedSkills: string[]
-  experienceMatch: ExperienceMatch
-  softSkillsAnalysis: SoftSkillsAnalysis
-  potentialRisks: string[]
-  finalRecommendation: FinalRecommendation
-  createdAt: string
-}
-
-// Mock data for candidate profile
-const mockCandidateData: CandidateData = {
-  id: "11390d87-bcec-4831-add8-ed88c71fd0b8-Viktoriia Mkrtchian QA CV.pdf",
-  userId: "anon-v1.1.3169+d01562dc2",
-  name: "Viktoriia Mkrtchian",
-  title: "QA Engineer",
-  contact: {
-    phone: "+38-066-210-6339",
-    email: "viktoriia.mkrtchian.work@gmail.com",
-    location: "Ukraine (remote)",
-  },
-  summary:
-    "QA Engineer with over 2.5 years of experience and a comprehensive understanding of software development and QA lifecycle processes. Results-oriented team player with excellent organizational and communication skills.",
-  education: [
-    {
-      degree: "Master's Degree",
-      field: 'Program Subject Area "Law"',
-      institution: "Yaroslav Mudryi National Law University, Ukraine",
-      date: "September 2017 - March 2019",
-    },
-    {
-      degree: "Bachelor's Degree",
-      field: 'Program Subject Area "Law"',
-      institution: "Yaroslav Mudryi National Law University, Ukraine",
-      date: "September 2013 - August 2017",
-    },
-  ],
-  experience: [
-    {
-      title: "QA Engineer",
-      company: "You are launched",
-      date: "April 2024 - nowadays",
-      responsibilities: [
-        "Testing of mobile (iOS, Android) and web applications",
-        "Creating and maintaining test documentation",
-        "Participating in Scrum ceremonies",
-        "Reporting defects and failures",
-        "Executing various types of testing",
-        "Reporting verification results to stakeholders",
-        "Checking event tracking in Mixpanel and Firebase",
-      ],
-    },
-    {
-      title: "QA Engineer",
-      company: "Large international outsourcing company (name under NDA)",
-      date: "November 2021 - November 2023",
-      responsibilities: [
-        "Performing testing on web platforms and mobile applications (Android)",
-        "Creating and maintaining test cases, test suites, and checklists",
-        "Reporting defects and failures",
-        "Conducting various types of testing",
-        "Executing API testing using Postman",
-        "Executing basic SQL queries",
-      ],
-    },
-    {
-      title: "Lawyer",
-      company: "Ukrainian companies",
-      date: "May 2019 - September 2021",
-    },
-  ],
-  skills: ["Understanding of Client/Server Architecture", "Understanding of SDLC/STLC"],
-  tools: [
-    "Jira",
-    "Confluence",
-    "TestRail",
-    "Postman",
-    "Swagger",
-    "DevTools",
-    "Android Studio",
-    "Lambda Test",
-    "Mixpanel",
-    "Firebase",
-    "DBeaver",
-    "SQL",
-  ],
-}
-
-// Mock data for matching analysis
-const mockMatchingData: MatchingData = {
-  matchScore: 70,
-  matchedSkills: ["QA testing", "Test documentation", "Defect reporting", "API testing", "SQL"],
-  unmatchedSkills: ["Operations management", "Product scaling", "Legal knowledge"],
-  experienceMatch: {
-    yearsOfExperience: 2,
-    requiredExperience: "Not specified",
-    match: "Yes",
-  },
-  softSkillsAnalysis: {
-    matched: ["Communication skills", "Team player"],
-    missing: ["Leadership"],
-  },
-  potentialRisks: [
-    "Lack of direct operations management experience",
-    "No background in product scaling",
-    "Legal background may not be directly applicable",
-  ],
-  finalRecommendation: {
-    suitability: "Not Recommended",
-    reason:
-      "While the candidate has strong QA skills, they lack the specific operations and product scaling experience required for this Operations Manager role.",
-  },
-  createdAt: "2023-06-14T12:00:00Z",
-}
+import { FC } from "react"
+import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 
 // Component for displaying match score
 const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
@@ -251,18 +86,14 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
 }
 
 export const CvAnalysis: FC = () => {
+  const { fileSlug } = useParams<{ fileSlug: string }>()
   const { user } = useSelector((state: RootState) => state.auth)
-  const [candidateData, setCandidateData] = useState<CandidateData | null>(null)
-  const [matchingData, setMatchingData] = useState<MatchingData | null>(null)
+  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(fileSlug)
 
-  // Simulate fetching data
-  useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    setTimeout(() => {
-      setCandidateData(mockCandidateData)
-      setMatchingData(mockMatchingData)
-    }, 1000)
-  }, [])
+  // If no fileSlug is provided, redirect to home
+  if (!fileSlug) {
+    return <Navigate to="/" replace />
+  }
 
   const sidebarItems = user
     ? [
@@ -354,12 +185,30 @@ export const CvAnalysis: FC = () => {
             Candidate Analysis
           </Typography>
 
-          {!candidateData || !matchingData ? (
+          {isLoading ? (
             <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Loading candidate data...
               </Typography>
               <LinearProgress />
+            </Paper>
+          ) : error ? (
+            <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
+              <Typography variant="h6" color="error">
+                {error}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                <Link to="/">Return to homepage</Link>
+              </Typography>
+            </Paper>
+          ) : !candidateData || !matchingData ? (
+            <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
+              <Typography variant="h6" color="error">
+                No data found for this CV
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                <Link to="/">Return to homepage</Link>
+              </Typography>
             </Paper>
           ) : (
             <>

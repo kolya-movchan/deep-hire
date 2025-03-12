@@ -95,7 +95,7 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
   )
 }
 
-export const CvAnalysis: FC = () => {
+export const CvAnalysisOfCandidate: FC = () => {
   console.log("[CvAnalysis] Component rendering")
   const { fileSlug } = useParams<{ fileSlug: string }>()
   console.log("[CvAnalysis] fileSlug from params:", fileSlug)

@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store"
 import { fetchCredits } from "@/store/credits-slice"
 import { checkAuth } from "@/store/auth-slice"
-import { CvAnalysis } from "../pages/cv-analysis"
+import { CvAnalysisOfCandidate } from "../pages/cv-analysis-of-candidate"
 import { createBrowserRouter } from "react-router-dom"
+import { AllCvAnalyses } from "@/pages/all-cv-analyses"
 
 type RouteConfig = {
   path: string
@@ -20,7 +21,7 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
-  { path: "/cv-analysis", element: <CvAnalysis /> },
+  { path: "/cv-analysis", element: <AllCvAnalyses /> },
 ] as const
 
 const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const
@@ -44,7 +45,7 @@ export function AppRoutes(): JSX.Element {
         <Route key={path} path={path} element={element} />
       ))}
 
-      <Route path="/cv-analysis/:fileSlug" element={<CvAnalysis />} />
+      <Route path="/cv-analysis/:fileSlug" element={<CvAnalysisOfCandidate />} />
 
       {authRoutes.map(({ path, element }) => {
         const renderElement = () => {
@@ -80,7 +81,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/cv-analysis/:fileSlug",
-    element: <CvAnalysis />,
+    element: <CvAnalysisOfCandidate />,
   },
   {
     path: "/profile",

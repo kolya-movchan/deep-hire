@@ -21,47 +21,44 @@ export const GET_CREDITS = gql`
   }
 `
 
-export const GET_CANDIDATE_DATA = gql`
-  query GetCandidateData($id: String!) {
-    getCandidateData(id: $id) {
+export const GET_CANDIDATE_SUMMARY = gql`
+  query getCandidateSummary($id: String!) {
+    getCandidateSummary(id: $id) {
       id
       userId
       name
       title
-      contact
       summary
+      contact {
+        phone
+        email
+        location
+      }
       education {
-        id
-        institution
         degree
         field
-        startDate
-        endDate
-        description
+        institution
+        date
       }
       experience {
-        id
+        title
         company
-        position
-        startDate
-        endDate
-        description
+        date
+        responsibilities
       }
       skills
       tools
       certifications
+      languages {
+        language
+        level
+      }
       projects {
-        id
-        name
+        title
         description
         technologies
         url
       }
-      languages {
-        name
-        proficiency
-      }
-      createdAt
     }
   }
 `

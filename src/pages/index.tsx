@@ -63,15 +63,16 @@ export const Home = () => {
     if (vacancyUrl && resumeFile) {
       try {
         const { fileUrl, fileSlug } = (await uploadFile(resumeFile, vacancyUrl, user?.userId)) || {}
+        const cleanFileSlug = fileSlug ? fileSlug.replace(/\.[^.]+$/, "") : undefined
         console.log("Uploaded file to:", fileUrl)
-        console.log("File SLUG ===>", fileSlug)
+        console.log("File SLUG ===>", cleanFileSlug)
 
         // Clear the inputs
         setResumeFile(null)
         setVacancyUrl("")
 
         // Redirect to analysis page
-        navigate(`/cv-analysis/${fileSlug}`)
+        navigate(`/cv-analysis/${cleanFileSlug}`)
       } catch (err) {
         console.error("Upload failed:", err)
       }

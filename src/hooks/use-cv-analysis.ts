@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { CandidateData, MatchingData } from "@/types/cv-analysis"
 import { mockMatchingData } from "@/mocks/cv-analysis-data"
 import client from "@/api/graphql/client"
-import { GET_CANDIDATE_DATA } from "@/api/graphql/queries"
+import { GET_CANDIDATE_SUMMARY } from "@/api/graphql/queries"
 
 interface UseCvAnalysisResult {
   candidateData: CandidateData | null
@@ -37,21 +37,21 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
       )
       try {
         const { data } = await client.query({
-          query: GET_CANDIDATE_DATA,
+          query: GET_CANDIDATE_SUMMARY,
           variables: { id: fileSlug },
           context: {
-            operationName: "getCandidateData",
+            operationName: "getCandidateSummary",
           },
         })
 
         console.log("[useCvAnalysis] Query response:", data)
 
-        if (data && data.getCandidateData) {
+        if (data && data.getCandidateSummary) {
           console.log(
             "[useCvAnalysis] Successfully retrieved candidate data:",
-            data.getCandidateData
+            data.getCandidateSummary
           )
-          setCandidateData(data.getCandidateData)
+          setCandidateData(data.getCandidateSummary)
           setMatchingData(mockMatchingData) // Still using mock matching data
           console.log("[useCvAnalysis] Set mock matching data:", mockMatchingData)
           setIsLoading(false)

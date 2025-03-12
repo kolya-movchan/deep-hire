@@ -37,7 +37,7 @@ import {
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { FC, useEffect } from "react"
+import { FC } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 
 // Component for displaying match score
@@ -100,10 +100,14 @@ export const CvAnalysis: FC = () => {
   const { fileSlug } = useParams<{ fileSlug: string }>()
   console.log("[CvAnalysis] fileSlug from params:", fileSlug)
 
+  // Remove file extension if present
+  const cleanFileSlug = fileSlug ? fileSlug.replace(/\.[^.]+$/, "") : undefined
+  console.log("[CvAnalysis] Cleaned fileSlug:", cleanFileSlug)
+
   const { user } = useSelector((state: RootState) => state.auth)
   console.log("[CvAnalysis] Current user:", user)
 
-  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(fileSlug)
+  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(cleanFileSlug)
   console.log("[CvAnalysis] Hook results:", {
     candidateData: candidateData ? "Present" : "Null",
     matchingData: matchingData ? "Present" : "Null",

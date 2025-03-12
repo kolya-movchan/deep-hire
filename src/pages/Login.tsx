@@ -27,7 +27,7 @@ import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
 import { forgotPassword, forgotPasswordSubmit } from "../api/rest/auth"
-import { WorkOutline, Person, Settings, Login as LoginIcon } from "@mui/icons-material"
+import { WorkOutline, Person, Settings, Login as LoginIcon, Assessment } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 
@@ -58,10 +58,16 @@ export const Login = () => {
   const sidebarItems = user
     ? [
         { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
-    : [{ icon: <LoginIcon />, text: "Login", path: "/login" }]
+    : [
+        { icon: <LoginIcon />, text: "Login", path: "/login" },
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+      ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

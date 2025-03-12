@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
 import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
 import { RootState } from "@/store"
-import { WorkOutline, Person, Settings, Login as LoginIcon } from "@mui/icons-material"
+import { WorkOutline, Person, Settings, Login as LoginIcon, Assessment } from "@mui/icons-material"
 import { createUser } from "@/api/graphql/api"
 
 interface RegisterForm {
@@ -67,10 +67,16 @@ export const Register = () => {
   const sidebarItems = user
     ? [
         { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
-    : [{ icon: <LoginIcon />, text: "Login", path: "/login" }]
+    : [
+        { icon: <LoginIcon />, text: "Login", path: "/login" },
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+      ]
 
   // Event handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

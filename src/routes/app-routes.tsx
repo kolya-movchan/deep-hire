@@ -11,6 +11,8 @@ import { checkAuth } from "@/store/auth-slice"
 import { CvAnalysisOfCandidate } from "../pages/cv-analysis-of-candidate"
 import { createBrowserRouter } from "react-router-dom"
 import { AllCvAnalyses } from "@/pages/all-cv-analyses"
+import { Vacancies } from "@/pages/vacancies"
+import { Candidates } from "@/pages/candidates"
 
 type RouteConfig = {
   path: string
@@ -21,7 +23,9 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
-  { path: "/cv-analysis", element: <AllCvAnalyses /> },
+  { path: "/all-cv-analyses", element: <AllCvAnalyses /> },
+  { path: "/vacancies", element: <Vacancies /> },
+  { path: "/candidates", element: <Candidates /> },
 ] as const
 
 const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const
@@ -87,4 +91,13 @@ export const router = createBrowserRouter([
     path: "/profile",
     element: <Profile />,
   },
+  {
+    path: "/vacancies",
+    element: <Vacancies />,
+  },
+  {
+    path: "/candidates",
+    element: <Candidates />,
+  },
+  { path: "/all-cv-analyses", element: <AllCvAnalyses /> },
 ])

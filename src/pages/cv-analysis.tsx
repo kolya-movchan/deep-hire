@@ -37,14 +37,24 @@ import {
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 
 // Component for displaying match score
 const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
+  console.log("[MatchScoreCard] Rendering with score:", score)
+
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return "#4caf50"
-    if (score >= 60) return "#ff9800"
+    console.log("[MatchScoreCard] Calculating color for score:", score)
+    if (score >= 80) {
+      console.log("[MatchScoreCard] Score >= 80, returning green")
+      return "#4caf50"
+    }
+    if (score >= 60) {
+      console.log("[MatchScoreCard] Score >= 60, returning orange")
+      return "#ff9800"
+    }
+    console.log("[MatchScoreCard] Score < 60, returning red")
     return "#f44336"
   }
 
@@ -86,12 +96,24 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
 }
 
 export const CvAnalysis: FC = () => {
+  console.log("[CvAnalysis] Component rendering")
   const { fileSlug } = useParams<{ fileSlug: string }>()
+  console.log("[CvAnalysis] fileSlug from params:", fileSlug)
+
   const { user } = useSelector((state: RootState) => state.auth)
+  console.log("[CvAnalysis] Current user:", user)
+
   const { candidateData, matchingData, isLoading, error } = useCvAnalysis(fileSlug)
+  console.log("[CvAnalysis] Hook results:", {
+    candidateData: candidateData ? "Present" : "Null",
+    matchingData: matchingData ? "Present" : "Null",
+    isLoading,
+    error,
+  })
 
   // If no fileSlug is provided, redirect to home
   if (!fileSlug) {
+    console.log("[CvAnalysis] No fileSlug provided, redirecting to home")
     return <Navigate to="/" replace />
   }
 
@@ -102,6 +124,7 @@ export const CvAnalysis: FC = () => {
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
     : [{ icon: <Login />, text: "Login", path: "/login" }]
+  console.log("[CvAnalysis] Sidebar items:", sidebarItems)
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>

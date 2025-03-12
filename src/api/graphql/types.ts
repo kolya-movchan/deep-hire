@@ -61,3 +61,44 @@ export type DeductCreditsVariables = {
   action: string
   requiredCredits: number
 }
+
+export interface CandidateData {
+  id: string
+  userId: string
+  name: string
+  title: string
+  contact: string
+  summary: string
+  education: Array<{
+    id: string
+    institution: string
+    degree: string
+    field: string
+    startDate: string
+    endDate: string
+    description: string
+  }>
+  experience: Array<{
+    id: string
+    company: string
+    position: string
+    startDate: string
+    endDate: string
+    description: string
+  }>
+  skills: string[]
+  tools: string[]
+  certifications: string[]
+  projects: Array<{
+    id: string
+    name: string
+    description: string
+    technologies: string[]
+    url: string
+  }>
+  languages: Array<{
+    name: string
+    proficiency: string
+  }>
+  createdAt: string
+}

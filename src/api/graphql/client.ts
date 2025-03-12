@@ -14,7 +14,8 @@ const authLink = setContext(async (_, { headers, operationName }) => {
     operationName === "CreateAnonUser" ||
     operationName === "GetCredits" ||
     operationName === "DeductCredits" ||
-    operationName === "VerifyVisitor"
+    operationName === "VerifyVisitor" ||
+    operationName === "getCandidateData"
   ) {
     return {
       headers: {

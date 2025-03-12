@@ -25,6 +25,43 @@ export const GET_CANDIDATE_DATA = gql`
   query GetCandidateData($id: String!) {
     getCandidateData(id: $id) {
       id
+      userId
+      name
+      title
+      contact
+      summary
+      education {
+        id
+        institution
+        degree
+        field
+        startDate
+        endDate
+        description
+      }
+      experience {
+        id
+        company
+        position
+        startDate
+        endDate
+        description
+      }
+      skills
+      tools
+      certifications
+      projects {
+        id
+        name
+        description
+        technologies
+        url
+      }
+      languages {
+        name
+        proficiency
+      }
+      createdAt
     }
   }
 `

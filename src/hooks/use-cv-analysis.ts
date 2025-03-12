@@ -29,6 +29,7 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
 
     let attempts = 0
     const maxAttempts = 30
+    let timer: NodeJS.Timeout | null = null
 
     const fetchData = async (): Promise<void> => {
       console.log(
@@ -42,6 +43,7 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           context: {
             operationName: "getCandidateSummary",
           },
+          fetchPolicy: "network-only", // Force network request, don't use cache
         })
 
         console.log("[useCvAnalysis] Query response:", data)
@@ -55,6 +57,11 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           setMatchingData(mockMatchingData) // Still using mock matching data
           console.log("[useCvAnalysis] Set mock matching data:", mockMatchingData)
           setIsLoading(false)
+
+          if (timer) {
+            console.log("[useCvAnalysis] Clearing polling interval after success")
+            clearInterval(timer)
+          }
           return // Success, exit the polling
         }
 
@@ -64,6 +71,11 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           console.error("[useCvAnalysis] Max attempts reached without finding data")
           setError("Failed to load CV analysis data after multiple attempts")
           setIsLoading(false)
+
+          if (timer) {
+            console.log("[useCvAnalysis] Clearing polling interval after max attempts")
+            clearInterval(timer)
+          }
           return // Max attempts reached, exit polling
         }
       } catch (err) {
@@ -74,6 +86,11 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           console.error("[useCvAnalysis] Max attempts reached with errors")
           setError("Failed to load CV analysis data after multiple attempts")
           setIsLoading(false)
+
+          if (timer) {
+            console.log("[useCvAnalysis] Clearing polling interval after max error attempts")
+            clearInterval(timer)
+          }
           return // Max attempts reached, exit polling
         }
       }
@@ -85,19 +102,19 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
 
     // Set up polling every 2 seconds
     console.log("[useCvAnalysis] Setting up polling interval (2000ms)")
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
       if (attempts < maxAttempts && isLoading) {
         console.log("[useCvAnalysis] Polling for data...")
         fetchData()
       } else {
         console.log("[useCvAnalysis] Clearing polling interval")
-        clearInterval(timer)
+        if (timer) clearInterval(timer)
       }
     }, 2000)
 
     return () => {
       console.log("[useCvAnalysis] Cleanup: clearing interval")
-      clearInterval(timer)
+      if (timer) clearInterval(timer)
     }
   }, [fileSlug])
 

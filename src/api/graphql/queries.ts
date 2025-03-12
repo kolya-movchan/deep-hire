@@ -20,3 +20,11 @@ export const GET_CREDITS = gql`
     }
   }
 `
+
+export const GET_CANDIDATE_DATA = gql`
+  query GetCandidateData($id: String!) {
+    getCandidateData(id: $id) {
+      id
+    }
+  }
+`

@@ -56,7 +56,7 @@ export const useFileUpload = () => {
         }
 
         const uniqueFileId = uuidv4()
-        const fileId = file.name.replace(/\s+/g, "-").replace(/\.[^/.]+$/, "")
+        const fileId = file.name.replace(/\s+/g, "-")
         const fileKey = `uploads/${uniqueFileId}-${fileId}`
         const fileSlug = `${uniqueFileId}-${fileId}`
 

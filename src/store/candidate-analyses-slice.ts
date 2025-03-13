@@ -61,6 +61,12 @@ const candidateAnalysesSlice = createSlice({
     clearAnalyses: (state) => {
       state.analyses = []
     },
+    addAnalysis: (state, action: PayloadAction<CandidateAnalysis>) => {
+      state.analyses.push(action.payload)
+    },
+    removeAnalysis: (state, action: PayloadAction<string>) => {
+      state.analyses = state.analyses.filter((analysis) => analysis.id !== action.payload)
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,5 +88,6 @@ const candidateAnalysesSlice = createSlice({
   },
 })
 
-export const { clearAnalyses } = candidateAnalysesSlice.actions
+export const { clearAnalyses, addAnalysis, updateAnalysis, removeAnalysis, setLoading, setError } =
+  candidateAnalysesSlice.actions
 export default candidateAnalysesSlice.reducer

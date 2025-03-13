@@ -3,6 +3,8 @@ import { CandidateData, MatchingData } from "@/types/cv-analysis"
 import { mockMatchingData } from "@/mocks/cv-analysis-data"
 import client from "@/api/graphql/client"
 import { GET_CANDIDATE_SUMMARY } from "@/api/graphql/queries"
+import { AppDispatch } from "@/store"
+import { addAnalysis } from "@/store/candidate-analyses-slice"
 
 interface UseCvAnalysisResult {
   candidateData: CandidateData | null
@@ -11,7 +13,10 @@ interface UseCvAnalysisResult {
   error: string | null
 }
 
-export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult => {
+export const useCvAnalysis = (
+  fileSlug: string | undefined,
+  dispatch: AppDispatch
+): UseCvAnalysisResult => {
   const [candidateData, setCandidateData] = useState<CandidateData | null>(null)
   const [matchingData, setMatchingData] = useState<MatchingData | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -57,6 +62,14 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           setMatchingData(mockMatchingData) // Still using mock matching data
           console.log("[useCvAnalysis] Set mock matching data:", mockMatchingData)
           setIsLoading(false)
+
+          dispatch(
+            addAnalysis({
+              id: fileSlug,
+              name: data.getCandidateSummary.name,
+              createdAt: data.getCandidateSummary.createdAt,
+            })
+          )
 
           if (timer) {
             console.log("[useCvAnalysis] Clearing polling interval after success")

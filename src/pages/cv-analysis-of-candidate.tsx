@@ -36,7 +36,7 @@ import {
   ThumbDown,
   Assessment,
 } from "@mui/icons-material"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { FC } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
@@ -97,6 +97,7 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
 }
 
 export const CvAnalysisOfCandidate: FC = () => {
+  const dispatch = useDispatch()
   console.log("[CvAnalysis] Component rendering")
   const { fileSlug } = useParams<{ fileSlug: string }>()
   console.log("[CvAnalysis] fileSlug from params:", fileSlug)
@@ -108,7 +109,7 @@ export const CvAnalysisOfCandidate: FC = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   console.log("[CvAnalysis] Current user:", user)
 
-  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(cleanFileSlug)
+  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(cleanFileSlug, dispatch)
   console.log("[CvAnalysis] Hook results:", {
     candidateData: candidateData ? "Present" : "Null",
     matchingData: matchingData ? "Present" : "Null",

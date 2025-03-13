@@ -10,8 +10,16 @@ import {
   ListItemText,
   Paper,
   Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Chip,
+  Button,
 } from "@mui/material"
-import { Person, Login, WorkOutline, Settings, Assessment } from "@mui/icons-material"
+import { Person, Login, WorkOutline, Settings, Assessment, Visibility } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -27,14 +35,30 @@ export const AllCvAnalyses: FC = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log(111, userId)
+      console.log("Fetching analyses for userId:", userId)
+      // Add a small delay to ensure any state updates are complete
+      const timer = setTimeout(() => {
+        dispatch(fetchCandidateAnalyses(userId))
+      }, 100)
 
-      dispatch(fetchCandidateAnalyses(userId))
+      return () => clearTimeout(timer)
     }
   }, [dispatch, userId])
 
+  // Format date for display
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date)
+  }
+
   // Display the data as JSON at the top of the component
-  const analysesJson = analyses ? JSON.stringify(analyses, null, 2) : "Loading..."
+  console.log("analyses ===>", analyses, loading, error)
 
   const sidebarItems = user
     ? [
@@ -134,26 +158,6 @@ export const AllCvAnalyses: FC = () => {
         }}
       >
         <Container maxWidth="lg" sx={{ py: 4 }}>
-          {/* Display JSON data at the top */}
-          {user?.userId && (
-            <Paper
-              elevation={2}
-              sx={{
-                p: 2,
-                mb: 4,
-                borderRadius: 2,
-                bgcolor: "#f8f9fa",
-                overflow: "auto",
-                maxHeight: "200px",
-              }}
-            >
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Raw Candidate Analyses Data:
-              </Typography>
-              <pre>{analysesJson}</pre>
-            </Paper>
-          )}
-
           <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
             CV Analyses
           </Typography>
@@ -187,6 +191,67 @@ export const AllCvAnalyses: FC = () => {
                     No CV analyses found. Upload a resume on the home page to get started.
                   </Typography>
                 </Paper>
+              </Grid>
+            )}
+
+            {!loading && !error && analyses && analyses.length > 0 && (
+              <Grid item xs={12}>
+                <TableContainer component={Paper} elevation={2} sx={{ borderRadius: 2 }}>
+                  <Table sx={{ minWidth: 650 }}>
+                    <TableHead sx={{ bgcolor: "#f5f5f5" }}>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }}>Created At</TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }} align="right">
+                          Actions
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {analyses.map((analysis) => (
+                        <TableRow
+                          key={analysis.id}
+                          sx={{ "&:hover": { bgcolor: "rgba(25, 118, 210, 0.04)" } }}
+                        >
+                          <TableCell>
+                            <Typography variant="body1" fontWeight={500}>
+                              {analysis.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              size="small"
+                              label={formatDate(analysis.createdAt)}
+                              sx={{ bgcolor: "#e3f2fd", color: "#1976d2" }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ fontSize: "0.8rem" }}
+                            >
+                              {analysis.id.substring(0, 12)}...
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button
+                              component={Link}
+                              to={`/cv-analysis/${analysis.id}`}
+                              variant="outlined"
+                              size="small"
+                              startIcon={<Visibility />}
+                              sx={{ borderRadius: 2 }}
+                            >
+                              View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Grid>
             )}
           </Grid>

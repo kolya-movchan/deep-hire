@@ -48,16 +48,13 @@ export function AppRoutes(): JSX.Element {
   // @ts-expect-error wrong types from fingerprintjs
   const visitorId = fingerprintData?.meta.version || ""
 
-  // Move the dispatch call to useEffect to prevent state updates during rendering
-  useEffect(() => {
-    if (visitorId) {
-      dispatch(
-        setNewVisitorData({
-          fingerprintId: `anon-${visitorId}`,
-        })
-      )
-    }
-  }, [dispatch, visitorId]) // Only re-run when visitorId changes
+  if (visitorId) {
+    dispatch(
+      setNewVisitorData({
+        fingerprintId: `anon-${visitorId}`,
+      })
+    )
+  }
 
   console.log(JSON.stringify({ user, loading, balance }, null, 2))
 

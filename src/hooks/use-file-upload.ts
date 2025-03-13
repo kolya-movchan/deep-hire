@@ -10,7 +10,6 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { deductCredits } from "@/store/credits-slice"
 import { useAppDispatch } from "@/store/hooks"
-import { useVisitorVerification } from "./use-visitor-verification"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -25,10 +24,9 @@ const s3Client = new S3Client({
 })
 
 export const useFileUpload = () => {
-  const { balance } = useSelector((state: RootState) => state.credits)
   const dispatch = useAppDispatch()
-
-  const { fingerPrintId } = useVisitorVerification()
+  const { balance } = useSelector((state: RootState) => state.credits)
+  const { fingerprintId } = useSelector((state: RootState) => state.visitor)
 
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -37,10 +35,10 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const anonUser = fingerPrintId ?? null
+    const anonUser = fingerprintId ?? null
     const user_id = userId || anonUser
 
-    console.log("visitor ===>", fingerPrintId)
+    console.log("visitor ===>", fingerprintId)
     console.log("user ===>", userId)
     console.log("user_id ===>", user_id)
 

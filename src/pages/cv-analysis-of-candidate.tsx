@@ -124,14 +124,14 @@ export const CvAnalysisOfCandidate: FC = () => {
 
   const sidebarItems = user
     ? [
-        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
         { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
     : [
         { icon: <Login />, text: "Login", path: "/login" },
-        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
         { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
       ]

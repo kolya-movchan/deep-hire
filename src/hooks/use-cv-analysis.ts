@@ -41,7 +41,7 @@ export const useCvAnalysis = (fileSlug: string | undefined): UseCvAnalysisResult
           query: GET_CANDIDATE_SUMMARY,
           variables: { id: fileSlug },
           context: {
-            operationName: "getCandidateSummary",
+            operationName: "GetCandidateSummary",
           },
           fetchPolicy: "network-only", // Force network request, don't use cache
         })

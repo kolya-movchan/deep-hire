@@ -5,19 +5,16 @@ import creditsReducer from "./credits-slice"
 import { CreditsState } from "@/types/state"
 import visitorReducer from "./visitor-slice"
 import { VisitorState } from "@/types/state"
+import candidateAnalysesReducer from "./candidate-analyses-slice"
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     visitor: visitorReducer,
     credits: creditsReducer,
+    candidateAnalyses: candidateAnalysesReducer,
   },
 })
 
-export type RootState = {
-  auth: AuthState
-  visitor: VisitorState
-  credits: CreditsState
-}
-
+export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

@@ -37,7 +37,7 @@ export const useFileUpload = () => {
     setIsUploading(true)
     setError(null)
 
-    const anonUser = fingerPrintId ? `anon-${fingerPrintId}` : null
+    const anonUser = fingerPrintId ?? null
     const user_id = userId || anonUser
 
     console.log("visitor ===>", fingerPrintId)

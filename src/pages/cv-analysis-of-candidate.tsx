@@ -129,7 +129,12 @@ export const CvAnalysisOfCandidate: FC = () => {
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
-    : [{ icon: <Login />, text: "Login", path: "/login" }]
+    : [
+        { icon: <Login />, text: "Login", path: "/login" },
+        { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+        { icon: <Person />, text: "Candidates", path: "/candidates" },
+      ]
   console.log("[CvAnalysis] Sidebar items:", sidebarItems)
 
   return (

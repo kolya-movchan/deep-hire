@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import {
   Box,
   Container,
@@ -15,9 +15,26 @@ import { Person, Login, WorkOutline, Settings, Assessment } from "@mui/icons-mat
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
+import { useAppDispatch } from "@/store/hooks"
+import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
 
 export const AllCvAnalyses: FC = () => {
+  const dispatch = useAppDispatch()
   const { user } = useSelector((state: RootState) => state.auth)
+  const { fingerprintId } = useSelector((state: RootState) => state.visitor)
+  const userId = user?.userId || fingerprintId
+  const { analyses, loading, error } = useSelector((state: RootState) => state.candidateAnalyses)
+
+  useEffect(() => {
+    if (userId) {
+      console.log(111, userId)
+
+      dispatch(fetchCandidateAnalyses(userId))
+    }
+  }, [dispatch, userId])
+
+  // Display the data as JSON at the top of the component
+  const analysesJson = analyses ? JSON.stringify(analyses, null, 2) : "Loading..."
 
   const sidebarItems = user
     ? [
@@ -117,6 +134,26 @@ export const AllCvAnalyses: FC = () => {
         }}
       >
         <Container maxWidth="lg" sx={{ py: 4 }}>
+          {/* Display JSON data at the top */}
+          {user?.userId && (
+            <Paper
+              elevation={2}
+              sx={{
+                p: 2,
+                mb: 4,
+                borderRadius: 2,
+                bgcolor: "#f8f9fa",
+                overflow: "auto",
+                maxHeight: "200px",
+              }}
+            >
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                Raw Candidate Analyses Data:
+              </Typography>
+              <pre>{analysesJson}</pre>
+            </Paper>
+          )}
+
           <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
             CV Analyses
           </Typography>
@@ -125,14 +162,33 @@ export const AllCvAnalyses: FC = () => {
           </Typography>
 
           <Grid container spacing={3}>
-            {/* Content will go here */}
-            <Grid item xs={12}>
-              <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-                <Typography variant="body1">
-                  No CV analyses found. Upload a resume on the home page to get started.
-                </Typography>
-              </Paper>
-            </Grid>
+            {loading && (
+              <Grid item xs={12}>
+                <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
+                  <Typography variant="body1">Loading candidate analyses...</Typography>
+                </Paper>
+              </Grid>
+            )}
+
+            {error && (
+              <Grid item xs={12}>
+                <Paper elevation={2} sx={{ p: 3, borderRadius: 2, bgcolor: "#ffebee" }}>
+                  <Typography variant="body1" color="error">
+                    Error loading analyses: {error}
+                  </Typography>
+                </Paper>
+              </Grid>
+            )}
+
+            {!loading && !error && (!analyses || analyses.length === 0) && (
+              <Grid item xs={12}>
+                <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
+                  <Typography variant="body1">
+                    No CV analyses found. Upload a resume on the home page to get started.
+                  </Typography>
+                </Paper>
+              </Grid>
+            )}
           </Grid>
         </Container>
       </Box>

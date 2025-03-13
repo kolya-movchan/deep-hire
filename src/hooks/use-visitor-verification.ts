@@ -5,7 +5,7 @@ import { VerifyVisitorMutation, VerifyVisitorVariables } from "@/api/graphql/typ
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useEffect } from "react"
-import { setNewVisitorData, setVisitorError, setVisitorLoading } from "@/store/visitor-slice"
+import { setVisitorError, setVisitorLoading } from "@/store/visitor-slice"
 import { updateBalance } from "@/store/credits-slice"
 
 export function useVisitorVerification() {
@@ -18,9 +18,8 @@ export function useVisitorVerification() {
 
   console.log("fingerprintData ===>", fingerprintData)
 
+  // @ts-expect-error wrong types from fingerprintjs
   const visitorId = fingerprintData?.meta.version || ""
-
-  console.log(111, visitorId)
 
   useEffect(() => {
     const validateVisitor = async () => {
@@ -37,12 +36,6 @@ export function useVisitorVerification() {
         })
 
         if (data?.verifyVisitor) {
-          dispatch(
-            setNewVisitorData({
-              fingerprintId: visitorId,
-            })
-          )
-
           console.log("Verify Visitor ===>", data.verifyVisitor)
 
           dispatch(updateBalance(data.verifyVisitor.balance))
@@ -61,7 +54,3 @@ export function useVisitorVerification() {
 
   return { fingerPrintId: visitorId }
 }
-
-
-
-

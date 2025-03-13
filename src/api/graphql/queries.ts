@@ -22,7 +22,7 @@ export const GET_CREDITS = gql`
 `
 
 export const GET_CANDIDATE_SUMMARY = gql`
-  query getCandidateSummary($id: String!) {
+  query GetCandidateSummary($id: String!) {
     getCandidateSummary(id: $id) {
       id
       userId

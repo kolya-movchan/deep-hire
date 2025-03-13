@@ -13,6 +13,8 @@ import { createBrowserRouter } from "react-router-dom"
 import { AllCvAnalyses } from "@/pages/all-cv-analyses"
 import { Vacancies } from "@/pages/vacancies"
 import { Candidates } from "@/pages/candidates"
+import { setNewVisitorData } from "@/store/visitor-slice"
+import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
 
 type RouteConfig = {
   path: string
@@ -40,6 +42,18 @@ export function AppRoutes(): JSX.Element {
     dispatch(checkAuth())
     dispatch(fetchCredits(user?.userId ?? ""))
   }, [dispatch, user?.userId])
+
+  const { data: fingerprintData } = useVisitorData({ extendedResult: false }, { immediate: true })
+
+  const visitorId = fingerprintData?.meta.version || ""
+
+  if (visitorId) {
+    dispatch(
+      setNewVisitorData({
+        fingerprintId: `anon-${visitorId}`,
+      })
+    )
+  }
 
   console.log(JSON.stringify({ user, loading, balance }, null, 2))
 
@@ -99,5 +113,8 @@ export const router = createBrowserRouter([
     path: "/candidates",
     element: <Candidates />,
   },
-  { path: "/all-cv-analyses", element: <AllCvAnalyses /> },
+  {
+    path: "/all-cv-analyses",
+    element: <AllCvAnalyses />,
+  },
 ])

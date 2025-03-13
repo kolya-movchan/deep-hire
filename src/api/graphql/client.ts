@@ -13,7 +13,7 @@ const apiKeyOnlyOperations = [
   "GetCredits",
   "DeductCredits",
   "VerifyVisitor",
-  "getCandidateSummary",
+  "GetCandidateSummary",
   "GetAllCandidateAnalyses",
 ]
 

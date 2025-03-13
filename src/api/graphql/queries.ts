@@ -62,3 +62,13 @@ export const GET_CANDIDATE_SUMMARY = gql`
     }
   }
 `
+
+export const GET_ALL_CANDIDATE_ANALYSES = gql`
+  query GetAllCandidateAnalyses($userId: String!) {
+    getAllCandidateAnalyses(userId: $userId) {
+      id
+      name
+      createdAt
+    }
+  }
+`

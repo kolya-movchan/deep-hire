@@ -102,3 +102,17 @@ export interface CandidateData {
   }>
   createdAt: string
 }
+
+export interface CandidateAnalysisSummary {
+  id: string
+  name: string
+  createdAt: string
+}
+
+export type GetAllCandidateAnalysesResponse = {
+  getAllCandidateAnalyses: CandidateAnalysisSummary[]
+}
+
+export type GetAllCandidateAnalysesVariables = {
+  userId: string
+}

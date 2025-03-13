@@ -7,20 +7,29 @@ const httpLink = createHttpLink({
   uri: import.meta.env.VITE_APP_SYNC_URL,
 })
 
+// List of operations that only require API key
+const apiKeyOnlyOperations = [
+  "CreateAnonUser",
+  "GetCredits",
+  "DeductCredits",
+  "VerifyVisitor",
+  "getCandidateSummary",
+  "GetAllCandidateAnalyses",
+]
+
 // Create the auth link
 const authLink = setContext(async (_, { headers, operationName }) => {
-  // For anonymous user creation, use only API key
-  if (
-    operationName === "CreateAnonUser" ||
-    operationName === "GetCredits" ||
-    operationName === "DeductCredits" ||
-    operationName === "VerifyVisitor" ||
-    operationName === "getCandidateSummary"
-  ) {
+  // Common headers for all requests
+  const commonHeaders = {
+    ...headers,
+    "Content-Type": "application/json",
+  }
+
+  // For operations that only need API key
+  if (apiKeyOnlyOperations.includes(operationName)) {
     return {
       headers: {
-        ...headers,
-        "Content-Type": "application/json",
+        ...commonHeaders,
         "x-api-key": import.meta.env.VITE_APP_SYNC_API_KEY,
       },
     }
@@ -30,8 +39,7 @@ const authLink = setContext(async (_, { headers, operationName }) => {
   const token = await getToken()
   return {
     headers: {
-      ...headers,
-      "Content-Type": "application/json",
+      ...commonHeaders,
       Authorization: token ? `Bearer ${token}` : "",
     },
   }

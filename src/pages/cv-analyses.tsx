@@ -26,7 +26,7 @@ import { RootState } from "@/store"
 import { useAppDispatch } from "@/store/hooks"
 import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
 
-export const AllCvAnalyses: FC = () => {
+export const CvAnalyses: FC = () => {
   const dispatch = useAppDispatch()
   const { user } = useSelector((state: RootState) => state.auth)
   const { fingerprintId } = useSelector((state: RootState) => state.visitor)
@@ -63,14 +63,14 @@ export const AllCvAnalyses: FC = () => {
   const sidebarItems = user
     ? [
         // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
         { icon: <Settings />, text: "Settings", path: "/settings" },
       ]
     : [
         { icon: <Login />, text: "Login", path: "/login" },
         // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
         { icon: <Person />, text: "Candidates", path: "/candidates" },
       ]
 
@@ -111,17 +111,15 @@ export const AllCvAnalyses: FC = () => {
               to={item.path}
               key={item.text}
               sx={{
-                color: item.path === "/all-cv-analyses" ? "#1976d2" : "#666",
-                bgcolor:
-                  item.path === "/all-cv-analyses" ? "rgba(25, 118, 210, 0.08)" : "transparent",
-                fontWeight: item.path === "/all-cv-analyses" ? 600 : 400,
+                color: item.path === "/cv-analyses" ? "#1976d2" : "#666",
+                bgcolor: item.path === "/cv-analyses" ? "rgba(25, 118, 210, 0.08)" : "transparent",
+                fontWeight: item.path === "/cv-analyses" ? 600 : 400,
                 "&:hover": {
-                  bgcolor:
-                    item.path === "/all-cv-analyses" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
+                  bgcolor: item.path === "/cv-analyses" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
                 },
               }}
             >
-              <ListItemIcon sx={{ color: item.path === "/all-cv-analyses" ? "#1976d2" : "#666" }}>
+              <ListItemIcon sx={{ color: item.path === "/cv-analyses" ? "#1976d2" : "#666" }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text} />

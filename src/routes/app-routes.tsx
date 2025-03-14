@@ -10,7 +10,7 @@ import { fetchCredits } from "@/store/credits-slice"
 import { checkAuth } from "@/store/auth-slice"
 import { CvAnalysisOfCandidate } from "../pages/cv-analysis-of-candidate"
 import { createBrowserRouter } from "react-router-dom"
-import { AllCvAnalyses } from "@/pages/all-cv-analyses"
+import { CvAnalyses } from "@/pages/cv-analyses"
 import { Vacancies } from "@/pages/vacancies"
 import { Candidates } from "@/pages/candidates"
 import { setNewVisitorData } from "@/store/visitor-slice"
@@ -25,7 +25,7 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
-  { path: "/all-cv-analyses", element: <AllCvAnalyses /> },
+  { path: "/cv-analyses", element: <CvAnalyses /> },
   { path: "/vacancies", element: <Vacancies /> },
   { path: "/candidates", element: <Candidates /> },
 ] as const
@@ -115,7 +115,7 @@ export const router = createBrowserRouter([
     element: <Candidates />,
   },
   {
-    path: "/all-cv-analyses",
-    element: <AllCvAnalyses />,
+    path: "/cv-analyses",
+    element: <CvAnalyses />,
   },
 ])

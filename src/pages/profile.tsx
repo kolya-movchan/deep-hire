@@ -65,7 +65,7 @@ export const Profile = () => {
   const sidebarItems = [
     { icon: <AddCircle />, text: "New Analysis", path: "/", highlight: true },
     // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-    { icon: <Assessment />, text: "CV Analyses", path: "/all-cv-analyses" },
+    { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
     { icon: <Person />, text: "Candidates", path: "/candidates" },
     { icon: <Settings />, text: "Settings", path: "/settings" },
   ]

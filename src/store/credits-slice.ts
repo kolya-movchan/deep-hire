@@ -22,9 +22,7 @@ const initialState: CreditsState = {
 export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (id: string) => {
   console.log("Fetching credits... for user:", id)
 
-  const { fingerprintId } = useSelector((state: RootState) => state.state.visitor)
-
-  const userId = id || fingerprintId
+  const userId = id
 
   console.log("Using user ID:", userId)
 
@@ -95,16 +93,9 @@ const creditsSlice = createSlice({
         console.log("Deduct credits fulfilled. Action payload:", action.payload)
         console.log("Current balance:", state.balance)
         state.loading = false
-        const newBalance = state.balance - action.payload.deductCredits.creditsUsed
-        state.balance = newBalance
-
-        console.log(111)
 
         if (state.balance !== null) {
-          console.log(111, state.balance)
-
           const newBalance = state.balance - action.payload.deductCredits.creditsUsed
-          console.log("New balance will be:", newBalance)
           state.balance = newBalance
         } else {
           console.warn("Cannot update balance: current balance is null")

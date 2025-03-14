@@ -36,12 +36,18 @@ export function AppRoutes(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>()
 
   const { user, loading } = useSelector((state: RootState) => state.auth)
+  const { fingerprintId } = useSelector((state: RootState) => state.visitor)
   const { balance } = useSelector((state: RootState) => state.credits)
+
+  const userId = user?.userId ?? fingerprintId
 
   useEffect(() => {
     dispatch(checkAuth())
-    dispatch(fetchCredits(user?.userId ?? ""))
-  }, [dispatch, user?.userId])
+
+    if (userId) {
+      dispatch(fetchCredits(userId))
+    }
+  }, [dispatch, userId])
 
   const { data: fingerprintData } = useVisitorData({ extendedResult: false }, { immediate: true })
 

@@ -46,10 +46,11 @@ export const useFileUpload = () => {
       console.log("balance ===>", balance)
 
       if (user_id) {
-        // console.log(111, balance)
-        // console.log(111, CreditCosts[CreditAction.PARSE_CV])
+        console.log("upload ===>", 111, user_id)
+        console.log("upload ===>", 111, balance)
+        console.log("upload ===>", 111, CreditCosts[CreditAction.PARSE_CV])
 
-        if (balance && balance < CreditCosts[CreditAction.PARSE_CV]) {
+        if ((balance && balance < CreditCosts[CreditAction.PARSE_CV]) || balance === null) {
           throw new Error("Not enough credits")
         }
 

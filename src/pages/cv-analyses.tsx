@@ -19,7 +19,7 @@ import {
   Chip,
   Button,
 } from "@mui/material"
-import { Person, Login, WorkOutline, Settings, Assessment, Visibility } from "@mui/icons-material"
+import { Person, Login, Settings, Assessment, Visibility } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -36,14 +36,9 @@ export const CvAnalyses: FC = () => {
   useEffect(() => {
     if (userId) {
       console.log("Fetching analyses for userId:", userId)
-      // Add a small delay to ensure any state updates are complete
-      const timer = setTimeout(() => {
-        dispatch(fetchCandidateAnalyses(userId))
-      }, 100)
-
-      return () => clearTimeout(timer)
+      dispatch(fetchCandidateAnalyses(userId))
     }
-  }, [dispatch, userId])
+  }, [userId, dispatch])
 
   // Format date for display
   const formatDate = (dateString: string): string => {

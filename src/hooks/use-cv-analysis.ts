@@ -63,13 +63,11 @@ export const useCvAnalysis = (
           console.log("[useCvAnalysis] Set mock matching data:", mockMatchingData)
           setIsLoading(false)
 
-          dispatch(
-            addAnalysis({
-              id: fileSlug,
-              name: data.getCandidateSummary.name,
-              createdAt: data.getCandidateSummary.createdAt,
-            })
-          )
+          console.log("[useCvAnalysis] Adding analysis:", {
+            id: fileSlug,
+            name: data.getCandidateSummary.name,
+            createdAt: data.getCandidateSummary.createdAt,
+          })
 
           if (timer) {
             console.log("[useCvAnalysis] Clearing polling interval after success")

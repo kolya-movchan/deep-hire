@@ -42,6 +42,7 @@ export const fetchCandidateAnalyses = createAsyncThunk(
         context: {
           operationName: "GetAllCandidateAnalyses",
         },
+        fetchPolicy: "network-only",
       })
 
       console.log("Candidate Analyses Data:", JSON.stringify(data, null, 2))
@@ -62,7 +63,8 @@ const candidateAnalysesSlice = createSlice({
       state.analyses = []
     },
     addAnalysis: (state, action: PayloadAction<CandidateAnalysis>) => {
-      state.analyses.push(action.payload)
+      console.log("[addAnalysis] Adding analysis:", action.payload)
+      state.analyses.unshift(action.payload)
     },
     removeAnalysis: (state, action: PayloadAction<string>) => {
       state.analyses = state.analyses.filter((analysis) => analysis.id !== action.payload)

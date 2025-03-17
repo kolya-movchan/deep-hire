@@ -11,8 +11,25 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
+  Tooltip,
+  Avatar,
 } from "@mui/material"
-import { Assessment, Person, AddCircle, Login, Menu as MenuIcon } from "@mui/icons-material"
+import {
+  Assessment,
+  Person,
+  AddCircle,
+  Login,
+  Menu as MenuIcon,
+  Dashboard,
+  Description,
+  People,
+  Analytics,
+  CloudUpload,
+  Settings,
+  Logout,
+  BusinessCenter,
+  Badge,
+} from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -44,45 +61,51 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
   const sidebarItems: SidebarItem[] = user
     ? [
         {
-          icon: <AddCircle />,
+          icon: <CloudUpload sx={{ color: "#4f46e5" }} />,
           text: "New Analysis",
           path: "/",
           highlight: activePath === "/",
         },
         {
-          icon: <Assessment />,
+          icon: <Description sx={{ color: "#6d28d9" }} />,
           text: "CV Analyses",
           path: "/cv-analyses",
-          highlight: activePath === "/cv-analyses",
+          highlight: activePath === "/cv-analyses" || activePath?.startsWith("/cv-analysis/"),
         },
         {
-          icon: <Person />,
+          icon: <People sx={{ color: "#2563eb" }} />,
           text: "Candidates",
           path: "/candidates",
           highlight: activePath === "/candidates",
         },
+        {
+          icon: <BusinessCenter sx={{ color: "#0891b2" }} />,
+          text: "Vacancies",
+          path: "/vacancies",
+          highlight: activePath === "/vacancies",
+        },
       ]
     : [
         {
-          icon: <Login />,
+          icon: <Login sx={{ color: "#0ea5e9" }} />,
           text: "Login",
           path: "/login",
           highlight: activePath === "/login",
         },
         {
-          icon: <AddCircle />,
+          icon: <CloudUpload sx={{ color: "#4f46e5" }} />,
           text: "New Analysis",
           path: "/",
           highlight: activePath === "/",
         },
         {
-          icon: <Assessment />,
+          icon: <Description sx={{ color: "#6d28d9" }} />,
           text: "CV Analyses",
           path: "/cv-analyses",
-          highlight: activePath === "/cv-analyses",
+          highlight: activePath === "/cv-analyses" || activePath?.startsWith("/cv-analysis/"),
         },
         {
-          icon: <Person />,
+          icon: <People sx={{ color: "#2563eb" }} />,
           text: "Candidates",
           path: "/candidates",
           highlight: activePath === "/candidates",
@@ -90,88 +113,111 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
       ]
 
   const drawerContent = (
-    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
-      <div className="p-4">
+    <div className="flex flex-col h-full bg-white text-gray-700 shadow-xl">
+      <div className="p-6 bg-gradient-to-r from-primary to-secondary">
         <Typography
           component={Link}
           to="/"
           className="font-heading text-2xl font-bold no-underline flex items-center gap-2"
           variant="h6"
         >
-          <div className="text-sidebar-primary-foreground p-2 rounded-md flex items-center">
+          <div className="text-sidebar-primary-foreground p-2 flex items-center">
             <span className="font-extrabold">Deep</span>
             <span className="font-light">Hire</span>
           </div>
         </Typography>
       </div>
 
-      <List className="mt-6 px-2">
+      <List className="py-2 px-2">
         {sidebarItems.map((item) => (
-          <ListItem
-            component={Link}
-            to={item.path}
-            key={item.text}
-            onClick={isMobile ? handleDrawerToggle : undefined}
-            className={cn(
-              "my-1 rounded-lg transition-all duration-200",
-              item.highlight
-                ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-            )}
-            disableGutters
-            sx={{ py: 1, px: 2 }}
-          >
-            <ListItemIcon
+          <Tooltip title={item.text} placement="right" key={item.text}>
+            <ListItem
+              component={Link}
+              to={item.path}
+              onClick={isMobile ? handleDrawerToggle : undefined}
               className={cn(
-                "min-w-[36px]",
-                item.highlight ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+                "my-1 transition-all duration-200 relative",
+                item.highlight
+                  ? "bg-gray-100 text-gray-800 font-medium"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
               )}
+              disableGutters
+              sx={{ py: 1.5, px: 2 }}
             >
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={item.text}
-              className="animate-fade-in"
-              primaryTypographyProps={{
-                className: cn("font-medium", item.highlight && "font-semibold"),
-              }}
-            />
-          </ListItem>
+              <ListItemIcon className="min-w-[36px]">{item.icon}</ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                className="animate-fade-in"
+                primaryTypographyProps={{
+                  className: cn("font-medium", item.highlight && "font-semibold"),
+                }}
+              />
+              {item.highlight && <div className="absolute left-0 top-0 w-1 h-full bg-gray-400" />}
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
 
       {user && (
         <>
-          <Divider className="mt-auto border-sidebar-border/50" />
-          <div className="p-4">
-            <ListItem
-              component={Link}
-              to="/profile"
-              onClick={isMobile ? handleDrawerToggle : undefined}
-              className={cn(
-                "rounded-lg transition-all duration-200",
-                activePath === "/profile"
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-              )}
-              disableGutters
-              sx={{ py: 1, px: 2 }}
+          <div className="px-4 py-3 bg-gray-50 border-y border-gray-100 mt-auto">
+            <Typography
+              variant="subtitle2"
+              className="text-gray-500 font-medium uppercase text-xs tracking-wider"
             >
-              <ListItemIcon
+              User Menu
+            </Typography>
+          </div>
+          <div className="py-2 px-2">
+            <Tooltip title="Profile Settings" placement="right">
+              <ListItem
+                component={Link}
+                to="/profile"
+                onClick={isMobile ? handleDrawerToggle : undefined}
                 className={cn(
-                  "min-w-[36px]",
-                  activePath === "/profile" ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+                  "transition-all duration-200 my-1 relative",
+                  activePath === "/profile"
+                    ? "bg-gray-100 text-gray-800 font-medium"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                 )}
+                disableGutters
+                sx={{ py: 1.5, px: 2 }}
               >
-                <Person />
-              </ListItemIcon>
-              <ListItemText
-                primary="Profile"
-                primaryTypographyProps={{
-                  className: cn("font-medium", activePath === "/profile" && "font-semibold"),
-                }}
-              />
-            </ListItem>
+                <ListItemIcon>
+                  <Badge sx={{ color: "#16a34a" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Profile"
+                  primaryTypographyProps={{
+                    className: cn("font-medium", activePath === "/profile" && "font-semibold"),
+                  }}
+                />
+                {activePath === "/profile" && (
+                  <div className="absolute left-0 top-0 w-1 h-full bg-gray-400" />
+                )}
+              </ListItem>
+            </Tooltip>
+
+            <Tooltip title="Logout" placement="right">
+              <ListItem
+                component={Link}
+                to="/logout"
+                onClick={isMobile ? handleDrawerToggle : undefined}
+                className="transition-all duration-200 my-1 text-gray-600 hover:bg-red-50 hover:text-red-600"
+                disableGutters
+                sx={{ py: 1.5, px: 2 }}
+              >
+                <ListItemIcon>
+                  <Logout sx={{ color: "#dc2626" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Logout"
+                  primaryTypographyProps={{
+                    className: "font-medium",
+                  }}
+                />
+              </ListItem>
+            </Tooltip>
           </div>
         </>
       )}
@@ -185,7 +231,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
         <IconButton
           aria-label="open menu"
           onClick={handleDrawerToggle}
-          className="fixed top-4 left-4 z-50 bg-white/90 shadow-md rounded-full p-2 hover:bg-white hover:shadow-lg transition-all duration-200"
+          className="fixed top-4 left-4 z-50 bg-white/90 shadow-md p-2 hover:bg-white hover:shadow-lg transition-all duration-200"
         >
           <MenuIcon className="text-primary" />
         </IconButton>
@@ -217,10 +263,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
         width: 280,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: 220,
+          width: 250,
           boxSizing: "border-box",
           border: "none",
-          boxShadow: "0 0 15px rgba(0,0,0,0.05)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
         },
       }}
     >

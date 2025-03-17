@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { Home } from "../pages"
 import { Login } from "../pages/login"
 import { Register } from "../pages/register"
@@ -15,6 +15,7 @@ import { Vacancies } from "@/pages/vacancies"
 import { Candidates } from "@/pages/candidates"
 import { setNewVisitorData } from "@/store/visitor-slice"
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
+import PrivateRoute from "./private-route"
 
 type RouteConfig = {
   path: string
@@ -72,21 +73,11 @@ export function AppRoutes(): JSX.Element {
 
       <Route path="/cv-analysis/:fileSlug" element={<CvAnalysisOfCandidate />} />
 
-      {authRoutes.map(({ path, element }) => {
-        const renderElement = () => {
-          if (loading) {
-            return <p>Loading...</p>
-          }
-
-          if (!user) {
-            return <Navigate to="/login" replace />
-          }
-
-          return element
-        }
-
-        return <Route key={path} path={path} element={renderElement()} />
-      })}
+      <Route element={<PrivateRoute />}>
+        {authRoutes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
+      </Route>
     </Routes>
   )
 }

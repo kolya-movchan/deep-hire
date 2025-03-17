@@ -169,17 +169,23 @@ export const CvAnalysisOfCandidate: FC = () => {
                           <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2">
                             <Email fontSize="small" sx={{ color: "#dc2626" }} />
                           </div>
-                          <span className="text-sm text-foreground/70 truncate">
+                          <a
+                            href={`mailto:${candidateData.contact.email}`}
+                            className="text-sm text-foreground/70 truncate hover:text-primary transition-colors"
+                          >
                             {candidateData.contact.email}
-                          </span>
+                          </a>
                         </div>
                         <div className="flex items-center overflow-hidden">
                           <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
                             <Phone fontSize="small" sx={{ color: "#16a34a" }} />
                           </div>
-                          <span className="text-sm text-foreground/70 truncate">
+                          <a
+                            href={`tel:${candidateData.contact.phone}`}
+                            className="text-sm text-foreground/70 truncate hover:text-primary transition-colors"
+                          >
                             {candidateData.contact.phone}
-                          </span>
+                          </a>
                         </div>
                         <div className="flex items-center overflow-hidden">
                           <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-2">
@@ -474,7 +480,7 @@ export const CvAnalysisOfCandidate: FC = () => {
                           className={cn(
                             "text-lg font-bold p-3 rounded-lg text-center",
                             matchingData?.finalRecommendation.suitability === "Recommended"
-                              ? "bg-success/10 text-success"
+                              ? "bg-green-100 text-green-700"
                               : "bg-destructive/10 text-destructive"
                           )}
                         >

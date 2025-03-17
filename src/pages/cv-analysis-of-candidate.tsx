@@ -484,7 +484,7 @@ export const CvAnalysisOfCandidate: FC = () => {
                             "text-lg font-bold p-3 rounded-lg text-center",
                             matchingData?.finalRecommendation.suitability === "Recommended"
                               ? "bg-green-100 text-green-700"
-                              : "bg-destructive/10 text-destructive"
+                              : "bg-red-100 text-red-700"
                           )}
                         >
                           {matchingData?.finalRecommendation.suitability}

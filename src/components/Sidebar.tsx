@@ -30,10 +30,11 @@ import {
   BusinessCenter,
   Badge,
 } from "@mui/icons-material"
-import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
 import { RootState } from "@/store"
 import { cn } from "@/lib/utils"
+import { logoutUser } from "@/store/auth-slice"
 
 export interface SidebarItem {
   icon: React.ReactNode
@@ -50,6 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
 
   const { user } = useSelector((state: RootState) => state.auth)
 
@@ -195,27 +197,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
                 {activePath === "/profile" && (
                   <div className="absolute left-0 top-0 w-1 h-full bg-gray-400" />
                 )}
-              </ListItem>
-            </Tooltip>
-
-            <Tooltip title="Logout" placement="right">
-              <ListItem
-                component={Link}
-                to="/logout"
-                onClick={isMobile ? handleDrawerToggle : undefined}
-                className="transition-all duration-200 my-1 text-gray-600 hover:bg-red-50 hover:text-red-600"
-                disableGutters
-                sx={{ py: 1.5, px: 2 }}
-              >
-                <ListItemIcon>
-                  <Logout sx={{ color: "#dc2626" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Logout"
-                  primaryTypographyProps={{
-                    className: "font-medium",
-                  }}
-                />
               </ListItem>
             </Tooltip>
           </div>

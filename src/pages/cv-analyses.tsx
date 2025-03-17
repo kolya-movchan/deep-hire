@@ -120,26 +120,18 @@ export const CvAnalyses: FC = () => {
                           >
                             Created At
                           </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
-                          >
-                            ID
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-4 text-right text-sm font-semibold text-foreground"
-                          >
-                            Actions
-                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {analyses.map((analysis, index) => (
                           <tr
                             key={analysis.id}
-                            className="hover:bg-primary/5 transition-colors duration-150"
+                            className="cursor-pointer transition-all duration-300 hover:bg-gray-100"
                             style={{ animationDelay: `${index * 0.05}s` }}
+                            onClick={() => (window.location.href = `/cv-analysis/${analysis.id}`)}
+                            title="Click to view CV analysis details"
+                            role="link"
+                            aria-label={`View analysis for ${analysis.name}`}
                           >
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-md font-medium text-foreground">
@@ -150,23 +142,6 @@ export const CvAnalyses: FC = () => {
                               <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
                                 {formatDate(analysis.createdAt)}
                               </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-sm text-foreground/60 font-mono">
-                                {analysis.id.substring(0, 12)}...
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <Button
-                                component={Link}
-                                to={`/cv-analysis/${analysis.id}`}
-                                variant="outlined"
-                                size="small"
-                                startIcon={<Visibility sx={{ color: "#16a34a" }} />}
-                                className="rounded-lg border-primary/20 text-primary hover:bg-primary/10"
-                              >
-                                View
-                              </Button>
                             </td>
                           </tr>
                         ))}

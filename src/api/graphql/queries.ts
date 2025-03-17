@@ -71,6 +71,7 @@ export const GET_ALL_CANDIDATE_ANALYSES = gql`
       id
       name
       title
+      vacancyUrl
       createdAt
     }
   }

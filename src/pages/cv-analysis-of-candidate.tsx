@@ -112,7 +112,7 @@ export const CvAnalysisOfCandidate: FC = () => {
           {isCandidateLoading && (
             <div className="card p-8 text-center animate-pulse">
               <h2 className="text-xl font-semibold mb-4">
-                Summarizing candidate's profile with AI. Usually it takes up to 2 minutes
+                Summarizing candidate's profile with AI. For the first time it takes up to 2 minutes
               </h2>
               <LinearProgress />
             </div>

@@ -124,6 +124,12 @@ export const CvAnalyses: FC = () => {
                             scope="col"
                             className="px-6 py-4 text-left text-sm font-semibold text-foreground"
                           >
+                            Job Position URL
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
                             Scanned At
                           </th>
                         </tr>
@@ -147,6 +153,23 @@ export const CvAnalyses: FC = () => {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm text-foreground/80">
                                 {analysis.title || "N/A"}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-foreground/80">
+                                {analysis.vacancyUrl ? (
+                                  <a
+                                    href={analysis.vacancyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-primary hover:underline"
+                                  >
+                                    View Position
+                                  </a>
+                                ) : (
+                                  "N/A"
+                                )}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">

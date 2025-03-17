@@ -8,28 +8,14 @@ import {
   ListItemText,
   Typography,
   Divider,
-  Button,
   IconButton,
   useMediaQuery,
   useTheme,
-  Tooltip,
 } from "@mui/material"
-import {
-  Assessment,
-  CompareArrows,
-  WorkOutline,
-  Person,
-  Settings,
-  AddCircle,
-  Login,
-  AppRegistration,
-  Logout,
-  Menu as MenuIcon,
-} from "@mui/icons-material"
-import { Link, useNavigate } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-import { RootState, AppDispatch } from "@/store"
-import { signOut } from "@/api/rest/auth"
+import { Assessment, Person, AddCircle, Login, Menu as MenuIcon } from "@mui/icons-material"
+import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
 
 export interface SidebarItem {
   icon: React.ReactNode
@@ -48,13 +34,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const { user } = useSelector((state: RootState) => state.auth)
-  const navigate = useNavigate()
-  const dispatch = useDispatch<AppDispatch>()
-
-  const handleSignOut = async () => {
-    // Assuming these are the correct parameters based on the codebase
-    await signOut((setIsLoggedIn) => {}, navigate, dispatch)
-  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -172,25 +151,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
                 <Person />
               </ListItemIcon>
               <ListItemText primary="Profile" />
-            </ListItem>
-
-            <ListItem
-              onClick={() => {
-                handleSignOut()
-                if (isMobile) handleDrawerToggle()
-              }}
-              sx={{
-                color: "#666",
-                "&:hover": {
-                  bgcolor: "#e0e0e0",
-                  cursor: "pointer",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: "#666" }}>
-                <Logout />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
             </ListItem>
           </List>
         </>

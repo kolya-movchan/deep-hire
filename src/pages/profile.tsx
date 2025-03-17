@@ -20,14 +20,7 @@ import {
   ListItemText,
   Button,
 } from "@mui/material"
-import {
-  Assessment,
-  CompareArrows,
-  WorkOutline,
-  Person,
-  Settings,
-  AddCircle,
-} from "@mui/icons-material"
+import { Assessment, CompareArrows, WorkOutline, Person, AddCircle } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
 import { signOut } from "@/api/rest/auth"
 import { checkAuthStatus } from "@/api/rest/auth"
@@ -67,7 +60,6 @@ export const Profile = () => {
     // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
     { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
     { icon: <Person />, text: "Candidates", path: "/candidates" },
-    { icon: <Settings />, text: "Settings", path: "/settings" },
   ]
 
   if (!user) {

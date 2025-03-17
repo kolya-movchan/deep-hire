@@ -127,7 +127,9 @@ export const CvAnalysisOfCandidate: FC = () => {
 
           {isCandidateLoading && (
             <div className="card p-8 text-center animate-pulse">
-              <h2 className="text-xl font-semibold mb-4">Analyzing candidate profile...</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Summarizing candidate's profile with AI. Usually it takes up to 2 minutes
+              </h2>
               <LinearProgress />
             </div>
           )}
@@ -232,7 +234,7 @@ export const CvAnalysisOfCandidate: FC = () => {
                     <h3 className="text-xl font-bold">Your Vacancy Details</h3>
                   </div>
                   <Divider className="mb-4" />
-                  <div className="flex items-center">
+                  <div className="flex items-center py-4">
                     <Link
                       to={candidateData.vacancyUrl}
                       className="text-primary hover:underline flex items-center"

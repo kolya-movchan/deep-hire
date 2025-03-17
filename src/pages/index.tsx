@@ -103,7 +103,7 @@ export const Home = () => {
                     Hiring Process
                   </span>
                 </h1>
-                <p className="text-xl text-foreground/80 mb-8 mx-auto">
+                <p className="text-lg text-foreground/80 mb-8 mx-auto">
                   AI-powered CV analysis that matches candidates to your job requirements with
                   unparalleled accuracy.
                 </p>

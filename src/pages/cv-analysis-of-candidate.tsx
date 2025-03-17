@@ -16,6 +16,7 @@ import {
   CardContent,
   LinearProgress,
   Stack,
+  CircularProgress,
 } from "@mui/material"
 import { Link, useParams, Navigate } from "react-router-dom"
 import {
@@ -95,6 +96,13 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
   )
 }
 
+// Component for loading sections
+const SectionLoader: FC = () => (
+  <Box sx={{ py: 2, display: "flex", justifyContent: "center" }}>
+    <CircularProgress size={24} />
+  </Box>
+)
+
 export const CvAnalysisOfCandidate: FC = () => {
   const dispatch = useDispatch()
   console.log("[CvAnalysis] Component rendering")
@@ -108,11 +116,13 @@ export const CvAnalysisOfCandidate: FC = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   console.log("[CvAnalysis] Current user:", user)
 
-  const { candidateData, matchingData, isLoading, error } = useCvAnalysis(cleanFileSlug, dispatch)
+  const { candidateData, matchingData, isCandidateLoading, isMatchingLoading, error } =
+    useCvAnalysis(cleanFileSlug, dispatch)
   console.log("[CvAnalysis] Hook results:", {
     candidateData: candidateData ? "Present" : "Null",
     matchingData: matchingData ? "Present" : "Null",
-    isLoading,
+    isCandidateLoading,
+    isMatchingLoading,
     error,
   })
 
@@ -219,14 +229,16 @@ export const CvAnalysisOfCandidate: FC = () => {
             Candidate Analysis
           </Typography>
 
-          {isLoading ? (
+          {isCandidateLoading && (
             <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Loading candidate data...
               </Typography>
               <LinearProgress />
             </Paper>
-          ) : error ? (
+          )}
+
+          {error && (
             <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
               <Typography variant="h6" color="error">
                 {error}
@@ -235,7 +247,9 @@ export const CvAnalysisOfCandidate: FC = () => {
                 <Link to="/">Return to homepage</Link>
               </Typography>
             </Paper>
-          ) : !candidateData || !matchingData ? (
+          )}
+
+          {!isCandidateLoading && !error && !candidateData && (
             <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
               <Typography variant="h6" color="error">
                 No data found for this CV
@@ -244,7 +258,9 @@ export const CvAnalysisOfCandidate: FC = () => {
                 <Link to="/">Return to homepage</Link>
               </Typography>
             </Paper>
-          ) : (
+          )}
+
+          {!isCandidateLoading && !error && candidateData && (
             <>
               {/* Profile Header */}
               <Paper elevation={3} sx={{ p: 4, mb: 3, borderRadius: 2 }}>
@@ -320,7 +336,18 @@ export const CvAnalysisOfCandidate: FC = () => {
               </Paper>
 
               {/* Match Score */}
-              {matchingData.matchScore && <MatchScoreCard score={matchingData.matchScore} />}
+              {isMatchingLoading ? (
+                <Paper elevation={3} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Match Score
+                  </Typography>
+                  <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                    <CircularProgress size={30} />
+                  </Box>
+                </Paper>
+              ) : (
+                matchingData?.matchScore && <MatchScoreCard score={matchingData.matchScore} />
+              )}
 
               <Grid container spacing={3}>
                 {/* Left Column */}
@@ -454,20 +481,24 @@ export const CvAnalysisOfCandidate: FC = () => {
                     </Typography>
                     <Divider sx={{ mb: 2 }} />
 
-                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                      {matchingData.matchedSkills.map((skill, index) => (
-                        <Chip
-                          key={index}
-                          label={skill}
-                          sx={{
-                            m: 0.5,
-                            bgcolor: "#e8f5e9",
-                            color: "#2e7d32",
-                            fontWeight: "medium",
-                          }}
-                        />
-                      ))}
-                    </Stack>
+                    {isMatchingLoading ? (
+                      <SectionLoader />
+                    ) : (
+                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                        {matchingData?.matchedSkills.map((skill, index) => (
+                          <Chip
+                            key={index}
+                            label={skill}
+                            sx={{
+                              m: 0.5,
+                              bgcolor: "#e8f5e9",
+                              color: "#2e7d32",
+                              fontWeight: "medium",
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    )}
                   </Paper>
 
                   {/* Unmatched Skills */}
@@ -478,20 +509,24 @@ export const CvAnalysisOfCandidate: FC = () => {
                     </Typography>
                     <Divider sx={{ mb: 2 }} />
 
-                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                      {matchingData.unmatchedSkills.map((skill, index) => (
-                        <Chip
-                          key={index}
-                          label={skill}
-                          sx={{
-                            m: 0.5,
-                            bgcolor: "#ffebee",
-                            color: "#d32f2f",
-                            fontWeight: "medium",
-                          }}
-                        />
-                      ))}
-                    </Stack>
+                    {isMatchingLoading ? (
+                      <SectionLoader />
+                    ) : (
+                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                        {matchingData?.unmatchedSkills.map((skill, index) => (
+                          <Chip
+                            key={index}
+                            label={skill}
+                            sx={{
+                              m: 0.5,
+                              bgcolor: "#ffebee",
+                              color: "#d32f2f",
+                              fontWeight: "medium",
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    )}
                   </Paper>
 
                   {/* Potential Risks */}
@@ -502,16 +537,20 @@ export const CvAnalysisOfCandidate: FC = () => {
                     </Typography>
                     <Divider sx={{ mb: 2 }} />
 
-                    <List dense>
-                      {matchingData.potentialRisks.map((risk, index) => (
-                        <ListItem key={index} sx={{ py: 0.5 }}>
-                          <ListItemIcon sx={{ minWidth: 30 }}>
-                            <Warning fontSize="small" color="warning" />
-                          </ListItemIcon>
-                          <ListItemText primary={risk} />
-                        </ListItem>
-                      ))}
-                    </List>
+                    {isMatchingLoading ? (
+                      <SectionLoader />
+                    ) : (
+                      <List dense>
+                        {matchingData?.potentialRisks.map((risk, index) => (
+                          <ListItem key={index} sx={{ py: 0.5 }}>
+                            <ListItemIcon sx={{ minWidth: 30 }}>
+                              <Warning fontSize="small" color="warning" />
+                            </ListItemIcon>
+                            <ListItemText primary={risk} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
                   </Paper>
 
                   {/* Recommendation */}
@@ -528,24 +567,31 @@ export const CvAnalysisOfCandidate: FC = () => {
                     <Typography variant="h5" sx={{ mb: 2 }}>
                       Recommendation
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
-                      Based on the candidate's profile and the job requirements:
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        color:
-                          matchingData.finalRecommendation.suitability === "Recommended"
-                            ? "#2e7d32"
-                            : "#d32f2f",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {matchingData.finalRecommendation.suitability}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      {matchingData.finalRecommendation.reason}
-                    </Typography>
+
+                    {isMatchingLoading ? (
+                      <SectionLoader />
+                    ) : (
+                      <>
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                          Based on the candidate's profile and the job requirements:
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color:
+                              matchingData?.finalRecommendation.suitability === "Recommended"
+                                ? "#2e7d32"
+                                : "#d32f2f",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {matchingData?.finalRecommendation.suitability}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                          {matchingData?.finalRecommendation.reason}
+                        </Typography>
+                      </>
+                    )}
                   </Paper>
                 </Grid>
               </Grid>

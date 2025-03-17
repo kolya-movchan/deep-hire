@@ -217,7 +217,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
         width: 280,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: 280,
+          width: 220,
           boxSizing: "border-box",
           border: "none",
           boxShadow: "0 0 15px rgba(0,0,0,0.05)",

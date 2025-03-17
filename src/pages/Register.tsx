@@ -160,7 +160,7 @@ export const Register = () => {
               </div>
               <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
               <p className="text-foreground/70 mb-6">
-                Join AI-FLEX to analyze candidate resumes and make better hiring decisions
+                JoinDeepHire to analyze candidate resumes and make better hiring decisions
               </p>
             </div>
 

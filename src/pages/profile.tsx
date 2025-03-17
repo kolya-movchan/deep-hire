@@ -393,7 +393,7 @@ export const Profile = () => {
                         No Recent Activity
                       </Typography>
                       <Typography className="text-gray-500 max-w-md mb-8">
-                        Your recent actions will appear here. Start using AI-FLEX by analyzing a CV
+                        Your recent actions will appear here. Start usingDeepHire by analyzing a CV
                         or creating a vacancy.
                       </Typography>
                       <Button

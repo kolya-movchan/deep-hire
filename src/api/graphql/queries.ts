@@ -30,6 +30,7 @@ export const GET_CANDIDATE_SUMMARY = gql`
       name
       title
       summary
+      vacancyUrl
       contact {
         phone
         email

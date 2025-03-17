@@ -29,6 +29,7 @@ import {
   ThumbUp,
   ThumbDown,
   Person,
+  Link as LinkIcon,
 } from "@mui/icons-material"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -219,6 +220,30 @@ export const CvAnalysisOfCandidate: FC = () => {
                 </div>
               ) : (
                 matchingData?.matchScore && <MatchScoreCard score={matchingData.matchScore} />
+              )}
+
+              {/* Vacancy URL */}
+              {candidateData.vacancyUrl && (
+                <div className="card bg-white mb-6 p-6 shadow-md rounded-xl border border-primary/10 animate-slide-up">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                      <Work sx={{ color: "#2563eb" }} />
+                    </div>
+                    <h3 className="text-xl font-bold">Your Vacancy Details</h3>
+                  </div>
+                  <Divider className="mb-4" />
+                  <div className="flex items-center">
+                    <Link
+                      to={candidateData.vacancyUrl}
+                      className="text-primary hover:underline flex items-center"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <LinkIcon sx={{ marginRight: 1 }} />
+                      View vacancy details
+                    </Link>
+                  </div>
+                </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">

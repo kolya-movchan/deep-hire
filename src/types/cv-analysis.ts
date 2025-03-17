@@ -23,6 +23,7 @@ export interface CandidateData {
   name: string
   title: string
   summary: string
+  vacancyUrl: string
   contact: Contact
   experience: Experience[]
   education: Education[]

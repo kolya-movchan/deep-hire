@@ -70,6 +70,7 @@ export const GET_ALL_CANDIDATE_ANALYSES = gql`
     getAllCandidateAnalyses(userId: $userId) {
       id
       name
+      title
       createdAt
     }
   }

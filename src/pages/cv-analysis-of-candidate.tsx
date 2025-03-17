@@ -1,20 +1,4 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Grid,
-  Chip,
-  Avatar,
-  Divider,
-  LinearProgress,
-  Stack,
-  CircularProgress,
-} from "@mui/material"
+import { Container, Grid, Avatar, Divider, LinearProgress } from "@mui/material"
 import { Link, useParams, Navigate } from "react-router-dom"
 import {
   Email,

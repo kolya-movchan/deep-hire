@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react"
-import { Container, Paper, Grid, Button, LinearProgress } from "@mui/material"
-import { Visibility, Description, AddCircleOutline } from "@mui/icons-material"
+import { Container, Grid, Button, LinearProgress } from "@mui/material"
+import { Description, AddCircleOutline } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -69,7 +69,7 @@ export const CvAnalyses: FC = () => {
                   </h2>
                   <p className="text-foreground/70">{error}</p>
                   <Button
-                    onClick={() => dispatch(fetchCandidateAnalyses(userId))}
+                    onClick={() => userId && dispatch(fetchCandidateAnalyses(userId))}
                     variant="outlined"
                     className="mt-4 bg-primary/10 text-primary"
                   >
@@ -118,7 +118,13 @@ export const CvAnalyses: FC = () => {
                             scope="col"
                             className="px-6 py-4 text-left text-sm font-semibold text-foreground"
                           >
-                            Created At
+                            Title
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
+                            Scanned At
                           </th>
                         </tr>
                       </thead>
@@ -136,6 +142,11 @@ export const CvAnalyses: FC = () => {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-md font-medium text-foreground">
                                 {analysis.name}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-foreground/80">
+                                {analysis.title || "N/A"}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">

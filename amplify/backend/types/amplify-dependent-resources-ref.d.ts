@@ -1,6 +1,6 @@
 export declare type AmplifyDependentResourcesAttributes = {
   auth: {
-    aiflex: {
+    DeepHire: {
       IdentityPoolId: string
       IdentityPoolName: string
       UserPoolId: string
@@ -11,7 +11,7 @@ export declare type AmplifyDependentResourcesAttributes = {
     }
   }
   api: {
-    aiflex: {
+    DeepHire: {
       GraphQLAPIKeyOutput: string
       GraphQLAPIIdOutput: string
       GraphQLAPIEndpointOutput: string

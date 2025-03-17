@@ -1,4 +1,4 @@
-# AI-FLEX DEVELOPMENT GUIDE
+# DeepHire DEVELOPMENT GUIDE
 
 ## Build & Run Commands
 

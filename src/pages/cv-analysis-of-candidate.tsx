@@ -28,6 +28,7 @@ import {
   Warning,
   ThumbUp,
   ThumbDown,
+  Person,
 } from "@mui/icons-material"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -117,21 +118,8 @@ export const CvAnalysisOfCandidate: FC = () => {
       <main className="flex-grow px-4 py-8 md:px-8">
         <Container maxWidth="lg" className="animate-fade-in">
           <div className="flex items-center mb-8">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
-                />
-              </svg>
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+              <Person sx={{ color: "#2563eb", fontSize: 28 }} />
             </div>
             <h1 className="text-3xl font-bold text-foreground">Candidate Analysis</h1>
           </div>
@@ -178,24 +166,24 @@ export const CvAnalysisOfCandidate: FC = () => {
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div className="flex items-center overflow-hidden">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
-                            <Email fontSize="small" />
+                          <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2">
+                            <Email fontSize="small" sx={{ color: "#dc2626" }} />
                           </div>
                           <span className="text-sm text-foreground/70 truncate">
                             {candidateData.contact.email}
                           </span>
                         </div>
                         <div className="flex items-center overflow-hidden">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
-                            <Phone fontSize="small" />
+                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
+                            <Phone fontSize="small" sx={{ color: "#16a34a" }} />
                           </div>
                           <span className="text-sm text-foreground/70 truncate">
                             {candidateData.contact.phone}
                           </span>
                         </div>
                         <div className="flex items-center overflow-hidden">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
-                            <LocationOn fontSize="small" />
+                          <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-2">
+                            <LocationOn fontSize="small" sx={{ color: "#ea580c" }} />
                           </div>
                           <span className="text-sm text-foreground/70 truncate">
                             {candidateData.contact.location}
@@ -230,8 +218,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                   {/* Experience */}
                   <div className="card bg-white mb-6 p-6 shadow-md rounded-xl border border-primary/10 animate-slide-up">
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-                        <Work />
+                      <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                        <Work sx={{ color: "#4f46e5" }} />
                       </div>
                       <h3 className="text-xl font-bold">Professional Experience</h3>
                     </div>
@@ -267,7 +255,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                                     <li key={idx} className="flex items-start gap-2">
                                       <CheckCircle
                                         fontSize="small"
-                                        className="text-primary mt-1 flex-shrink-0"
+                                        sx={{ color: "#4f46e5" }}
+                                        className="mt-1 flex-shrink-0"
                                       />
                                       <span className="text-foreground/80">{resp}</span>
                                     </li>
@@ -287,8 +276,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.1s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mr-3">
-                        <School />
+                      <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center mr-3">
+                        <School sx={{ color: "#7c3aed" }} />
                       </div>
                       <h3 className="text-xl font-bold">Education</h3>
                     </div>
@@ -334,8 +323,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.2s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent mr-3">
-                        <Star />
+                      <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
+                        <Star sx={{ color: "#eab308" }} />
                       </div>
                       <h3 className="text-xl font-bold">Skills</h3>
                     </div>
@@ -359,8 +348,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.3s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-                        <Build />
+                      <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center mr-3">
+                        <Build sx={{ color: "#0891b2" }} />
                       </div>
                       <h3 className="text-xl font-bold">Tools & Technologies</h3>
                     </div>
@@ -384,8 +373,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.4s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success mr-3">
-                        <ThumbUp />
+                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                        <ThumbUp sx={{ color: "#16a34a" }} />
                       </div>
                       <h3 className="text-xl font-bold">Matched Skills</h3>
                     </div>
@@ -413,8 +402,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.5s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive mr-3">
-                        <ThumbDown />
+                      <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                        <ThumbDown sx={{ color: "#dc2626" }} />
                       </div>
                       <h3 className="text-xl font-bold">Missing Skills</h3>
                     </div>
@@ -442,8 +431,8 @@ export const CvAnalysisOfCandidate: FC = () => {
                     style={{ animationDelay: "0.6s" }}
                   >
                     <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning mr-3">
-                        <Warning />
+                      <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-3">
+                        <Warning sx={{ color: "#d97706" }} />
                       </div>
                       <h3 className="text-xl font-bold">Potential Risks</h3>
                     </div>
@@ -455,7 +444,11 @@ export const CvAnalysisOfCandidate: FC = () => {
                       <ul className="space-y-2">
                         {matchingData?.potentialRisks.map((risk, index) => (
                           <li key={index} className="flex items-start gap-2">
-                            <Warning fontSize="small" className="text-warning mt-1 flex-shrink-0" />
+                            <Warning
+                              fontSize="small"
+                              sx={{ color: "#d97706" }}
+                              className="mt-1 flex-shrink-0"
+                            />
                             <span className="text-foreground/80">{risk}</span>
                           </li>
                         ))}

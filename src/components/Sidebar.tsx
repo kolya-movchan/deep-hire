@@ -91,14 +91,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
 
   const drawerContent = (
     <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
-      <div className="p-6">
+      <div className="p-4">
         <Typography
           component={Link}
           to="/"
-          className="font-heading text-2xl font-bold text-sidebar-primary no-underline flex items-center gap-2"
+          className="font-heading text-2xl font-bold no-underline flex items-center gap-2"
+          variant="h6"
         >
-          <span className="bg-sidebar-primary text-sidebar-primary-foreground p-1 rounded">AI</span>
-          <span>FLEX</span>
+          <div className="text-sidebar-primary-foreground p-2 rounded-md flex items-center">
+            <span className="font-extrabold">Deep</span>
+            <span className="font-light">Hire</span>
+          </div>
         </Typography>
       </div>
 

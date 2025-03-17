@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --primary-hue: 230;
+  --secondary-hue: 255;
+  --accent-hue: 190;
+  --success-hue: 142;
+  --warning-hue: 38;
+  --danger-hue: 358;
+}
+
 /* CSS Reset */
 *,
 *::before,
@@ -15,11 +26,35 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
-    line-height: 1.5;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", sans-serif;
+    @apply font-semibold tracking-tight;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+  }
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  h3 {
+    @apply text-2xl md:text-3xl;
   }
   img,
   picture,
@@ -35,17 +70,127 @@
   select {
     font: inherit;
   }
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  p {
     overflow-wrap: break-word;
   }
   #root,
   #__next {
     isolation: isolate;
+    @apply min-h-screen flex flex-col;
+  }
+
+  /* Modern scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background/50;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-lg;
+  }
+
+  .card {
+    @apply rounded-xl bg-card p-4 shadow-md transition-all duration-200 hover:shadow-lg;
+  }
+
+  .btn {
+    @apply rounded-lg px-4 py-2 font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:brightness-110 active:brightness-90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:brightness-110 active:brightness-90;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground hover:brightness-110 active:brightness-90;
+  }
+
+  .form-input {
+    @apply rounded-lg border border-input bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50;
+  }
+
+  .animate-fade-in {
+    @apply opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards];
+  }
+
+  .animate-slide-up {
+    @apply opacity-0 translate-y-4 animate-[slideUp_0.5s_ease-out_forwards];
+  }
+
+  .animate-slide-down {
+    @apply opacity-0 -translate-y-4 animate-[slideDown_0.5s_ease-out_forwards];
+  }
+
+  .animate-slide-left {
+    @apply opacity-0 translate-x-4 animate-[slideLeft_0.5s_ease-out_forwards];
+  }
+
+  .animate-slide-right {
+    @apply opacity-0 -translate-x-4 animate-[slideRight_0.5s_ease-out_forwards];
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

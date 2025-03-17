@@ -16,6 +16,7 @@ import { Assessment, Person, AddCircle, Login, Menu as MenuIcon } from "@mui/ico
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
+import { cn } from "@/lib/utils"
 
 export interface SidebarItem {
   icon: React.ReactNode
@@ -48,7 +49,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
           path: "/",
           highlight: activePath === "/",
         },
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies", highlight: activePath === "/vacancies" },
         {
           icon: <Assessment />,
           text: "CV Analyses",
@@ -75,7 +75,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
           path: "/",
           highlight: activePath === "/",
         },
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies", highlight: activePath === "/vacancies" },
         {
           icon: <Assessment />,
           text: "CV Analyses",
@@ -91,71 +90,89 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
       ]
 
   const drawerContent = (
-    <>
-      <Box sx={{ p: 2 }}>
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+      <div className="p-6">
         <Typography
-          variant="h6"
-          fontWeight="bold"
           component={Link}
           to="/"
-          sx={{
-            textDecoration: "none",
-            color: "#1976d2",
-          }}
+          className="font-heading text-2xl font-bold text-sidebar-primary no-underline flex items-center gap-2"
         >
-          ResumeCheck
+          <span className="bg-sidebar-primary text-sidebar-primary-foreground p-1 rounded">AI</span>
+          <span>FLEX</span>
         </Typography>
-      </Box>
-      <List>
+      </div>
+
+      <List className="mt-6 px-2">
         {sidebarItems.map((item) => (
           <ListItem
             component={Link}
             to={item.path}
             key={item.text}
             onClick={isMobile ? handleDrawerToggle : undefined}
-            sx={{
-              color: item.highlight ? "#1976d2" : "#666",
-              bgcolor: item.highlight ? "rgba(25, 118, 210, 0.08)" : "transparent",
-              fontWeight: item.highlight ? 600 : 400,
-              "&:hover": {
-                bgcolor: item.highlight ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
-              },
-            }}
+            className={cn(
+              "my-1 rounded-lg transition-all duration-200",
+              item.highlight
+                ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+            )}
+            disableGutters
+            sx={{ py: 1, px: 2 }}
           >
-            <ListItemIcon sx={{ color: item.highlight ? "#1976d2" : "#666" }}>
+            <ListItemIcon
+              className={cn(
+                "min-w-[36px]",
+                item.highlight ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+              )}
+            >
               {item.icon}
             </ListItemIcon>
-            <ListItemText primary={item.text} />
+            <ListItemText
+              primary={item.text}
+              className="animate-fade-in"
+              primaryTypographyProps={{
+                className: cn("font-medium", item.highlight && "font-semibold"),
+              }}
+            />
           </ListItem>
         ))}
       </List>
 
       {user && (
         <>
-          <Divider sx={{ mt: "auto" }} />
-          <List>
+          <Divider className="mt-auto border-sidebar-border/50" />
+          <div className="p-4">
             <ListItem
               component={Link}
               to="/profile"
               onClick={isMobile ? handleDrawerToggle : undefined}
-              sx={{
-                color: activePath === "/profile" ? "#1976d2" : "#666",
-                bgcolor: activePath === "/profile" ? "rgba(25, 118, 210, 0.08)" : "transparent",
-                fontWeight: activePath === "/profile" ? 600 : 400,
-                "&:hover": {
-                  bgcolor: activePath === "/profile" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
-                },
-              }}
+              className={cn(
+                "rounded-lg transition-all duration-200",
+                activePath === "/profile"
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+              )}
+              disableGutters
+              sx={{ py: 1, px: 2 }}
             >
-              <ListItemIcon sx={{ color: activePath === "/profile" ? "#1976d2" : "#666" }}>
+              <ListItemIcon
+                className={cn(
+                  "min-w-[36px]",
+                  activePath === "/profile" ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+                )}
+              >
                 <Person />
               </ListItemIcon>
-              <ListItemText primary="Profile" />
+              <ListItemText
+                primary="Profile"
+                primaryTypographyProps={{
+                  className: cn("font-medium", activePath === "/profile" && "font-semibold"),
+                }}
+              />
             </ListItem>
-          </List>
+          </div>
         </>
       )}
-    </>
+    </div>
   )
 
   // For mobile, use a temporary drawer
@@ -163,38 +180,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
     return (
       <>
         <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
+          aria-label="open menu"
           onClick={handleDrawerToggle}
-          sx={{
-            mr: 2,
-            position: "fixed",
-            top: 10,
-            left: 10,
-            zIndex: 1200,
-            bgcolor: "white",
-            boxShadow: 1,
-            "&:hover": {
-              bgcolor: "#f5f5f5",
-            },
-          }}
+          className="fixed top-4 left-4 z-50 bg-white/90 shadow-md rounded-full p-2 hover:bg-white hover:shadow-lg transition-all duration-200"
         >
-          <MenuIcon />
+          <MenuIcon className="text-primary" />
         </IconButton>
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile
+            keepMounted: true,
           }}
           sx={{
-            display: "block",
             "& .MuiDrawer-paper": {
-              width: 240,
+              width: 280,
               boxSizing: "border-box",
-              bgcolor: "#f5f5f5",
             },
           }}
         >
@@ -209,14 +211,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
     <Drawer
       variant="permanent"
       sx={{
-        width: 200,
+        width: 280,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: 200,
+          width: 280,
           boxSizing: "border-box",
-          bgcolor: "#f5f5f5",
-          display: "flex",
-          flexDirection: "column",
+          border: "none",
+          boxShadow: "0 0 15px rgba(0,0,0,0.05)",
         },
       }}
     >

@@ -147,13 +147,17 @@ export const Login = () => {
               to={item.path}
               key={item.text}
               sx={{
-                color: "#666",
+                color: item.path === "/login" ? "#1976d2" : "#666",
+                bgcolor: item.path === "/login" ? "rgba(25, 118, 210, 0.08)" : "transparent",
+                fontWeight: item.path === "/login" ? 600 : 400,
                 "&:hover": {
-                  bgcolor: "#e0e0e0",
+                  bgcolor: item.path === "/login" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#666" }}>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={{ color: item.path === "/login" ? "#1976d2" : "#666" }}>
+                {item.icon}
+              </ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
           ))}

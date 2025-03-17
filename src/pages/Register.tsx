@@ -2,18 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { configAmplify } from "../utils/config-amplify"
 import { register, confirmRegistration, logIn } from "../api/rest/auth"
-import {
-  TextField,
-  IconButton,
-  Container,
-  Box,
-  Typography,
-  Button,
-  Paper,
-  Stack,
-  Drawer,
-} from "@mui/material"
-import { Visibility, VisibilityOff } from "@mui/icons-material"
+import { TextField, IconButton, Container, Button, Alert } from "@mui/material"
+import { Visibility, VisibilityOff, CheckCircle } from "@mui/icons-material"
 import { passwordRequirements } from "@/mocks/data/password-requirements"
 import { useNavigate } from "react-router-dom"
 import { AppDispatch } from "@/store"
@@ -23,6 +13,7 @@ import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
 import { RootState } from "@/store"
 import { createUser } from "@/api/graphql/api"
 import { Sidebar } from "@/components/Sidebar"
+import { cn } from "@/lib/utils"
 
 interface RegisterForm {
   fullName: string
@@ -48,6 +39,8 @@ export const Register = () => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRequirements, setShowRequirements] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>("")
 
   // Navigation hook for logged in users
   useNavigateLoggedInUser(navigate)
@@ -67,225 +60,355 @@ export const Register = () => {
       ...prev,
       [name]: value,
     }))
+
+    if (name === "password") {
+      setShowRequirements(true)
+    }
+
+    if (error) setError("")
   }
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError("")
 
     const allRequirementsMet = requirements.every((req) => req.met)
     if (!allRequirementsMet) {
       setShowRequirements(true)
+      setError("Please meet all password requirements")
       return
     }
 
+    setLoading(true)
     try {
       const { isSignUpComplete, userId, nextStep } = await register({
         ...formData,
         username: formData.email,
       })
-
-      console.log("isSignUpComplete:", isSignUpComplete)
-      console.log("userId:", userId)
-      console.log("nextStep:", nextStep)
       setIsConfirming(true)
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error)
+      setError(error.message || "Registration failed. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleConfirm = async () => {
+    if (!confirmationCode.trim()) {
+      setError("Please enter the confirmation code")
+      return
+    }
+
+    setLoading(true)
+    setError("")
+
     try {
       await confirmRegistration(formData.email, confirmationCode)
-      console.log("User confirmed successfully!")
       await logIn(formData.email, formData.password)
       await createUser(formData.email, formData.fullName)
       dispatch(checkAuth())
       navigate("/")
       setIsConfirming(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error confirming user:", error)
+      setError(error.message || "Failed to confirm account. Please check your code and try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   // Side effects
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (requirementsRef.current && !requirementsRef.current.contains(event.target as Node)) {
+      if (
+        requirementsRef.current &&
+        !requirementsRef.current.contains(event.target as Node) &&
+        !formData.password
+      ) {
         setShowRequirements(false)
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+  }, [formData.password])
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 200,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 200,
-            boxSizing: "border-box",
-            bgcolor: "#f5f5f5",
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            component={Link}
-            to="/"
-            sx={{
-              textDecoration: "none",
-              color: "#1976d2",
-            }}
-          >
-            ResumeCheck
-          </Typography>
-        </Box>
-        <Sidebar activePath={"/login"} />
-      </Drawer>
+    <div className="flex min-h-screen bg-background">
+      <Sidebar activePath="/login" />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: "#fff",
-          p: 3,
-        }}
-      >
-        <Container
-          maxWidth="md"
-          sx={{
-            py: 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "calc(100vh - 64px)",
-          }}
-        >
-          <Box sx={{ textAlign: "center", mb: 3, width: "100%" }}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
-              Create Account
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
-              Please fill in your information to register
-            </Typography>
+      <main className="flex-grow flex items-center justify-center p-4">
+        <Container maxWidth="sm" className="animate-fade-in">
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 rounded-full bg-secondary/10 mx-auto mb-4 flex items-center justify-center text-secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+                  />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
+              <p className="text-foreground/70 mb-6">
+                Join AI-FLEX to analyze candidate resumes and make better hiring decisions
+              </p>
+            </div>
 
-            <Paper elevation={2} sx={{ p: 3, mb: 3, maxWidth: "500px", mx: "auto" }}>
+            {error && (
+              <div className="mb-6 p-3 rounded-lg bg-destructive/10 text-destructive text-sm animate-shake">
+                {error}
+              </div>
+            )}
+
+            <div className="card glass-effect backdrop-blur-md p-8 border border-primary/10 shadow-lg rounded-xl">
               {!isConfirming ? (
-                <Box component="form" onSubmit={handleRegister}>
-                  <Stack spacing={3}>
+                <form onSubmit={handleRegister} className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="fullName"
+                      className="block text-sm font-medium text-foreground/80 mb-1.5"
+                    >
+                      Full Name
+                    </label>
                     <TextField
+                      id="fullName"
                       fullWidth
-                      label="Full Name"
                       name="fullName"
-                      placeholder="Enter your full name"
+                      placeholder="John Smith"
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
                       variant="outlined"
+                      className="form-input"
+                      InputProps={{
+                        className: "rounded-lg bg-background/50 backdrop-blur-sm",
+                      }}
                     />
+                  </div>
 
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-foreground/80 mb-1.5"
+                    >
+                      Email Address
+                    </label>
                     <TextField
+                      id="email"
                       fullWidth
-                      label="Email"
                       name="email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="your.email@example.com"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
                       variant="outlined"
+                      className="form-input"
+                      InputProps={{
+                        className: "rounded-lg bg-background/50 backdrop-blur-sm",
+                      }}
                     />
+                  </div>
 
+                  <div className="relative">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-foreground/80 mb-1.5"
+                    >
+                      Password
+                    </label>
                     <TextField
+                      id="password"
                       fullWidth
-                      label="Password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a password"
+                      placeholder="••••••••"
                       value={formData.password}
                       onChange={handleInputChange}
                       required
                       variant="outlined"
+                      className="form-input"
+                      onFocus={() => setShowRequirements(true)}
                       InputProps={{
                         endAdornment: (
-                          <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                            className="text-foreground/50"
+                          >
                             {showPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
                         ),
+                        className: "rounded-lg bg-background/50 backdrop-blur-sm",
                       }}
                     />
 
                     {showRequirements && (
-                      <Paper
+                      <div
                         ref={requirementsRef}
-                        elevation={2}
-                        sx={{
-                          p: 2,
-                          width: "100%",
-                        }}
+                        className="mt-2 p-4 bg-background rounded-lg border border-primary/10 shadow-md animate-fade-in"
                       >
-                        {requirements.map((req, i) => (
-                          <Typography
-                            key={i}
-                            variant="body2"
-                            sx={{
-                              color: req.met ? "success.main" : "error.main",
-                              mb: 0.5,
-                            }}
-                          >
-                            {req.text}
-                          </Typography>
-                        ))}
-                      </Paper>
+                        <h4 className="text-sm font-medium mb-2 text-foreground">
+                          Password Requirements:
+                        </h4>
+                        <div className="space-y-1.5">
+                          {requirements.map((req, i) => (
+                            <div
+                              key={i}
+                              className={cn(
+                                "flex items-start text-sm",
+                                req.met ? "text-success" : "text-foreground/60"
+                              )}
+                            >
+                              <div className="mt-0.5 mr-2 flex-shrink-0">
+                                {req.met ? (
+                                  <CheckCircle className="h-4 w-4" />
+                                ) : (
+                                  <div className="h-4 w-4 rounded-full border border-foreground/30"></div>
+                                )}
+                              </div>
+                              <span>{req.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
+                  </div>
 
-                    <Button type="submit" fullWidth variant="contained" color="primary">
-                      Create Account
-                    </Button>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={loading}
+                    className="bg-secondary hover:bg-secondary-hover text-secondary-foreground p-3 rounded-lg transition-all duration-200 disabled:opacity-70 mt-4"
+                  >
+                    {loading ? (
+                      <span className="flex items-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Creating Account...
+                      </span>
+                    ) : (
+                      "Create Account"
+                    )}
+                  </Button>
 
-                    <Typography variant="body2" color="text.secondary">
+                  <div className="text-center pt-2">
+                    <p className="text-sm text-foreground/70">
                       Already have an account?{" "}
-                      <Link
-                        to="/login"
-                        style={{
-                          color: "#1976d2",
-                          textDecoration: "none",
-                          fontWeight: 500,
-                        }}
-                      >
+                      <Link to="/login" className="text-secondary font-medium hover:underline">
                         Sign in here
                       </Link>
-                    </Typography>
-                  </Stack>
-                </Box>
+                    </p>
+                  </div>
+                </form>
               ) : (
-                <Stack spacing={3}>
-                  <TextField
+                <div className="space-y-6">
+                  <div className="text-center mb-4">
+                    <Alert
+                      severity="success"
+                      className="bg-success/10 text-success border border-success/20 rounded-lg"
+                    >
+                      Account created! Please check your email for the confirmation code.
+                    </Alert>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="confirmationCode"
+                      className="block text-sm font-medium text-foreground/80 mb-1.5"
+                    >
+                      Confirmation Code
+                    </label>
+                    <TextField
+                      id="confirmationCode"
+                      fullWidth
+                      placeholder="Enter the code from your email"
+                      value={confirmationCode}
+                      onChange={(e) => {
+                        setConfirmationCode(e.target.value)
+                        if (error) setError("")
+                      }}
+                      variant="outlined"
+                      className="form-input"
+                      InputProps={{
+                        className: "rounded-lg bg-background/50 backdrop-blur-sm",
+                      }}
+                    />
+                    <p className="text-xs text-foreground/60 mt-1.5">
+                      The code was sent to {formData.email}
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={handleConfirm}
                     fullWidth
-                    label="Confirmation Code"
-                    placeholder="Enter confirmation code"
-                    value={confirmationCode}
-                    onChange={(e) => setConfirmationCode(e.target.value)}
-                    variant="outlined"
-                  />
-                  <Button onClick={handleConfirm} fullWidth variant="contained" color="primary">
-                    Confirm Account
+                    variant="contained"
+                    disabled={loading || !confirmationCode.trim()}
+                    className="bg-secondary hover:bg-secondary-hover text-secondary-foreground p-3 rounded-lg transition-all duration-200 disabled:opacity-70"
+                  >
+                    {loading ? (
+                      <span className="flex items-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Confirming Account...
+                      </span>
+                    ) : (
+                      "Confirm Account & Log In"
+                    )}
                   </Button>
-                </Stack>
+                </div>
               )}
-            </Paper>
-          </Box>
+            </div>
+          </div>
         </Container>
-      </Box>
-    </Box>
+      </main>
+    </div>
   )
 }

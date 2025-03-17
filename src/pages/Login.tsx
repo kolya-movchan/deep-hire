@@ -5,16 +5,11 @@ import {
   TextField,
   IconButton,
   Container,
-  Box,
-  Typography,
   Button,
-  Paper,
-  Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Drawer,
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../api/rest/auth"
@@ -50,6 +45,8 @@ export const Login = () => {
   const [confirmationCode, setConfirmationCode] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [isResetCodeSent, setIsResetCodeSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -57,29 +54,45 @@ export const Login = () => {
       ...prev,
       [name]: value,
     }))
+    if (error) setError("")
   }
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
+    setError("")
+
     try {
       await logIn(formData.email, formData.password)
       dispatch(checkAuth())
       navigate("/")
     } catch (error) {
       console.error("Login error:", error)
+      setError("Invalid email or password. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleForgotPassword = async () => {
+    if (!resetEmail) return
+
+    setLoading(true)
     try {
       await forgotPassword(resetEmail)
       setIsResetCodeSent(true)
     } catch (error) {
       console.error("Password reset error:", error)
+      setError("Failed to send reset code. Please check your email and try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleResetPasswordSubmit = async () => {
+    if (!resetEmail || !confirmationCode || !newPassword) return
+
+    setLoading(true)
     try {
       await forgotPasswordSubmit(resetEmail, confirmationCode, newPassword)
       setForgotPasswordOpen(false)
@@ -87,204 +100,299 @@ export const Login = () => {
       setResetEmail("")
       setConfirmationCode("")
       setNewPassword("")
+      setError("")
     } catch (error) {
       console.error("Password reset confirmation error:", error)
+      setError("Failed to reset password. Please check your code and try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 200,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 200,
-            boxSizing: "border-box",
-            bgcolor: "#f5f5f5",
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            component={Link}
-            to="/"
-            sx={{
-              textDecoration: "none",
-              color: "#1976d2",
-            }}
-          >
-            ResumeCheck
-          </Typography>
-        </Box>
-        <Sidebar activePath={window.location.pathname} />
-      </Drawer>
+    <div className="flex min-h-screen bg-background">
+      <Sidebar activePath={window.location.pathname} />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: "#fff",
-          p: 3,
-        }}
-      >
-        <Container
-          maxWidth="md"
-          sx={{
-            py: 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "calc(100vh - 64px)",
-          }}
-        >
-          <Box sx={{ textAlign: "center", mb: 3, width: "100%" }}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
-              Welcome Back
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
-              Please sign in to continue
-            </Typography>
+      <main className="flex-grow flex items-center justify-center p-4">
+        <Container maxWidth="sm" className="animate-fade-in">
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"
+                  />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
+              <p className="text-foreground/70 mb-6">Please sign in to your account to continue</p>
+            </div>
 
-            <Paper elevation={2} sx={{ p: 3, mb: 3, maxWidth: "500px", mx: "auto" }}>
-              <Box component="form" onSubmit={handleLogin}>
-                <Stack spacing={3}>
+            {error && (
+              <div className="mb-6 p-3 rounded-lg bg-destructive/10 text-destructive text-sm animate-shake">
+                {error}
+              </div>
+            )}
+
+            <div className="card glass-effect backdrop-blur-md p-8 border border-primary/10 shadow-lg rounded-xl">
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-foreground/80 mb-1.5"
+                  >
+                    Email Address
+                  </label>
                   <TextField
+                    id="email"
                     fullWidth
-                    label="Email"
                     name="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="your.email@example.com"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
                     variant="outlined"
+                    className="form-input"
+                    InputProps={{
+                      className: "rounded-lg bg-background/50 backdrop-blur-sm",
+                    }}
                   />
+                </div>
 
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-foreground/80"
+                    >
+                      Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setForgotPasswordOpen(true)}
+                      className="text-xs text-primary hover:text-primary-focus focus:outline-none focus:underline"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
                   <TextField
+                    id="password"
                     fullWidth
-                    label="Password"
                     name="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                     value={formData.password}
                     onChange={handleInputChange}
                     required
                     variant="outlined"
+                    className="form-input"
                     InputProps={{
                       endAdornment: (
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          className="text-foreground/50"
+                        >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       ),
+                      className: "rounded-lg bg-background/50 backdrop-blur-sm",
                     }}
                   />
-                  <Button
-                    onClick={() => setForgotPasswordOpen(true)}
-                    size="small"
-                    sx={{
-                      color: "#1976d2",
-                      textTransform: "none",
-                      p: 0,
-                      minWidth: "auto",
-                      alignSelf: "flex-end",
-                      "&:hover": {
-                        background: "transparent",
-                        textDecoration: "underline",
-                      },
-                    }}
-                  >
-                    Forgot Password?
-                  </Button>
+                </div>
 
-                  <Button type="submit" fullWidth variant="contained" color="primary">
-                    Sign In
-                  </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                  className="bg-primary hover:bg-primary-hover text-primary-foreground p-3 rounded-lg transition-all duration-200 disabled:opacity-70"
+                >
+                  {loading ? (
+                    <span className="flex items-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Signing in...
+                    </span>
+                  ) : (
+                    "Sign In"
+                  )}
+                </Button>
 
-                  <Typography variant="body2" color="text.secondary">
+                <div className="text-center mt-6">
+                  <p className="text-sm text-foreground/70">
                     Don't have an account?{" "}
-                    <Link
-                      to="/register"
-                      style={{
-                        color: "#1976d2",
-                        textDecoration: "none",
-                        fontWeight: 500,
-                      }}
-                    >
+                    <Link to="/register" className="text-primary font-medium hover:underline">
                       Register here
                     </Link>
-                  </Typography>
-                </Stack>
-              </Box>
-            </Paper>
-          </Box>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
         </Container>
-      </Box>
+      </main>
 
-      <Dialog open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)}>
-        <DialogTitle>{isResetCodeSent ? "Enter Reset Code" : "Reset Password"}</DialogTitle>
-        <DialogContent>
+      {/* Password Reset Dialog */}
+      <Dialog
+        open={forgotPasswordOpen}
+        onClose={() => {
+          if (!loading) {
+            setForgotPasswordOpen(false)
+            setIsResetCodeSent(false)
+            setResetEmail("")
+            setConfirmationCode("")
+            setNewPassword("")
+            setError("")
+          }
+        }}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          className: "rounded-xl overflow-hidden",
+        }}
+      >
+        <DialogTitle className="bg-primary/5 py-4 px-6">
+          <h2 className="text-xl font-semibold">
+            {isResetCodeSent ? "Enter Reset Code" : "Reset Password"}
+          </h2>
+        </DialogTitle>
+        <DialogContent className="p-6">
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              {error}
+            </div>
+          )}
+
           {!isResetCodeSent ? (
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Email Address"
-              type="email"
-              fullWidth
-              variant="outlined"
-              value={resetEmail}
-              onChange={(e) => setResetEmail(e.target.value)}
-            />
-          ) : (
-            <Stack spacing={2}>
+            <div className="mt-2">
+              <p className="text-foreground/70 text-sm mb-4">
+                Enter your email address and we'll send you a code to reset your password.
+              </p>
               <TextField
                 autoFocus
-                margin="dense"
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="outlined"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                className="form-input"
+              />
+            </div>
+          ) : (
+            <div className="mt-2 space-y-4">
+              <p className="text-foreground/70 text-sm mb-2">
+                We've sent a code to your email. Enter the code and your new password below.
+              </p>
+              <TextField
+                autoFocus
                 label="Confirmation Code"
                 type="text"
                 fullWidth
                 variant="outlined"
                 value={confirmationCode}
                 onChange={(e) => setConfirmationCode(e.target.value)}
+                className="form-input"
               />
               <TextField
-                margin="dense"
                 label="New Password"
                 type="password"
                 fullWidth
                 variant="outlined"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                className="form-input"
               />
-            </Stack>
+            </div>
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions className="px-6 py-4 bg-primary/2">
           <Button
             onClick={() => {
-              setForgotPasswordOpen(false)
-              setIsResetCodeSent(false)
-              setResetEmail("")
-              setConfirmationCode("")
-              setNewPassword("")
+              if (!loading) {
+                setForgotPasswordOpen(false)
+                setIsResetCodeSent(false)
+                setResetEmail("")
+                setConfirmationCode("")
+                setNewPassword("")
+                setError("")
+              }
             }}
-            sx={{ color: "gray" }}
+            disabled={loading}
+            className="text-foreground/70 hover:bg-background/50 rounded-lg"
           >
             Cancel
           </Button>
           <Button
             onClick={isResetCodeSent ? handleResetPasswordSubmit : handleForgotPassword}
-            color="primary"
+            disabled={
+              loading ||
+              (!isResetCodeSent && !resetEmail) ||
+              (isResetCodeSent && (!confirmationCode || !newPassword))
+            }
+            className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg"
           >
-            {isResetCodeSent ? "Confirm Reset" : "Reset Password"}
+            {loading ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Processing...
+              </span>
+            ) : isResetCodeSent ? (
+              "Reset Password"
+            ) : (
+              "Send Code"
+            )}
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </div>
   )
 }

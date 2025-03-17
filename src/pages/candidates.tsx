@@ -1,20 +1,9 @@
 import { FC } from "react"
-import {
-  Box,
-  Container,
-  Typography,
-  Drawer,
-  Grid,
-  Avatar,
-  Chip,
-  Card,
-  CardContent,
-  CardActions,
-  Button,
-} from "@mui/material"
-import { Star } from "@mui/icons-material"
+import { Container, Grid, Avatar, Button } from "@mui/material"
+import { Star, Email, Phone } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { Sidebar } from "@/components/Sidebar"
+import { cn } from "@/lib/utils"
 
 // Define types for our mocked data
 type Skill = {
@@ -102,17 +91,17 @@ const mockCandidates: Candidate[] = [
 const getStatusColor = (status: Candidate["status"]): string => {
   switch (status) {
     case "new":
-      return "#2196f3" // blue
+      return "primary"
     case "contacted":
-      return "#ff9800" // orange
+      return "warning"
     case "interviewing":
-      return "#9c27b0" // purple
+      return "secondary"
     case "hired":
-      return "#4caf50" // green
+      return "success"
     case "rejected":
-      return "#f44336" // red
+      return "destructive"
     default:
-      return "#757575" // grey
+      return "muted"
   }
 }
 
@@ -120,138 +109,143 @@ const getStatusColor = (status: Candidate["status"]): string => {
 const getSkillLevelColor = (level: Skill["level"]): string => {
   switch (level) {
     case "beginner":
-      return "#90caf9" // light blue
+      return "bg-primary/10 text-primary"
     case "intermediate":
-      return "#64b5f6" // medium blue
+      return "bg-secondary/10 text-secondary"
     case "expert":
-      return "#1976d2" // dark blue
+      return "bg-accent/10 text-accent"
     default:
-      return "#bbdefb" // very light blue
+      return "bg-primary/5 text-primary"
   }
 }
 
 export const Candidates: FC = () => {
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 200,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 200,
-            boxSizing: "border-box",
-            bgcolor: "#f5f5f5",
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            component={Link}
-            to="/"
-            sx={{
-              textDecoration: "none",
-              color: "#1976d2",
-            }}
-          >
-            ResumeCheck
-          </Typography>
-        </Box>
-        <Sidebar activePath={window.location.pathname} />
-      </Drawer>
+    <div className="flex min-h-screen bg-background">
+      <Sidebar activePath={window.location.pathname} />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: "#fff",
-          p: 3,
-        }}
-      >
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
-            Candidates
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
-            View and manage all candidates in your pipeline
-          </Typography>
+      <main className="flex-grow px-4 py-8 md:px-8">
+        <Container maxWidth="lg" className="animate-fade-in">
+          <div className="flex items-center mb-8">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-foreground">Candidates</h1>
+          </div>
+
+          <p className="text-foreground/70 mb-8 max-w-2xl">
+            View and manage all candidates in your recruitment pipeline. Track status, skills, and
+            contact information in one place.
+          </p>
 
           <Grid container spacing={3}>
-            {mockCandidates.map((candidate) => (
+            {mockCandidates.map((candidate, index) => (
               <Grid item xs={12} md={6} key={candidate.id}>
-                <Card
-                  elevation={2}
-                  sx={{ borderRadius: 2, height: "100%", display: "flex", flexDirection: "column" }}
+                <div
+                  className="card bg-white rounded-xl shadow-md border border-primary/5 h-full flex flex-col animate-slide-up overflow-hidden"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                      <Avatar sx={{ bgcolor: getStatusColor(candidate.status), mr: 2 }}>
+                  <div className="p-6 flex-grow">
+                    <div className="flex items-center mb-4">
+                      <Avatar
+                        className={cn(
+                          "w-12 h-12 mr-4 text-white font-bold",
+                          `bg-${getStatusColor(candidate.status)}`
+                        )}
+                      >
                         {candidate.name.charAt(0)}
                       </Avatar>
-                      <Box>
-                        <Typography variant="h6">{candidate.name}</Typography>
-                        <Typography variant="body2" color="text.secondary">
+                      <div>
+                        <h3 className="text-lg font-bold text-foreground">{candidate.name}</h3>
+                        <p className="text-sm text-foreground/60">
                           {candidate.position} • {candidate.experience} years exp
-                        </Typography>
-                      </Box>
-                      <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-                        <Star sx={{ color: "#FFD700", mr: 0.5 }} />
-                        <Typography variant="body2">{candidate.rating}</Typography>
-                      </Box>
-                    </Box>
+                        </p>
+                      </div>
+                      <div className="ml-auto flex items-center">
+                        <div className="flex items-center bg-warning/10 text-warning px-2 py-1 rounded-full">
+                          <Star sx={{ fontSize: "1rem", marginRight: "2px" }} />
+                          <span className="text-sm font-medium">{candidate.rating}</span>
+                        </div>
+                      </div>
+                    </div>
 
-                    <Chip
-                      label={candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
-                      size="small"
-                      sx={{
-                        bgcolor: getStatusColor(candidate.status),
-                        color: "white",
-                        mb: 2,
-                      }}
-                    />
+                    <div className="mb-4">
+                      <span
+                        className={cn(
+                          "inline-block text-xs font-medium px-3 py-1 rounded-full",
+                          `bg-${getStatusColor(candidate.status)}/10 text-${getStatusColor(candidate.status)}`
+                        )}
+                      >
+                        {candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
+                      </span>
+                    </div>
 
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      {candidate.email}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      {candidate.phone}
-                    </Typography>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-foreground/70">
+                        <Email fontSize="small" className="mr-2 text-primary/60" />
+                        <span>{candidate.email}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-foreground/70">
+                        <Phone fontSize="small" className="mr-2 text-primary/60" />
+                        <span>{candidate.phone}</span>
+                      </div>
+                    </div>
 
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                      Skills:
-                    </Typography>
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                      {candidate.skills.map((skill) => (
-                        <Chip
-                          key={skill.name}
-                          label={skill.name}
-                          size="small"
-                          sx={{
-                            bgcolor: getSkillLevelColor(skill.level),
-                            color: "white",
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  </CardContent>
-                  <CardActions sx={{ p: 2, pt: 0 }}>
-                    <Button size="small" variant="outlined">
-                      View Profile
-                    </Button>
-                    <Button size="small" variant="contained" sx={{ ml: 1 }}>
-                      Contact
-                    </Button>
-                  </CardActions>
-                </Card>
+                    <div>
+                      <h4 className="text-sm font-medium mb-2 text-foreground/80">Skills:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {candidate.skills.map((skill) => (
+                          <span
+                            key={skill.name}
+                            className={cn(
+                              "text-xs px-2 py-1 rounded-full",
+                              getSkillLevelColor(skill.level)
+                            )}
+                          >
+                            {skill.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border-t border-primary/5 bg-primary/2">
+                    <div className="flex gap-2">
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        className="text-primary border-primary/20 hover:bg-primary/5 rounded-lg text-sm flex-1"
+                      >
+                        View Profile
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg text-sm flex-1"
+                      >
+                        Contact
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </Grid>
             ))}
           </Grid>
         </Container>
-      </Box>
-    </Box>
+      </main>
+    </div>
   )
 }

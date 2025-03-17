@@ -1,20 +1,5 @@
 import { FC, useEffect } from "react"
-import {
-  Box,
-  Container,
-  Typography,
-  Drawer,
-  Paper,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  Button,
-} from "@mui/material"
+import { Container, Paper, Grid, Button, LinearProgress } from "@mui/material"
 import { Visibility } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
@@ -32,7 +17,6 @@ export const CvAnalyses: FC = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log("Fetching analyses for userId:", userId)
       dispatch(fetchCandidateAnalyses(userId))
     }
   }, [userId, dispatch])
@@ -49,150 +33,178 @@ export const CvAnalyses: FC = () => {
     }).format(date)
   }
 
-  // Display the data as JSON at the top of the component
-  console.log("analyses ===>", analyses, loading, error)
-
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 200,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 200,
-            boxSizing: "border-box",
-            bgcolor: "#f5f5f5",
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            component={Link}
-            to="/"
-            sx={{
-              textDecoration: "none",
-              color: "#1976d2",
-            }}
-          >
-            ResumeCheck
-          </Typography>
-        </Box>
-        <Sidebar activePath={window.location.pathname} />
-      </Drawer>
+    <div className="flex min-h-screen bg-background">
+      <Sidebar activePath={window.location.pathname} />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: "#fff",
-          p: 3,
-        }}
-      >
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
-            CV Analyses
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
-            View all your CV analyses and their results
-          </Typography>
+      <main className="flex-grow px-4 py-8 md:px-8">
+        <Container maxWidth="lg" className="animate-fade-in">
+          <div className="flex items-center mb-8">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-foreground">CV Analyses</h1>
+          </div>
+
+          <p className="text-foreground/70 mb-8 max-w-2xl">
+            View all your CV analyses and check candidate matching results. You can upload new
+            resumes from the home page.
+          </p>
 
           <Grid container spacing={3}>
             {loading && (
               <Grid item xs={12}>
-                <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-                  <Typography variant="body1">Loading candidate analyses...</Typography>
-                </Paper>
+                <div className="card p-6 text-center animate-pulse">
+                  <h2 className="text-xl font-semibold mb-4">Loading analyses...</h2>
+                  <LinearProgress />
+                </div>
               </Grid>
             )}
 
             {error && (
               <Grid item xs={12}>
-                <Paper elevation={2} sx={{ p: 3, borderRadius: 2, bgcolor: "#ffebee" }}>
-                  <Typography variant="body1" color="error">
-                    Error loading analyses: {error}
-                  </Typography>
-                </Paper>
+                <div className="card p-6 text-center border border-destructive/20 bg-destructive/5">
+                  <h2 className="text-xl font-semibold text-destructive mb-4">
+                    Error loading analyses
+                  </h2>
+                  <p className="text-foreground/70">{error}</p>
+                  <Button
+                    onClick={() => dispatch(fetchCandidateAnalyses(userId))}
+                    variant="outlined"
+                    className="mt-4 bg-primary/10 hover:bg-primary/20 text-primary"
+                  >
+                    Try Again
+                  </Button>
+                </div>
               </Grid>
             )}
 
             {!loading && !error && (!analyses || analyses.length === 0) && (
               <Grid item xs={12}>
-                <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-                  <Typography variant="body1">
-                    No CV analyses found. Upload a resume on the home page to get started.
-                  </Typography>
-                </Paper>
+                <div className="card glass-effect p-8 text-center border border-primary/10 animate-slide-up">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-8 h-8"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-semibold mb-2">No analyses found</h2>
+                  <p className="text-foreground/70 mb-6">
+                    Upload a resume on the home page to get started with candidate analysis.
+                  </p>
+                  <Button
+                    component={Link}
+                    to="/"
+                    variant="contained"
+                    className="bg-primary text-primary-foreground hover:bg-primary-hover"
+                  >
+                    Upload Resume
+                  </Button>
+                </div>
               </Grid>
             )}
 
             {!loading && !error && analyses && analyses.length > 0 && (
               <Grid item xs={12}>
-                <TableContainer component={Paper} elevation={2} sx={{ borderRadius: 2 }}>
-                  <Table sx={{ minWidth: 650 }}>
-                    <TableHead sx={{ bgcolor: "#f5f5f5" }}>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                        <TableCell sx={{ fontWeight: "bold" }}>Created At</TableCell>
-                        <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
-                        <TableCell sx={{ fontWeight: "bold" }} align="right">
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {analyses.map((analysis) => (
-                        <TableRow
-                          key={analysis.id}
-                          sx={{ "&:hover": { bgcolor: "rgba(25, 118, 210, 0.04)" } }}
-                        >
-                          <TableCell>
-                            <Typography variant="body1" fontWeight={500}>
-                              {analysis.name}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Chip
-                              size="small"
-                              label={formatDate(analysis.createdAt)}
-                              sx={{ bgcolor: "#e3f2fd", color: "#1976d2" }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ fontSize: "0.8rem" }}
-                            >
-                              {analysis.id.substring(0, 12)}...
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Button
-                              component={Link}
-                              to={`/cv-analysis/${analysis.id}`}
-                              variant="outlined"
-                              size="small"
-                              startIcon={<Visibility />}
-                              sx={{ borderRadius: 2 }}
-                            >
-                              View
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <div className="overflow-hidden bg-white rounded-xl shadow-md border border-primary/5 animate-slide-up">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-primary/5">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
+                            Name
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
+                            Created At
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
+                            ID
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-right text-sm font-semibold text-foreground"
+                          >
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {analyses.map((analysis, index) => (
+                          <tr
+                            key={analysis.id}
+                            className="hover:bg-primary/5 transition-colors duration-150"
+                            style={{ animationDelay: `${index * 0.05}s` }}
+                          >
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-md font-medium text-foreground">
+                                {analysis.name}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                                {formatDate(analysis.createdAt)}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className="text-sm text-foreground/60 font-mono">
+                                {analysis.id.substring(0, 12)}...
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right">
+                              <Button
+                                component={Link}
+                                to={`/cv-analysis/${analysis.id}`}
+                                variant="outlined"
+                                size="small"
+                                startIcon={<Visibility />}
+                                className="rounded-lg border-primary/20 text-primary hover:bg-primary/10"
+                              >
+                                View
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </Grid>
             )}
           </Grid>
         </Container>
-      </Box>
-    </Box>
+      </main>
+    </div>
   )
 }

@@ -1,6 +1,16 @@
 import { FC } from "react"
-import { Container, Grid, Avatar, Button } from "@mui/material"
-import { Star, Email, Phone } from "@mui/icons-material"
+import { Container, Grid, Avatar, Button, Paper, Tooltip, Chip } from "@mui/material"
+import {
+  Star,
+  Email,
+  Phone,
+  Groups,
+  StarBorder,
+  StarHalf,
+  CheckCircle,
+  Work,
+  School,
+} from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { Sidebar } from "@/components/Sidebar"
 import { cn } from "@/lib/utils"
@@ -109,14 +119,48 @@ const getStatusColor = (status: Candidate["status"]): string => {
 const getSkillLevelColor = (level: Skill["level"]): string => {
   switch (level) {
     case "beginner":
-      return "bg-primary/10 text-primary"
+      return "bg-blue-100 text-blue-700"
     case "intermediate":
-      return "bg-secondary/10 text-secondary"
+      return "bg-purple-100 text-purple-700"
     case "expert":
-      return "bg-accent/10 text-accent"
+      return "bg-indigo-100 text-indigo-700"
     default:
-      return "bg-primary/5 text-primary"
+      return "bg-gray-100 text-gray-700"
   }
+}
+
+// Helper function for rating colors and stars display
+const getRatingColor = (rating: number): string => {
+  if (rating >= 4.5) return "#16a34a" // green-600
+  if (rating >= 4.0) return "#65a30d" // lime-600
+  if (rating >= 3.5) return "#ca8a04" // yellow-600
+  if (rating >= 3.0) return "#ea580c" // orange-600
+  return "#dc2626" // red-600
+}
+
+// Function to render stars based on rating
+const renderStars = (rating: number) => {
+  const stars = []
+  const fullStars = Math.floor(rating)
+  const hasHalfStar = rating % 1 >= 0.5
+
+  // Add full stars
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(<Star key={`star-${i}`} sx={{ color: getRatingColor(rating) }} />)
+  }
+
+  // Add half star if needed
+  if (hasHalfStar) {
+    stars.push(<StarHalf key="half-star" sx={{ color: getRatingColor(rating) }} />)
+  }
+
+  // Add empty stars
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(<StarBorder key={`empty-${i}`} sx={{ color: getRatingColor(rating) }} />)
+  }
+
+  return stars
 }
 
 export const Candidates: FC = () => {
@@ -126,121 +170,154 @@ export const Candidates: FC = () => {
 
       <main className="flex-grow px-4 py-8 md:px-8">
         <Container maxWidth="lg" className="animate-fade-in">
-          <div className="flex items-center mb-8">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-                />
-              </svg>
+          <div className="flex items-center mb-6">
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+              <Groups sx={{ color: "#2563eb", fontSize: 28 }} />
             </div>
-            <h1 className="text-3xl font-bold text-foreground">Candidates</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Candidates</h1>
+              <p className="text-foreground/70 max-w-2xl">
+                View and manage all candidates in your recruitment pipeline
+              </p>
+            </div>
           </div>
 
-          <p className="text-foreground/70 mb-8 max-w-2xl">
-            View and manage all candidates in your recruitment pipeline. Track status, skills, and
-            contact information in one place.
-          </p>
+          <Paper
+            elevation={2}
+            className="p-4 mb-8 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/10"
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle sx={{ color: "#4f46e5" }} />
+                <span className="font-medium">
+                  Track candidate status, skills, and contact information in one place
+                </span>
+              </div>
+              <Button
+                variant="contained"
+                className="bg-primary text-white rounded-lg"
+                startIcon={<Work />}
+                sx={{ textTransform: "none" }}
+              >
+                Add New Candidate
+              </Button>
+            </div>
+          </Paper>
 
           <Grid container spacing={3}>
             {mockCandidates.map((candidate, index) => (
               <Grid item xs={12} md={6} key={candidate.id}>
-                <div
-                  className="card bg-white rounded-xl shadow-md border border-primary/5 h-full flex flex-col animate-slide-up overflow-hidden"
+                <Paper
+                  elevation={2}
+                  className="h-full flex flex-col animate-slide-up overflow-hidden rounded-xl"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className="p-6 flex-grow">
-                    <div className="flex items-center mb-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-blue-100">
+                    <div className="flex items-center">
                       <Avatar
-                        className={cn(
-                          "w-12 h-12 mr-4 text-white font-bold",
-                          `bg-${getStatusColor(candidate.status)}`
-                        )}
+                        sx={{
+                          bgcolor: getRatingColor(candidate.rating),
+                          width: 56,
+                          height: 56,
+                          boxShadow: "0 3px 5px rgba(0,0,0,0.1)",
+                        }}
+                        className="mr-4 text-white font-bold"
                       >
                         {candidate.name.charAt(0)}
                       </Avatar>
-                      <div>
-                        <h3 className="text-lg font-bold text-foreground">{candidate.name}</h3>
-                        <p className="text-sm text-foreground/60">
-                          {candidate.position} • {candidate.experience} years exp
-                        </p>
-                      </div>
-                      <div className="ml-auto flex items-center">
-                        <div className="flex items-center bg-warning/10 text-warning px-2 py-1 rounded-full">
-                          <Star sx={{ fontSize: "1rem", marginRight: "2px" }} />
-                          <span className="text-sm font-medium">{candidate.rating}</span>
+                      <div className="flex-grow">
+                        <h3 className="text-xl font-bold text-gray-800 mb-1">{candidate.name}</h3>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <Chip
+                            size="small"
+                            label={candidate.position}
+                            sx={{ backgroundColor: "#e0e7ff", color: "#4338ca", fontWeight: 500 }}
+                          />
+                          <Tooltip title="Years of experience">
+                            <Chip
+                              size="small"
+                              icon={<Work sx={{ fontSize: 16, color: "#6366f1" }} />}
+                              label={`${candidate.experience} years`}
+                              sx={{ backgroundColor: "#ede9fe", color: "#6d28d9", fontWeight: 500 }}
+                            />
+                          </Tooltip>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="mb-4">
-                      <span
-                        className={cn(
-                          "inline-block text-xs font-medium px-3 py-1 rounded-full",
-                          `bg-${getStatusColor(candidate.status)}/10 text-${getStatusColor(candidate.status)}`
-                        )}
-                      >
-                        {candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
-                      </span>
+                  <div className="p-5 flex-grow">
+                    <div className="flex justify-between items-center mb-4">
+                      <Chip
+                        label={candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
+                        sx={{
+                          backgroundColor: `var(--${getStatusColor(candidate.status)}-light)`,
+                          color: `var(--${getStatusColor(candidate.status)}-dark)`,
+                          fontWeight: 600,
+                          textTransform: "uppercase",
+                          fontSize: "0.7rem",
+                        }}
+                      />
+
+                      <Tooltip title={`Rating: ${candidate.rating}/5`}>
+                        <div className="flex items-center">{renderStars(candidate.rating)}</div>
+                      </Tooltip>
                     </div>
 
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center text-sm text-foreground/70">
-                        <Email fontSize="small" className="mr-2 text-primary/60" />
-                        <span>{candidate.email}</span>
+                    <div className="space-y-3 mb-5 bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center text-sm">
+                        <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                          <Email fontSize="small" sx={{ color: "#dc2626" }} />
+                        </div>
+                        <span className="text-gray-700">{candidate.email}</span>
                       </div>
-                      <div className="flex items-center text-sm text-foreground/70">
-                        <Phone fontSize="small" className="mr-2 text-primary/60" />
-                        <span>{candidate.phone}</span>
+                      <div className="flex items-center text-sm">
+                        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                          <Phone fontSize="small" sx={{ color: "#16a34a" }} />
+                        </div>
+                        <span className="text-gray-700">{candidate.phone}</span>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium mb-2 text-foreground/80">Skills:</h4>
+                      <div className="flex items-center mb-3">
+                        <School sx={{ color: "#4f46e5", marginRight: "8px" }} />
+                        <h4 className="font-semibold text-gray-700">Skills & Expertise</h4>
+                      </div>
                       <div className="flex flex-wrap gap-2">
                         {candidate.skills.map((skill) => (
-                          <span
+                          <Chip
                             key={skill.name}
-                            className={cn(
-                              "text-xs px-2 py-1 rounded-full",
-                              getSkillLevelColor(skill.level)
-                            )}
-                          >
-                            {skill.name}
-                          </span>
+                            label={skill.name}
+                            size="small"
+                            className={cn(getSkillLevelColor(skill.level))}
+                          />
                         ))}
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 border-t border-primary/5 bg-primary/2">
-                    <div className="flex gap-2">
+                  <div className="p-4 border-t border-gray-100 bg-white">
+                    <div className="flex gap-3">
                       <Button
-                        size="small"
+                        size="medium"
                         variant="outlined"
-                        className="text-primary border-primary/20 hover:bg-primary/5 rounded-lg text-sm flex-1"
+                        className="text-primary border-primary/20 rounded-lg flex-1"
+                        sx={{ textTransform: "none" }}
                       >
                         View Profile
                       </Button>
                       <Button
-                        size="small"
+                        size="medium"
                         variant="contained"
-                        className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg text-sm flex-1"
+                        className="bg-gradient-to-r from-primary to-indigo-600 text-white hover:from-primary/90 hover:to-indigo-700 rounded-lg flex-1"
+                        sx={{ textTransform: "none" }}
                       >
                         Contact
                       </Button>
                     </div>
                   </div>
-                </div>
+                </Paper>
               </Grid>
             ))}
           </Grid>

@@ -71,7 +71,7 @@ export const CvAnalyses: FC = () => {
                   <Button
                     onClick={() => dispatch(fetchCandidateAnalyses(userId))}
                     variant="outlined"
-                    className="mt-4 bg-primary/10 hover:bg-primary/20 text-primary"
+                    className="mt-4 bg-primary/10 text-primary"
                   >
                     Try Again
                   </Button>
@@ -93,7 +93,7 @@ export const CvAnalyses: FC = () => {
                     component={Link}
                     to="/"
                     variant="contained"
-                    className="bg-primary text-primary-foreground hover:bg-primary-hover"
+                    className="bg-primary text-primary-foreground"
                   >
                     Upload Resume
                   </Button>

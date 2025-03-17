@@ -95,15 +95,15 @@ export const Home = () => {
         <div className="min-h-screen bg-gradient-to-br from-background to-background/95">
           <Container maxWidth="lg" className="py-8 px-4">
             {/* Hero Section - Centered for eye tracking */}
-            <div className="flex flex-col items-center justify-center py-2">
+            <div className="flex flex-col items-center justify-center py-2 min-h-screen">
               <div className="text-center mb-2 animate-fade-in">
-                <h1 className="text-3xl md:text-6xl font-bold mb-6">
+                <h1 className="text-2xl md:text-4xl font-bold mb-6">
                   Supercharge Your{" "}
                   <span className=" bg-gradient-to-r from-primary to-secondary">
                     Hiring Process
                   </span>
                 </h1>
-                <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
+                <p className="text-xl text-foreground/80 mb-8 mx-auto">
                   AI-powered CV analysis that matches candidates to your job requirements with
                   unparalleled accuracy.
                 </p>
@@ -134,7 +134,7 @@ export const Home = () => {
                           ? "border-primary bg-primary/5"
                           : resumeFile
                             ? "border-success bg-success/5"
-                            : "border-gray-200 hover:border-primary/50 hover:bg-primary/5"
+                            : "border-gray-200 hover:border-primary/50"
                       }`}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}

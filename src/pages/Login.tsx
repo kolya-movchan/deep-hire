@@ -216,7 +216,7 @@ export const Login = () => {
                   fullWidth
                   variant="contained"
                   disabled={loading}
-                  className="bg-primary hover:bg-primary-hover text-primary-foreground p-3 rounded-lg transition-all duration-200 disabled:opacity-70"
+                  className="bg-primary text-primary-foreground p-3 rounded-lg transition-all duration-200 disabled:opacity-70"
                 >
                   {loading ? (
                     <span className="flex items-center">
@@ -359,7 +359,7 @@ export const Login = () => {
               (!isResetCodeSent && !resetEmail) ||
               (isResetCodeSent && (!confirmationCode || !newPassword))
             }
-            className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg"
+            className="bg-primary text-primary-foreground rounded-lg"
           >
             {loading ? (
               <span className="flex items-center">

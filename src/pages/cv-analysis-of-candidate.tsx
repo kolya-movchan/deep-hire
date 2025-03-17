@@ -26,14 +26,19 @@ import { cn } from "@/lib/utils"
 const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
   const getScoreColor = (score: number): string => {
     if (score >= 80) return "success"
-    if (score >= 60) return "warning"
-    return "destructive"
+    if (score > 30) return "warning"
+    return "danger"
   }
 
   const getScoreText = (score: number): string => {
+    if (score >= 90) return "Perfect match for the position"
     if (score >= 80) return "Excellent match for the position"
+    if (score >= 70) return "Strong match with minor gaps"
     if (score >= 60) return "Good match with some gaps"
-    return "Potential match with significant gaps"
+    if (score >= 50) return "Moderate match with several gaps"
+    if (score >= 40) return "Fair match with significant gaps"
+    if (score >= 30) return "Weak match with major gaps"
+    return "Poor match for the position"
   }
 
   return (

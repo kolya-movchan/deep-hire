@@ -56,6 +56,11 @@ export default {
           foreground: "hsl(var(--success-hue), 10%, 98% / <alpha-value>)",
           muted: "hsl(var(--success-hue), 65%, 95% / <alpha-value>)",
         },
+        info: {
+          DEFAULT: "hsl(var(--info-hue), 90%, 55% / <alpha-value>)",
+          foreground: "hsl(var(--info-hue), 10%, 10% / <alpha-value>)",
+          muted: "hsl(var(--info-hue), 90%, 95% / <alpha-value>)",
+        },
         warning: {
           DEFAULT: "hsl(var(--warning-hue), 90%, 55% / <alpha-value>)",
           foreground: "hsl(var(--warning-hue), 10%, 10% / <alpha-value>)",

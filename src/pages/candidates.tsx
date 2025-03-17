@@ -105,7 +105,7 @@ const getStatusColor = (status: Candidate["status"]): string => {
     case "contacted":
       return "warning"
     case "interviewing":
-      return "secondary"
+      return "info"
     case "hired":
       return "success"
     case "rejected":
@@ -181,28 +181,6 @@ export const Candidates: FC = () => {
               </p>
             </div>
           </div>
-
-          <Paper
-            elevation={2}
-            className="p-4 mb-8 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/10"
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <CheckCircle sx={{ color: "#4f46e5" }} />
-                <span className="font-medium">
-                  Track candidate status, skills, and contact information in one place
-                </span>
-              </div>
-              <Button
-                variant="contained"
-                className="bg-primary text-white rounded-lg"
-                startIcon={<Work />}
-                sx={{ textTransform: "none" }}
-              >
-                Add New Candidate
-              </Button>
-            </div>
-          </Paper>
 
           <Grid container spacing={3}>
             {mockCandidates.map((candidate, index) => (

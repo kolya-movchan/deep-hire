@@ -90,6 +90,5 @@ const candidateAnalysesSlice = createSlice({
   },
 })
 
-export const { clearAnalyses, addAnalysis, updateAnalysis, removeAnalysis, setLoading, setError } =
-  candidateAnalysesSlice.actions
+export const { clearAnalyses, addAnalysis, removeAnalysis } = candidateAnalysesSlice.actions
 export default candidateAnalysesSlice.reducer

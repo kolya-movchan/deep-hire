@@ -21,7 +21,6 @@ import { Link, useParams, Navigate } from "react-router-dom"
 import {
   Person,
   Login,
-  WorkOutline,
   Settings,
   Email,
   Phone,

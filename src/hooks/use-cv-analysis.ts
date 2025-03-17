@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { CandidateData, MatchingData } from "@/types/cv-analysis"
-import { mockMatchingData } from "@/mocks/cv-analysis-data"
 import client from "@/api/graphql/client"
-import { GET_CANDIDATE_SUMMARY } from "@/api/graphql/queries"
+import { GET_CANDIDATE_SUMMARY, GET_MATCH_POSITION } from "@/api/graphql/queries"
 import { AppDispatch } from "@/store"
 import { addAnalysis } from "@/store/candidate-analyses-slice"
+import { GetMatchPositionResponse, GetMatchPositionVariables } from "@/api/graphql/types"
 
 interface UseCvAnalysisResult {
   candidateData: CandidateData | null
@@ -34,7 +34,7 @@ export const useCvAnalysis = (
 
     let attempts = 0
     const maxAttempts = 30
-    let timer: NodeJS.Timeout | null = null
+    let timer: ReturnType<typeof setTimeout> | null = null
 
     const fetchData = async (): Promise<void> => {
       console.log(
@@ -42,7 +42,8 @@ export const useCvAnalysis = (
         fileSlug
       )
       try {
-        const { data } = await client.query({
+        // Fetch candidate summary data
+        const candidateResponse = await client.query({
           query: GET_CANDIDATE_SUMMARY,
           variables: { id: fileSlug },
           context: {
@@ -51,23 +52,68 @@ export const useCvAnalysis = (
           fetchPolicy: "network-only", // Force network request, don't use cache
         })
 
-        console.log("[useCvAnalysis] Query response:", data)
+        console.log("[useCvAnalysis] Candidate query response:", candidateResponse.data)
 
-        if (data && data.getCandidateSummary) {
+        // Fetch matching data
+        const matchingResponse = await client.query<
+          GetMatchPositionResponse,
+          GetMatchPositionVariables
+        >({
+          query: GET_MATCH_POSITION,
+          variables: { id: fileSlug },
+          context: {
+            operationName: "GetMatchPosition",
+          },
+          fetchPolicy: "network-only",
+        })
+
+        console.log("[useCvAnalysis] Matching query response:", matchingResponse.data)
+
+        if (
+          candidateResponse.data &&
+          candidateResponse.data.getCandidateSummary &&
+          matchingResponse.data &&
+          matchingResponse.data.getMatchPosition
+        ) {
           console.log(
             "[useCvAnalysis] Successfully retrieved candidate data:",
-            data.getCandidateSummary
+            candidateResponse.data.getCandidateSummary
           )
-          setCandidateData(data.getCandidateSummary)
-          setMatchingData(mockMatchingData) // Still using mock matching data
-          console.log("[useCvAnalysis] Set mock matching data:", mockMatchingData)
+          console.log(
+            "[useCvAnalysis] Successfully retrieved matching data:",
+            matchingResponse.data.getMatchPosition
+          )
+
+          setCandidateData(candidateResponse.data.getCandidateSummary)
+
+          // Map the GraphQL response to our MatchingData interface
+          const matchData: MatchingData = {
+            matchScore: matchingResponse.data.getMatchPosition.matchScore,
+            matchedSkills: matchingResponse.data.getMatchPosition.matchedSkills,
+            unmatchedSkills: matchingResponse.data.getMatchPosition.unmatchedSkills,
+            experienceMatch: matchingResponse.data.getMatchPosition.experienceMatch,
+            softSkillsAnalysis: matchingResponse.data.getMatchPosition.softSkillsAnalysis,
+            potentialRisks: matchingResponse.data.getMatchPosition.potentialRisks,
+            finalRecommendation: matchingResponse.data.getMatchPosition.finalRecommendation,
+          }
+
+          setMatchingData(matchData)
           setIsLoading(false)
 
           console.log("[useCvAnalysis] Adding analysis:", {
             id: fileSlug,
-            name: data.getCandidateSummary.name,
-            createdAt: data.getCandidateSummary.createdAt,
+            name: candidateResponse.data.getCandidateSummary.name,
+            createdAt: candidateResponse.data.getCandidateSummary.createdAt,
           })
+
+          // Add the analysis to the store
+          dispatch(
+            addAnalysis({
+              id: fileSlug,
+              name: candidateResponse.data.getCandidateSummary.name,
+              createdAt: candidateResponse.data.getCandidateSummary.createdAt,
+            })
+          )
 
           if (timer) {
             console.log("[useCvAnalysis] Clearing polling interval after success")
@@ -127,7 +173,7 @@ export const useCvAnalysis = (
       console.log("[useCvAnalysis] Cleanup: clearing interval")
       if (timer) clearInterval(timer)
     }
-  }, [fileSlug])
+  }, [fileSlug, dispatch])
 
   console.log("[useCvAnalysis] Returning state:", {
     candidateData: candidateData ? "Present" : "Null",

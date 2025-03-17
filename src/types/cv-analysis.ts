@@ -1,6 +1,6 @@
 export interface Contact {
-  phone: string
   email: string
+  phone: string
   location: string
 }
 
@@ -20,21 +20,21 @@ export interface Experience {
 
 export interface CandidateData {
   id: string
-  userId: string
   name: string
   title: string
-  contact: Contact
   summary: string
-  education: Education[]
+  contact: Contact
   experience: Experience[]
+  education: Education[]
   skills: string[]
   tools: string[]
+  createdAt: string
 }
 
 export interface ExperienceMatch {
   yearsOfExperience: number
-  requiredExperience: string
-  match: string
+  requiredExperience: number
+  match: boolean
 }
 
 export interface SoftSkillsAnalysis {
@@ -55,5 +55,4 @@ export interface MatchingData {
   softSkillsAnalysis: SoftSkillsAnalysis
   potentialRisks: string[]
   finalRecommendation: FinalRecommendation
-  createdAt: string
 }

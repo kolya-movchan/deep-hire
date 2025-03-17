@@ -73,3 +73,29 @@ export const GET_ALL_CANDIDATE_ANALYSES = gql`
     }
   }
 `
+
+export const GET_MATCH_POSITION = gql`
+  query GetMatchPosition($id: ID!) {
+    getMatchPosition(id: $id) {
+      id
+      matchScore
+      matchedSkills
+      unmatchedSkills
+      experienceMatch {
+        yearsOfExperience
+        requiredExperience
+        match
+      }
+      softSkillsAnalysis {
+        matched
+        missing
+      }
+      potentialRisks
+      finalRecommendation {
+        suitability
+        reason
+      }
+      createdAt
+    }
+  }
+`

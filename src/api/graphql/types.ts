@@ -116,3 +116,39 @@ export type GetAllCandidateAnalysesResponse = {
 export type GetAllCandidateAnalysesVariables = {
   userId: string
 }
+
+export interface ExperienceMatch {
+  yearsOfExperience: number
+  requiredExperience: number
+  match: boolean
+}
+
+export interface SoftSkillsAnalysis {
+  matched: string[]
+  missing: string[]
+}
+
+export interface FinalRecommendation {
+  suitability: string
+  reason: string
+}
+
+export interface MatchPosition {
+  id: string
+  matchScore: number
+  matchedSkills: string[]
+  unmatchedSkills: string[]
+  experienceMatch: ExperienceMatch
+  softSkillsAnalysis: SoftSkillsAnalysis
+  potentialRisks: string[]
+  finalRecommendation: FinalRecommendation
+  createdAt: string
+}
+
+export interface GetMatchPositionResponse {
+  getMatchPosition: MatchPosition
+}
+
+export interface GetMatchPositionVariables {
+  id: string
+}

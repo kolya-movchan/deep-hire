@@ -4,11 +4,6 @@ import {
   Container,
   Typography,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
   Grid,
   Avatar,
   Chip,
@@ -17,10 +12,9 @@ import {
   CardActions,
   Button,
 } from "@mui/material"
-import { Person, Login, WorkOutline, Settings, Assessment, Star } from "@mui/icons-material"
+import { Star } from "@mui/icons-material"
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
+import { Sidebar } from "@/components/Sidebar"
 
 // Define types for our mocked data
 type Skill = {
@@ -137,22 +131,6 @@ const getSkillLevelColor = (level: Skill["level"]): string => {
 }
 
 export const Candidates: FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth)
-
-  const sidebarItems = user
-    ? [
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-        { icon: <Settings />, text: "Settings", path: "/settings" },
-      ]
-    : [
-        { icon: <Login />, text: "Login", path: "/login" },
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-      ]
-
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Drawer
@@ -183,47 +161,7 @@ export const Candidates: FC = () => {
             ResumeCheck
           </Typography>
         </Box>
-        <List>
-          {sidebarItems.map((item) => (
-            <ListItem
-              component={Link}
-              to={item.path}
-              key={item.text}
-              sx={{
-                color: item.path === "/candidates" ? "#1976d2" : "#666",
-                bgcolor: item.path === "/candidates" ? "rgba(25, 118, 210, 0.08)" : "transparent",
-                fontWeight: item.path === "/candidates" ? 600 : 400,
-                "&:hover": {
-                  bgcolor: item.path === "/candidates" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: item.path === "/candidates" ? "#1976d2" : "#666" }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-
-        {user && (
-          <ListItem
-            component={Link}
-            to="/profile"
-            sx={{
-              mt: "auto",
-              color: "#666",
-              "&:hover": {
-                bgcolor: "#e0e0e0",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "#666" }}>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-        )}
+        <Sidebar activePath={window.location.pathname} />
       </Drawer>
 
       <Box

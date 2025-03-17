@@ -27,6 +27,7 @@ import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
 import { RootState } from "@/store"
 import { WorkOutline, Person, Settings, Login as LoginIcon, Assessment } from "@mui/icons-material"
 import { createUser } from "@/api/graphql/api"
+import { Sidebar } from "@/components/Sidebar"
 
 interface RegisterForm {
   fullName: string
@@ -63,20 +64,6 @@ export const Register = () => {
       met: req.regex.test(formData.password),
     }))
   }, [formData.password])
-
-  const sidebarItems = user
-    ? [
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-        { icon: <Settings />, text: "Settings", path: "/settings" },
-      ]
-    : [
-        { icon: <LoginIcon />, text: "Login", path: "/login" },
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-      ]
 
   // Event handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,43 +154,7 @@ export const Register = () => {
             ResumeCheck
           </Typography>
         </Box>
-        <List>
-          {sidebarItems.map((item) => (
-            <ListItem
-              component={Link}
-              to={item.path}
-              key={item.text}
-              sx={{
-                color: "#666",
-                "&:hover": {
-                  bgcolor: "#e0e0e0",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: "#666" }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-
-        {user && (
-          <ListItem
-            component={Link}
-            to="/profile"
-            sx={{
-              mt: "auto",
-              color: "#666",
-              "&:hover": {
-                bgcolor: "#e0e0e0",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "#666" }}>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-        )}
+        <Sidebar activePath={"/login"} />
       </Drawer>
 
       <Box

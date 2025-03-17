@@ -25,6 +25,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useAppDispatch } from "@/store/hooks"
 import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
+import { Sidebar } from "@/components/Sidebar"
 
 export const CvAnalyses: FC = () => {
   const dispatch = useAppDispatch()
@@ -54,20 +55,6 @@ export const CvAnalyses: FC = () => {
 
   // Display the data as JSON at the top of the component
   console.log("analyses ===>", analyses, loading, error)
-
-  const sidebarItems = user
-    ? [
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-        { icon: <Settings />, text: "Settings", path: "/settings" },
-      ]
-    : [
-        { icon: <Login />, text: "Login", path: "/login" },
-        // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies" },
-        { icon: <Assessment />, text: "CV Analyses", path: "/cv-analyses" },
-        { icon: <Person />, text: "Candidates", path: "/candidates" },
-      ]
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -99,47 +86,7 @@ export const CvAnalyses: FC = () => {
             ResumeCheck
           </Typography>
         </Box>
-        <List>
-          {sidebarItems.map((item) => (
-            <ListItem
-              component={Link}
-              to={item.path}
-              key={item.text}
-              sx={{
-                color: item.path === "/cv-analyses" ? "#1976d2" : "#666",
-                bgcolor: item.path === "/cv-analyses" ? "rgba(25, 118, 210, 0.08)" : "transparent",
-                fontWeight: item.path === "/cv-analyses" ? 600 : 400,
-                "&:hover": {
-                  bgcolor: item.path === "/cv-analyses" ? "rgba(25, 118, 210, 0.12)" : "#e0e0e0",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: item.path === "/cv-analyses" ? "#1976d2" : "#666" }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-
-        {user && (
-          <ListItem
-            component={Link}
-            to="/profile"
-            sx={{
-              mt: "auto",
-              color: "#666",
-              "&:hover": {
-                bgcolor: "#e0e0e0",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "#666" }}>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-        )}
+        <Sidebar activePath={window.location.pathname} />
       </Drawer>
 
       <Box

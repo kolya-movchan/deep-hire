@@ -199,7 +199,10 @@ export const CvAnalysisOfCandidate: FC = () => {
                     </div>
                   </Grid>
                   <Grid item xs={12} md={4} className="flex justify-center items-center">
-                    <Avatar className="w-24 h-24 text-5xl font-bold bg-gradient-to-br from-primary to-secondary text-white">
+                    <Avatar
+                      className="text-5xl font-bold bg-gradient-to-br text-white"
+                      sx={{ width: 120, height: 120, fontSize: "3rem" }}
+                    >
                       {candidateData.name.charAt(0)}
                     </Avatar>
                   </Grid>

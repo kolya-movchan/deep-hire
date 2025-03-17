@@ -15,10 +15,6 @@ import {
   DialogContent,
   DialogActions,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import { logIn } from "../api/rest/auth"
@@ -27,7 +23,6 @@ import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
 import { forgotPassword, forgotPasswordSubmit } from "../api/rest/auth"
-import { WorkOutline, Person, Settings, Login as LoginIcon, Assessment } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { Sidebar } from "@/components/Sidebar"

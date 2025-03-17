@@ -4,10 +4,6 @@ import {
   Container,
   Typography,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Paper,
   Grid,
   Table,
@@ -19,7 +15,7 @@ import {
   Chip,
   Button,
 } from "@mui/material"
-import { Person, Login, Settings, Assessment, Visibility } from "@mui/icons-material"
+import { Visibility } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"

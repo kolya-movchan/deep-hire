@@ -12,10 +12,6 @@ import {
   Paper,
   Stack,
   Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { passwordRequirements } from "@/mocks/data/password-requirements"
@@ -25,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
 import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
 import { RootState } from "@/store"
-import { WorkOutline, Person, Settings, Login as LoginIcon, Assessment } from "@mui/icons-material"
 import { createUser } from "@/api/graphql/api"
 import { Sidebar } from "@/components/Sidebar"
 

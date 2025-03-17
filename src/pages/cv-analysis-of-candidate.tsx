@@ -20,9 +20,6 @@ import {
 } from "@mui/material"
 import { Link, useParams, Navigate } from "react-router-dom"
 import {
-  Person,
-  Login,
-  Settings,
   Email,
   Phone,
   LocationOn,
@@ -34,7 +31,6 @@ import {
   Warning,
   ThumbUp,
   ThumbDown,
-  Assessment,
 } from "@mui/icons-material"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"

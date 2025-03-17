@@ -1,28 +1,7 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  TextField,
-  Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material"
+import { Box, Container, Typography, Grid, Paper, TextField, Button } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import {
-  CloudUpload,
-  Link as LinkIcon,
-  Person,
-  Login,
-  WorkOutline,
-  Settings,
-  Assessment,
-} from "@mui/icons-material"
+import { CloudUpload, Link as LinkIcon } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useFileUpload } from "../hooks/use-file-upload"

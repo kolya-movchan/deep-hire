@@ -64,16 +64,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
       ]
     : [
         {
-          icon: <AddCircle />,
-          text: "New Analysis",
-          path: "/",
-          highlight: activePath === "/",
-        },
-        {
           icon: <Login />,
           text: "Login",
           path: "/login",
           highlight: activePath === "/login",
+        },
+        {
+          icon: <AddCircle />,
+          text: "New Analysis",
+          path: "/",
+          highlight: activePath === "/",
         },
         // { icon: <WorkOutline />, text: "Vacancies", path: "/vacancies", highlight: activePath === "/vacancies" },
         {

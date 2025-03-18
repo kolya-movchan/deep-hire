@@ -1,6 +1,6 @@
-import { FC, useEffect } from "react"
+import { FC, useEffect, useState } from "react"
 import { Container, Grid, Button, LinearProgress } from "@mui/material"
-import { Description, AddCircleOutline } from "@mui/icons-material"
+import { Description, AddCircleOutline, ArrowUpward, ArrowDownward } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -8,6 +8,9 @@ import { useAppDispatch } from "@/store/hooks"
 import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
 import { fetchCandidateDetails, clearDetails } from "@/store/candidate-details-slice"
 import { Sidebar } from "@/components/Sidebar"
+
+type SortField = "name" | "title" | "position" | "matchScore"
+type SortDirection = "asc" | "desc"
 
 export const CvAnalyses: FC = () => {
   const dispatch = useAppDispatch()
@@ -19,6 +22,9 @@ export const CvAnalyses: FC = () => {
     (state: RootState) => state.candidateDetails
   )
 
+  const [sortField, setSortField] = useState<SortField>("name")
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
+
   useEffect(() => {
     if (userId) {
       dispatch(fetchCandidateAnalyses(userId))
@@ -28,12 +34,6 @@ export const CvAnalyses: FC = () => {
       dispatch(clearDetails())
     }
   }, [userId, dispatch])
-
-  // useEffect(() => {
-  //   if (analyses && analyses.length > 0 && userId) {
-
-  //   }
-  // }, [analyses, userId, dispatch])
 
   // Format date for display
   const formatDate = (dateString: string): string => {
@@ -45,6 +45,68 @@ export const CvAnalyses: FC = () => {
       hour: "2-digit",
       minute: "2-digit",
     }).format(date)
+  }
+
+  // Handle sorting
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortField(field)
+      setSortDirection("asc")
+    }
+  }
+
+  // Sort analyses
+  const getSortedAnalyses = () => {
+    if (!analyses) return []
+
+    const analysesWithScores = analyses.map((analysis) => {
+      const matchScore = matchScores.find((score) => score.id === analysis.id)?.matchScore
+      return {
+        ...analysis,
+        matchScore: matchScore ? Number(matchScore) : -1,
+      }
+    })
+
+    return [...analysesWithScores].sort((a, b) => {
+      let comparison = 0
+
+      switch (sortField) {
+        case "name":
+          comparison = a.name.localeCompare(b.name)
+          break
+        case "title": {
+          const titleA = a.title || ""
+          const titleB = b.title || ""
+          comparison = titleA.localeCompare(titleB)
+          break
+        }
+        case "position": {
+          const positionA = a.vacancyUrl ? "a" : "z" // Sort positions with URLs first
+          const positionB = b.vacancyUrl ? "a" : "z"
+          comparison = positionA.localeCompare(positionB)
+          break
+        }
+        case "matchScore":
+          comparison = a.matchScore - b.matchScore
+          break
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison
+    })
+  }
+
+  const sortedAnalyses = getSortedAnalyses()
+
+  // Render sort icon
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) return <span className="text-gray-300 ml-1">⇅</span>
+    return sortDirection === "asc" ? (
+      <ArrowUpward fontSize="inherit" className="ml-1 inline-block text-primary text-xs" />
+    ) : (
+      <ArrowDownward fontSize="inherit" className="ml-1 inline-block text-primary text-xs" />
+    )
   }
 
   return (
@@ -120,42 +182,58 @@ export const CvAnalyses: FC = () => {
                 <div className="overflow-hidden bg-white rounded-xl shadow-md border border-primary/5 animate-slide-up">
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-primary/5">
+                      <thead className="bg-gray-50">
                         <tr>
                           <th
                             scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            onClick={() => handleSort("name")}
                           >
-                            Name
+                            <div className="flex items-center">
+                              <span>Name</span>
+                              {renderSortIcon("name")}
+                            </div>
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            onClick={() => handleSort("title")}
                           >
-                            Title
+                            <div className="flex items-center">
+                              <span>Title</span>
+                              {renderSortIcon("title")}
+                            </div>
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            onClick={() => handleSort("position")}
                           >
-                            Position
+                            <div className="flex items-center">
+                              <span>Position</span>
+                              {renderSortIcon("position")}
+                            </div>
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            onClick={() => handleSort("matchScore")}
                           >
-                            Match Score
+                            <div className="flex items-center">
+                              <span>Match Score</span>
+                              {renderSortIcon("matchScore")}
+                            </div>
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                           >
                             Scanned At
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {analyses.map((analysis, index) => {
+                        {sortedAnalyses.map((analysis, index) => {
                           const matchScore = matchScores.find(
                             (score) => score.id === analysis.id
                           )?.matchScore

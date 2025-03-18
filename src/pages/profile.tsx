@@ -264,58 +264,6 @@ export const Profile = () => {
                         </Button>
                       </CardContent>
                     </Card>
-
-                    <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100 rounded-xl shadow-sm overflow-hidden">
-                      <CardContent className="p-6 h-full flex flex-col justify-between">
-                        <div className="flex items-center mb-3 justify-between gap-2">
-                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
-                            <People sx={{ color: "#2563eb", fontSize: 28 }} />
-                          </div>
-                          <Typography variant="h6" className="text-gray-700 font-medium">
-                            Candidates
-                          </Typography>
-                        </div>
-                        <Typography variant="h3" className="font-bold text-blue-700 ml-2 mt-3 mb-4">
-                          0
-                        </Typography>
-                        <Button
-                          component={Link}
-                          to="/candidates"
-                          className="mt-2 bg-blue-600 hover:bg-blue-700 text-white py-2"
-                          size="medium"
-                          variant="contained"
-                          fullWidth
-                        >
-                          View Candidates
-                        </Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-gradient-to-br from-cyan-50 to-teal-50 border border-cyan-100 rounded-xl shadow-sm overflow-hidden">
-                      <CardContent className="p-6 h-full flex flex-col justify-between">
-                        <div className="flex items-center mb-3 justify-between gap-2">
-                          <div className="w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center mr-4">
-                            <BusinessCenter sx={{ color: "#0891b2", fontSize: 28 }} />
-                          </div>
-                          <Typography variant="h6" className="text-gray-700 font-medium">
-                            Vacancies
-                          </Typography>
-                        </div>
-                        <Typography variant="h3" className="font-bold text-cyan-700 ml-2 mt-3 mb-4">
-                          0
-                        </Typography>
-                        <Button
-                          component={Link}
-                          to="/vacancies"
-                          className="mt-2 bg-cyan-600 hover:bg-cyan-700 text-white py-2"
-                          size="medium"
-                          variant="contained"
-                          fullWidth
-                        >
-                          View Vacancies
-                        </Button>
-                      </CardContent>
-                    </Card>
                   </div>
 
                   {/* Quick Actions */}

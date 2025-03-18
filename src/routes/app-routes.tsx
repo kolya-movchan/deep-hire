@@ -12,7 +12,6 @@ import { CvAnalysisOfCandidate } from "../pages/cv-analysis-of-candidate"
 import { createBrowserRouter } from "react-router-dom"
 import { CvAnalyses } from "@/pages/cv-analyses"
 import { Vacancies } from "@/pages/vacancies"
-import { Candidates } from "@/pages/candidates"
 import { setNewVisitorData } from "@/store/visitor-slice"
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
 import PrivateRoute from "./private-route"
@@ -28,7 +27,6 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/register", element: <Register /> },
   { path: "/cv-analyses", element: <CvAnalyses /> },
   { path: "/vacancies", element: <Vacancies /> },
-  { path: "/candidates", element: <Candidates /> },
 ] as const
 
 const authRoutes: readonly RouteConfig[] = [{ path: "/profile", element: <Profile /> }] as const
@@ -106,10 +104,6 @@ export const router = createBrowserRouter([
   {
     path: "/vacancies",
     element: <Vacancies />,
-  },
-  {
-    path: "/candidates",
-    element: <Candidates />,
   },
   {
     path: "/cv-analyses",

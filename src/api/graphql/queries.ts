@@ -77,6 +77,24 @@ export const GET_ALL_CANDIDATE_ANALYSES = gql`
   }
 `
 
+export const GET_CANDIDATE_CARD_DATA = gql`
+  query GetAllCandidateAnalyses($userId: String!) {
+    getAllCandidateAnalyses(userId: $userId) {
+      id
+      name
+      title
+      vacancyUrl
+      contact {
+        phone
+        email
+        location
+      }
+      skills
+      createdAt
+    }
+  }
+`
+
 export const GET_MATCH_POSITION = gql`
   query GetMatchPosition($id: ID!) {
     getMatchPosition(id: $id) {

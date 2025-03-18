@@ -124,7 +124,7 @@ export const CvAnalyses: FC = () => {
                             scope="col"
                             className="px-6 py-4 text-left text-sm font-semibold text-foreground"
                           >
-                            Job Position URL
+                            Position
                           </th>
                           <th
                             scope="col"

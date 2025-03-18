@@ -75,12 +75,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
           highlight: activePath === "/cv-analyses" || activePath?.startsWith("/cv-analysis/"),
         },
         {
-          icon: <People sx={{ color: "#2563eb" }} />,
-          text: "Candidates",
-          path: "/candidates",
-          highlight: activePath === "/candidates",
-        },
-        {
           icon: <BusinessCenter sx={{ color: "#0891b2" }} />,
           text: "Vacancies",
           path: "/vacancies",
@@ -105,12 +99,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
           text: "CV Analyses",
           path: "/cv-analyses",
           highlight: activePath === "/cv-analyses" || activePath?.startsWith("/cv-analysis/"),
-        },
-        {
-          icon: <People sx={{ color: "#2563eb" }} />,
-          text: "Candidates",
-          path: "/candidates",
-          highlight: activePath === "/candidates",
         },
       ]
 
@@ -204,38 +192,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
       )}
     </div>
   )
-
-  // For mobile, use a temporary drawer
-  if (isMobile) {
-    return (
-      <>
-        <IconButton
-          aria-label="open menu"
-          onClick={handleDrawerToggle}
-          className="fixed top-4 left-4 z-50 bg-white/90 shadow-md p-2 hover:bg-white hover:shadow-lg transition-all duration-200"
-        >
-          <MenuIcon className="text-primary" />
-        </IconButton>
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: 280,
-              boxSizing: "border-box",
-            },
-          }}
-        >
-          {drawerContent}
-        </Drawer>
-      </>
-    )
-  }
-
   // For desktop, use a permanent drawer
   return (
     <Drawer

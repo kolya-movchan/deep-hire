@@ -10,6 +10,8 @@ import {
 export interface CandidateAnalysis {
   id: string
   name: string
+  title: string
+  vacancyUrl: string
   createdAt: string
 }
 
@@ -45,7 +47,6 @@ export const fetchCandidateAnalyses = createAsyncThunk(
         fetchPolicy: "network-only",
       })
 
-      console.log("Candidate Analyses Data:", JSON.stringify(data, null, 2))
       return data.getAllCandidateAnalyses
     } catch (error) {
       console.error("Error fetching candidate analyses:", error)

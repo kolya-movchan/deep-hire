@@ -16,6 +16,7 @@ const apiKeyOnlyOperations = [
   "GetCandidateSummary",
   "GetAllCandidateAnalyses",
   "GetMatchPosition",
+  "getAllCandidatesMatch",
 ]
 
 // Create the auth link

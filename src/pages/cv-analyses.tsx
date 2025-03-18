@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useAppDispatch } from "@/store/hooks"
 import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
+import { fetchCandidateDetails, clearDetails } from "@/store/candidate-details-slice"
 import { Sidebar } from "@/components/Sidebar"
 
 export const CvAnalyses: FC = () => {
@@ -14,12 +15,25 @@ export const CvAnalyses: FC = () => {
   const { fingerprintId } = useSelector((state: RootState) => state.visitor)
   const userId = user?.userId || fingerprintId
   const { analyses, loading, error } = useSelector((state: RootState) => state.candidateAnalyses)
+  const { details: matchScores, loading: matchScoresLoading } = useSelector(
+    (state: RootState) => state.candidateDetails
+  )
 
   useEffect(() => {
     if (userId) {
       dispatch(fetchCandidateAnalyses(userId))
+      dispatch(fetchCandidateDetails(userId))
+    }
+    return () => {
+      dispatch(clearDetails())
     }
   }, [userId, dispatch])
+
+  // useEffect(() => {
+  //   if (analyses && analyses.length > 0 && userId) {
+
+  //   }
+  // }, [analyses, userId, dispatch])
 
   // Format date for display
   const formatDate = (dateString: string): string => {
@@ -130,55 +144,86 @@ export const CvAnalyses: FC = () => {
                             scope="col"
                             className="px-6 py-4 text-left text-sm font-semibold text-foreground"
                           >
+                            Match Score
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-4 text-left text-sm font-semibold text-foreground"
+                          >
                             Scanned At
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {analyses.map((analysis, index) => (
-                          <tr
-                            key={analysis.id}
-                            className="cursor-pointer transition-all duration-300 hover:bg-gray-100"
-                            style={{ animationDelay: `${index * 0.05}s` }}
-                            onClick={() => (window.location.href = `/cv-analysis/${analysis.id}`)}
-                            title="Click to view CV analysis details"
-                            role="link"
-                            aria-label={`View analysis for ${analysis.name}`}
-                          >
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-md font-medium text-foreground">
-                                {analysis.name}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-foreground/80">
-                                {analysis.title || "N/A"}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-foreground/80">
-                                {analysis.vacancyUrl ? (
-                                  <a
-                                    href={analysis.vacancyUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="text-primary hover:underline"
-                                  >
-                                    View Position
-                                  </a>
-                                ) : (
-                                  "N/A"
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-                                {formatDate(analysis.createdAt)}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                        {analyses.map((analysis, index) => {
+                          const matchScore = matchScores.find(
+                            (score) => score.id === analysis.id
+                          )?.matchScore
+
+                          return (
+                            <tr
+                              key={analysis.id}
+                              className="cursor-pointer transition-all duration-300 hover:bg-gray-100"
+                              style={{ animationDelay: `${index * 0.05}s` }}
+                              onClick={() => (window.location.href = `/cv-analysis/${analysis.id}`)}
+                              title="Click to view CV analysis details"
+                              role="link"
+                              aria-label={`View analysis for ${analysis.name}`}
+                            >
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-md font-medium text-foreground">
+                                  {analysis.name}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-foreground/80">
+                                  {analysis.title || "N/A"}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-foreground/80">
+                                  {analysis.vacancyUrl ? (
+                                    <a
+                                      href={analysis.vacancyUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="text-primary hover:underline"
+                                    >
+                                      View Position
+                                    </a>
+                                  ) : (
+                                    "N/A"
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-foreground/80">
+                                  {matchScore ? (
+                                    <span
+                                      className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
+                                        Number(matchScore) >= 70
+                                          ? "bg-green-100 text-green-800"
+                                          : Number(matchScore) >= 40
+                                            ? "bg-yellow-100 text-yellow-800"
+                                            : "bg-red-100 text-red-800"
+                                      }`}
+                                    >
+                                      {matchScore}%
+                                    </span>
+                                  ) : (
+                                    "N/A"
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                                  {formatDate(analysis.createdAt)}
+                                </span>
+                              </td>
+                            </tr>
+                          )
+                        })}
                       </tbody>
                     </table>
                   </div>

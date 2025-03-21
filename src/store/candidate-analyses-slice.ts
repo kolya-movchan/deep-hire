@@ -16,7 +16,7 @@ export interface CandidateAnalysis {
   createdAt: string
 }
 
-interface CandidateAnalysesState {
+export interface CandidateAnalysesState {
   analyses: CandidateAnalysis[]
   loading: boolean
   error: string | null

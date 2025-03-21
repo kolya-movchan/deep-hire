@@ -7,7 +7,7 @@ export interface CandidateDetails {
   matchScore: string
 }
 
-interface CandidateDetailsState {
+export interface CandidateDetailsState {
   details: CandidateDetails[]
   loading: boolean
   error: string | null

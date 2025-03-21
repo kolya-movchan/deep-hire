@@ -72,7 +72,9 @@ export const CvAnalyses: FC = () => {
 
       switch (sortField) {
         case "name":
-          comparison = a.name.localeCompare(b.name)
+          if (a.name && b.name) {
+            comparison = a.name.localeCompare(b.name)
+          }
           break
         case "title": {
           const titleA = a.title || ""

@@ -15,6 +15,7 @@ import {
   Tab,
   Tabs,
   Chip,
+  Badge,
 } from "@mui/material"
 import {
   CreditCard,
@@ -26,8 +27,6 @@ import {
   Settings,
   CloudUpload,
   Description,
-  People,
-  BusinessCenter,
   MonetizationOn,
 } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router-dom"
@@ -46,7 +45,7 @@ export const Profile = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
 
-  const handleTabChange = (_event: any, newValue: number) => {
+  const handleTabChange = (_event: unknown, newValue: number) => {
     setActiveTab(newValue)
   }
 

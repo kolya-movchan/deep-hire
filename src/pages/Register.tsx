@@ -81,14 +81,14 @@ export const Register = () => {
 
     setLoading(true)
     try {
-      const { isSignUpComplete, userId, nextStep } = await register({
+      await register({
         ...formData,
         username: formData.email,
       })
       setIsConfirming(true)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Registration error:", error)
-      setError(error.message || "Registration failed. Please try again.")
+      setError(error instanceof Error ? error.message : "Registration failed. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -110,9 +110,13 @@ export const Register = () => {
       dispatch(checkAuth())
       navigate("/")
       setIsConfirming(false)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error confirming user:", error)
-      setError(error.message || "Failed to confirm account. Please check your code and try again.")
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to confirm account. Please check your code and try again."
+      )
     } finally {
       setLoading(false)
     }

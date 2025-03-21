@@ -41,7 +41,7 @@ export const Profile = () => {
   const [activeTab, setActiveTab] = useState(0)
   const [loading, setLoading] = useState(true)
   const userId = useSelector((state: RootState) => state?.auth?.user?.userId)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [, setIsLoggedIn] = useState<boolean | null>(null)
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
 

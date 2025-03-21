@@ -1,40 +1,20 @@
 import React, { useState } from "react"
 import {
-  Box,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Typography,
-  Divider,
-  IconButton,
   useMediaQuery,
   useTheme,
   Tooltip,
-  Avatar,
 } from "@mui/material"
-import {
-  Assessment,
-  Person,
-  AddCircle,
-  Login,
-  Menu as MenuIcon,
-  Dashboard,
-  Description,
-  People,
-  Analytics,
-  CloudUpload,
-  Settings,
-  Logout,
-  BusinessCenter,
-  Badge,
-} from "@mui/icons-material"
-import { Link, useNavigate } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
+import { Login, Description, CloudUpload, BusinessCenter, Badge } from "@mui/icons-material"
+import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { cn } from "@/lib/utils"
-import { logoutUser } from "@/store/auth-slice"
 
 export interface SidebarItem {
   icon: React.ReactNode
@@ -51,7 +31,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [mobileOpen, setMobileOpen] = useState(false)
-  const navigate = useNavigate()
 
   const { user } = useSelector((state: RootState) => state.auth)
 

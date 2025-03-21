@@ -10,8 +10,6 @@ import {
 } from "@/api/graphql/types"
 import { DEDUCT_CREDITS } from "@/api/graphql/mutations"
 import { GET_CREDITS } from "@/api/graphql/queries"
-import { RootState } from "./store"
-import { useSelector } from "react-redux"
 
 const initialState: CreditsState = {
   balance: null,

@@ -18,9 +18,7 @@ export const CvAnalyses: FC = () => {
   const { fingerprintId } = useSelector((state: RootState) => state.visitor)
   const userId = user?.userId || fingerprintId
   const { analyses, loading, error } = useSelector((state: RootState) => state.candidateAnalyses)
-  const { details: matchScores, loading: matchScoresLoading } = useSelector(
-    (state: RootState) => state.candidateDetails
-  )
+  const { details: matchScores } = useSelector((state: RootState) => state.candidateDetails)
 
   const [sortField, setSortField] = useState<SortField>("name")
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")

@@ -15,8 +15,7 @@ import {
   Person,
   Link as LinkIcon,
 } from "@mui/icons-material"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/store"
+import { useDispatch } from "react-redux"
 import { FC } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 import { Sidebar } from "@/components/Sidebar"
@@ -90,8 +89,6 @@ export const CvAnalysisOfCandidate: FC = () => {
 
   // Remove file extension if present
   const cleanFileSlug = fileSlug ? fileSlug.replace(/\.[^.]+$/, "") : undefined
-
-  const { user } = useSelector((state: RootState) => state.auth)
 
   const { candidateData, matchingData, isCandidateLoading, isMatchingLoading, error } =
     useCvAnalysis(cleanFileSlug, dispatch)

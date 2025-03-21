@@ -7,10 +7,9 @@ import { Visibility, VisibilityOff, CheckCircle } from "@mui/icons-material"
 import { passwordRequirements } from "@/mocks/data/password-requirements"
 import { useNavigate } from "react-router-dom"
 import { AppDispatch } from "@/store"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { checkAuth } from "@/store/auth-slice"
 import { useNavigateLoggedInUser } from "@/helpers/navigate-user"
-import { RootState } from "@/store"
 import { createUser } from "@/api/graphql/api"
 import { Sidebar } from "@/components/Sidebar"
 import { cn } from "@/lib/utils"
@@ -26,7 +25,6 @@ export const Register = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-  const { user } = useSelector((state: RootState) => state.auth)
   const requirementsRef = useRef<HTMLDivElement>(null)
 
   // State declarations

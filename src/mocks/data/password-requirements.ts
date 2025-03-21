@@ -1,4 +1,4 @@
-import { PasswordRequirement } from "@/types/signup"
+import { PasswordRequirement } from "@/types/auth"
 
 export const passwordRequirements: PasswordRequirement[] = [
   {

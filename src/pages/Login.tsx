@@ -18,8 +18,6 @@ import { checkAuth } from "@/store/auth-slice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store"
 import { forgotPassword, forgotPasswordSubmit } from "../api/rest/auth"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
 import { Sidebar } from "@/components/Sidebar"
 
 interface LoginForm {
@@ -33,8 +31,6 @@ export const Login = () => {
   configAmplify()
 
   const dispatch = useDispatch<AppDispatch>()
-  const { user } = useSelector((state: RootState) => state.auth)
-
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginForm>({
     email: "",

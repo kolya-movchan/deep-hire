@@ -3,7 +3,7 @@ import { CandidateData, MatchingData } from "@/types/cv-analysis"
 import client from "@/api/graphql/client"
 import { GET_CANDIDATE_SUMMARY, GET_MATCH_POSITION } from "@/api/graphql/queries"
 import { AppDispatch } from "@/store"
-import { addAnalysis } from "@/store/candidate-analyses-slice"
+import { addAnalysis, CandidateAnalysis } from "@/store/candidate-analyses-slice"
 import { GetMatchPositionResponse, GetMatchPositionVariables } from "@/api/graphql/types"
 
 interface UseCvAnalysisResult {
@@ -73,7 +73,7 @@ export const useCvAnalysis = (
                 id: fileSlug,
                 name: candidateResponse.data.getCandidateSummary.name,
                 createdAt: candidateResponse.data.getCandidateSummary.createdAt,
-              })
+              } as CandidateAnalysis)
             )
           }
         }

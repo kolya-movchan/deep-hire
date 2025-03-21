@@ -6,6 +6,7 @@ Amplify.configure({
     Cognito: {
       userPoolId: "YOUR_USER_POOL_ID",
       userPoolClientId: "YOUR_USER_POOL_CLIENT_ID",
+      // @ts-expect-error - Ignoring type errors for AWS Amplify configuration
       region: "YOUR_REGION", // e.g., 'us-east-1'
     },
   },

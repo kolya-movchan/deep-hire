@@ -2,7 +2,11 @@ import { configureStore } from "@reduxjs/toolkit"
 // ... other imports ...
 
 export const store = configureStore({
-  // ... your store configuration ...
+  reducer: {
+    // Add your reducers here
+    // For example:
+    // counter: counterReducer,
+  },
 })
 
 export type RootState = ReturnType<typeof store.getState>

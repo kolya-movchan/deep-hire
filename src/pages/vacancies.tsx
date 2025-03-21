@@ -24,8 +24,6 @@ import {
   FilterList,
 } from "@mui/icons-material"
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
 import { Sidebar } from "@/components/Sidebar"
 
 // Define types for our mocked data
@@ -162,7 +160,6 @@ const formatDate = (dateString: string): string => {
 }
 
 export const Vacancies: FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth)
   const [vacancies, setVacancies] = useState<Vacancy[]>(mockVacancies)
 
   // Toggle favorite status

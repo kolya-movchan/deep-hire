@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import client from "@/api/graphql/client"
 import { GET_ALL_CANDIDATE_ANALYSES } from "@/api/graphql/queries"
 import {
+  CandidateAnalysisSummary,
   GetAllCandidateAnalysesResponse,
   GetAllCandidateAnalysesVariables,
 } from "@/api/graphql/types"
@@ -79,8 +80,8 @@ const candidateAnalysesSlice = createSlice({
       })
       .addCase(
         fetchCandidateAnalyses.fulfilled,
-        (state, action: PayloadAction<CandidateAnalysis[]>) => {
-          state.analyses = action.payload
+        (state, action: PayloadAction<CandidateAnalysisSummary[]>) => {
+          state.analyses = action.payload as unknown as CandidateAnalysis[]
           state.loading = false
         }
       )

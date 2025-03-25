@@ -10,6 +10,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { deductCredits } from "@/store/credits-slice"
 import { useAppDispatch } from "@/store/hooks"
+import { setSelectedFile } from "@/store/cv-slice"
 
 const REGION = import.meta.env.VITE_PUBLIC_AWS_REGION
 const BUCKET_NAME = import.meta.env.VITE_PUBLIC_AWS_BUCKET_NAME
@@ -58,7 +59,6 @@ export const useFileUpload = () => {
         const fileId = file.name.replace(/\s+/g, "-")
         const fileKey = `uploads/${uniqueFileId}-${fileId}`
         const fileSlug = `${uniqueFileId}-${fileId}`
-
         // Generate a pre-signed URL
         const command = new PutObjectCommand({
           Bucket: BUCKET_NAME,
@@ -92,6 +92,8 @@ export const useFileUpload = () => {
 
         console.log("fileUrl ===>", `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${fileKey}`)
         console.log("fileSlug ===>", fileSlug)
+
+        dispatch(setSelectedFile(`${uniqueFileId}-${fileId.replace(/\.[^/.]+$/, "")}`))
 
         return {
           fileUrl: `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/${fileKey}`,

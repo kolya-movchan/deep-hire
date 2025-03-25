@@ -80,7 +80,7 @@ export const Home = () => {
         setVacancyUrl("")
 
         // Redirect to analysis page
-        navigate(`/cv-analysis/${cleanFileSlug}`)
+        navigate(`/cv-analysis-of-candidate`)
       } catch (err) {
         console.error("Upload failed:", err)
       }

@@ -43,7 +43,7 @@ const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
 
   return (
     <div
-      className="card bg-white mb-6 rounded-xl overflow-hidden shadow-md animate-slide-up border-l-4 border-l-solid"
+      className="card bg-white mb-6 rounded-xl overflow-hidden shadow-md animate-slide-up border-l-4 border-l-solid upload-success"
       style={{ borderLeftColor: `hsl(var(--${getScoreColor(score)}-hue), 65%, 48%)` }}
     >
       <div className="p-6">

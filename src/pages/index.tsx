@@ -203,7 +203,7 @@ export const Home = () => {
                         error={!!urlError}
                         helperText={urlError || "The URL should start with https://"}
                         fullWidth
-                        className="form-input"
+                        className="form-input input-url"
                         InputProps={{
                           startAdornment: <LinkIcon className="mr-2 text-primary" />,
                           className: "rounded-lg",
@@ -227,8 +227,9 @@ export const Home = () => {
                       variant="contained"
                       onClick={uploadResume}
                       disabled={!resumeFile || !vacancyUrl || !!urlError || isUploading}
-                      className="w-fit bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white py-2 rounded-lg transition-all duration-200 disabled:opacity-50 text-base"
+                      className="w-fit bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white py-2 rounded-lg transition-all duration-200 disabled:opacity-50 text-base submit-button"
                       sx={{ textTransform: "none" }}
+                      type="submit"
                     >
                       {isUploading ? (
                         <span className="flex items-center justify-center">

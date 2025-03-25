@@ -18,7 +18,7 @@ async function simulateUser(browser: Browser, userData: UserSimulation): Promise
     console.log(`${userData.userId}: Starting simulation`)
 
     // Navigate to your application
-    await page.goto("http://localhost:3001") // Adjust URL to match your dev server
+    await page.goto("http://localhost:3001/") // Adjust URL to match your dev server
 
     // Wait for the file input to be available
     await page.waitForSelector('input[type="file"]')
@@ -30,13 +30,13 @@ async function simulateUser(browser: Browser, userData: UserSimulation): Promise
     }
 
     // Fill in URL input
-    await page.type('input[type="url"]', userData.url)
+    await page.type(".form-input.input-url input", userData.url)
 
     // Submit the form
     await page.click('button[type="submit"]')
 
     // Wait for upload to complete - adjust selector based on your UI
-    await page.waitForSelector(".upload-success", { timeout: 30000 })
+    await page.waitForSelector(".upload-success", { timeout: 100000 })
 
     console.log(`${userData.userId}: Simulation completed successfully`)
   } catch (error) {
@@ -61,12 +61,12 @@ async function runLoadTest() {
     {
       userId: "user1",
       pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
-      url: "https://example1.com",
+      url: "https://universegroup.recruitee.com/o/remote-2d-motion-designer-2-5",
     },
     {
       userId: "user2",
       pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
-      url: "https://example2.com",
+      url: "https://universegroup.recruitee.com/o/senior-front-end-developer-react-2-3?source=uni_tech",
     },
   ]
 

@@ -48,3 +48,5 @@ export default tseslint.config({
   },
 })
 ```
+
+npx tsx src/utils/loadTest.ts

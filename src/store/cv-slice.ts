@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { RootState } from "../store"
+import { createSlice, PayloadAction, Slice } from "@reduxjs/toolkit"
+import { RootState } from "."
 
 export interface CvState {
   selectedFileId: string | null
@@ -9,7 +9,7 @@ const initialState: CvState = {
   selectedFileId: null,
 }
 
-export const cvSlice = createSlice({
+export const cvSlice: Slice<CvState> = createSlice({
   name: "cv",
   initialState,
   reducers: {

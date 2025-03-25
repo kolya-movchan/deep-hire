@@ -20,7 +20,6 @@ import { FC } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 import { Sidebar } from "@/components/Sidebar"
 import { cn } from "@/lib/utils"
-import { RootState } from "../store"
 import { selectSelectedFileId } from "@/store/cv-slice"
 
 // Component for displaying match score

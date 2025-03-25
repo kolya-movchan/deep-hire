@@ -15,7 +15,7 @@ interface UseCvAnalysisResult {
 }
 
 export const useCvAnalysis = (
-  fileSlug: string | undefined,
+  fileSlug: string | null,
   dispatch: AppDispatch
 ): UseCvAnalysisResult => {
   const [candidateData, setCandidateData] = useState<CandidateData | null>(null)

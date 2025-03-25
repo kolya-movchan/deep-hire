@@ -28,7 +28,7 @@ test-ai.js
 .env.prod
 .prettierignore
 .lintstagedrc
-config.json
+
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend

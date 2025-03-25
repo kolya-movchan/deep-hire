@@ -1,0 +1,9 @@
+{
+  "aws": {
+    "region": "eu-north-1"
+  },
+  "amplify": {
+    "userPoolId": "eu-north-1_Q06o5ifqW",
+    "userPoolClientId": "4pcp673fou0ni1660hdiuivv87"
+  }
+}

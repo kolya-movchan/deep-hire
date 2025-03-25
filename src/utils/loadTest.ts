@@ -8,7 +8,7 @@ const __dirname = dirname(__filename)
 
 // Default configuration
 const DEFAULT_CONFIG: LoadTestConfig = {
-  concurrentUsers: 20,
+  concurrentUsers: 2,
   headless: true,
   baseUrl: "http://localhost:3001/",
 }

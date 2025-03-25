@@ -1,0 +1,48 @@
+{
+  "startTime": 1742939153289,
+  "endTime": 1742939234426,
+  "duration": 81.137,
+  "usersCount": 2,
+  "concurrentUsers": 2,
+  "headless": true,
+  "baseUrl": "http://localhost:3001/",
+  "timestamp": "2025-03-25T21:47:14.433Z",
+  "metrics": {
+    "individual": [
+      {
+        "navigationStart": 1742939153783,
+        "navigationEnd": 1742939158712,
+        "fileUploadStart": 1742939161102,
+        "fileUploadEnd": 1742939161288,
+        "urlInputStart": 1742939161288,
+        "urlInputEnd": 1742939161889,
+        "formSubmitStart": 1742939161889,
+        "formSubmitEnd": 1742939198599,
+        "processingStart": 1742939198599,
+        "processingEnd": 1742939234289,
+        "totalDuration": 80507
+      },
+      {
+        "navigationStart": 1742939153782,
+        "navigationEnd": 1742939158637,
+        "fileUploadStart": 1742939161101,
+        "fileUploadEnd": 1742939161275,
+        "urlInputStart": 1742939161275,
+        "urlInputEnd": 1742939161987,
+        "formSubmitStart": 1742939161987,
+        "formSubmitEnd": 1742939162122,
+        "processingStart": 1742939162122,
+        "processingEnd": 1742939198165,
+        "totalDuration": 44384
+      }
+    ],
+    "average": {
+      "avgnavigationDuration": 4892,
+      "avgfileUploadDuration": 180,
+      "avgurlInputDuration": 656.5,
+      "avgformSubmitDuration": 18422.5,
+      "avgprocessingDuration": 35866.5,
+      "totalDuration": 62445.5
+    }
+  }
+}

@@ -6,6 +6,13 @@ import fs from "fs"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+// Default configuration
+const DEFAULT_CONFIG: LoadTestConfig = {
+  concurrentUsers: 5,
+  headless: false,
+  baseUrl: "http://localhost:3001/",
+}
+
 // Create base directories
 const UTILS_DIR = join(__dirname)
 const RUNS_DIR = join(UTILS_DIR, "runs")
@@ -38,10 +45,17 @@ interface UserSimulation {
   url: string
 }
 
+interface LoadTestConfig {
+  concurrentUsers: number
+  headless: boolean
+  baseUrl: string
+}
+
 async function simulateUser(
   browser: Browser,
   userData: UserSimulation,
-  dirs: ReturnType<typeof createRunDirectory>
+  dirs: ReturnType<typeof createRunDirectory>,
+  config: LoadTestConfig
 ): Promise<void> {
   const page = await browser.newPage()
 
@@ -49,7 +63,7 @@ async function simulateUser(
     console.log(`${userData.userId}: Starting simulation`)
 
     // Navigate to your application
-    await page.goto("http://localhost:3001/") // Adjust URL to match your dev server
+    await page.goto(config.baseUrl)
 
     // Wait for the file input to be available
     await page.waitForSelector('input[type="file"]')
@@ -82,24 +96,37 @@ async function simulateUser(
   }
 }
 
-async function runLoadTest() {
+// Sample job URLs for testing - always ensure we have at least 2 URLs
+const JOB_URLS = ["https://universegroup.recruitee.com/o/remote-2d-motion-designer-2-5"]
+
+// Generate users based on the desired count, always mixing between the URLs
+const generateUsers = (count: number): UserSimulation[] => {
+  // Ensure we have at least 2 URLs to mix between
+  if (JOB_URLS.length < 2) {
+    throw new Error("At least 2 job URLs must be defined for proper testing")
+  }
+
+  return Array.from({ length: count }, (_, index) => ({
+    userId: `user${index + 1}`,
+    pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
+    // Ensure we're cycling through all available URLs
+    url: JOB_URLS[index % JOB_URLS.length],
+  }))
+}
+
+async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<void> {
+  // Merge default config with custom config
+  const config: LoadTestConfig = { ...DEFAULT_CONFIG, ...customConfig }
+
+  console.log(`Starting load test with ${config.concurrentUsers} concurrent users`)
+  console.log(`Headless mode: ${config.headless ? "enabled" : "disabled"}`)
+
   const browser = await puppeteer.launch({
-    headless: false, // Set to true in production
+    headless: config.headless,
     defaultViewport: { width: 1280, height: 800 },
   })
 
-  const users: UserSimulation[] = [
-    {
-      userId: "user1",
-      pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
-      url: "https://universegroup.recruitee.com/o/remote-2d-motion-designer-2-5",
-    },
-    {
-      userId: "user2",
-      pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
-      url: "https://universegroup.recruitee.com/o/senior-front-end-developer-react-2-3?source=uni_tech",
-    },
-  ]
+  const users = generateUsers(config.concurrentUsers)
 
   console.log("Starting concurrent browser simulations...")
   const startTime = Date.now()
@@ -109,7 +136,7 @@ async function runLoadTest() {
 
   try {
     // Run all user simulations concurrently
-    await Promise.all(users.map((user) => simulateUser(browser, user, dirs)))
+    await Promise.all(users.map((user) => simulateUser(browser, user, dirs, config)))
 
     const endTime = Date.now()
     const duration = (endTime - startTime) / 1000
@@ -124,6 +151,9 @@ async function runLoadTest() {
           endTime,
           duration,
           usersCount: users.length,
+          concurrentUsers: config.concurrentUsers,
+          headless: config.headless,
+          baseUrl: config.baseUrl,
           timestamp: new Date().toISOString(),
         },
         null,
@@ -142,8 +172,13 @@ async function runLoadTest() {
   }
 }
 
-// Add error handling for the main function
-runLoadTest().catch((error) => {
+// Example usage:
+// Run with 5 concurrent users in headless mode
+runLoadTest({
+  concurrentUsers: 5,
+  headless: DEFAULT_CONFIG.headless,
+  // baseUrl: "https://staging.example.com/" // Uncomment to override default URL
+}).catch((error) => {
   console.error("Fatal error:", error)
   // Create error directory if it doesn't exist yet
   const errorDir = join(RUNS_DIR, "fatal-errors")

@@ -1,0 +1,10 @@
+{
+  "startTime": 1742938142698,
+  "endTime": 1742938257078,
+  "duration": 114.38,
+  "usersCount": 5,
+  "concurrentUsers": 5,
+  "headless": false,
+  "baseUrl": "http://localhost:3001/",
+  "timestamp": "2025-03-25T21:30:57.078Z"
+}

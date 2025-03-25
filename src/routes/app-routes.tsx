@@ -26,6 +26,7 @@ const publicRoutes: readonly RouteConfig[] = [
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/cv-analyses", element: <CvAnalyses /> },
+  { path: "/cv-analysis-of-candidate", element: <CvAnalysisOfCandidate /> },
   { path: "/vacancies", element: <Vacancies /> },
 ] as const
 
@@ -69,8 +70,6 @@ export function AppRoutes(): JSX.Element {
         <Route key={path} path={path} element={element} />
       ))}
 
-      <Route path="/cv-analysis/:fileSlug" element={<CvAnalysisOfCandidate />} />
-
       <Route element={<PrivateRoute />}>
         {authRoutes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />
@@ -94,7 +93,7 @@ export const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/cv-analysis/:fileSlug",
+    path: "/cv-analysis-of-candidate",
     element: <CvAnalysisOfCandidate />,
   },
   {

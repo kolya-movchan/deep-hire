@@ -1,5 +1,5 @@
 import { Container, Grid, Avatar, Divider, LinearProgress } from "@mui/material"
-import { Link, useParams, Navigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import {
   Email,
   Phone,
@@ -15,11 +15,13 @@ import {
   Person,
   Link as LinkIcon,
 } from "@mui/icons-material"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { FC } from "react"
 import { useCvAnalysis } from "@/hooks/use-cv-analysis"
 import { Sidebar } from "@/components/Sidebar"
 import { cn } from "@/lib/utils"
+import { RootState } from "../store"
+import { selectSelectedFileId } from "@/store/cv-slice"
 
 // Component for displaying match score
 const MatchScoreCard: FC<{ score: number }> = ({ score }) => {
@@ -85,17 +87,13 @@ const SectionLoader: FC = () => (
 
 export const CvAnalysisOfCandidate: FC = () => {
   const dispatch = useDispatch()
-  const { fileSlug } = useParams<{ fileSlug: string }>()
-
-  // Remove file extension if present
-  const cleanFileSlug = fileSlug ? fileSlug.replace(/\.[^.]+$/, "") : undefined
+  const selectedFileId = useSelector(selectSelectedFileId)
 
   const { candidateData, matchingData, isCandidateLoading, isMatchingLoading, error } =
-    useCvAnalysis(cleanFileSlug, dispatch)
+    useCvAnalysis(selectedFileId, dispatch)
 
-  // If no fileSlug is provided, redirect to home
-  if (!fileSlug) {
-    return <Navigate to="/" replace />
+  if (!selectedFileId) {
+    return <Navigate to="/cv-analyses" replace />
   }
 
   return (

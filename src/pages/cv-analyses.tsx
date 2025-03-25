@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from "react"
 import { Container, Grid, Button, LinearProgress } from "@mui/material"
 import { Description, AddCircleOutline, ArrowUpward, ArrowDownward } from "@mui/icons-material"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useAppDispatch } from "@/store/hooks"
 import { fetchCandidateAnalyses } from "@/store/candidate-analyses-slice"
 import { fetchCandidateDetails, clearDetails } from "@/store/candidate-details-slice"
 import { Sidebar } from "@/components/Sidebar"
+import { setSelectedFile } from "@/store/cv-slice"
 
 type SortField = "name" | "title" | "position" | "matchScore"
 type SortDirection = "asc" | "desc"
@@ -19,6 +20,7 @@ export const CvAnalyses: FC = () => {
   const userId = user?.userId || fingerprintId
   const { analyses, loading, error } = useSelector((state: RootState) => state.candidateAnalyses)
   const { details: matchScores } = useSelector((state: RootState) => state.candidateDetails)
+  const navigate = useNavigate()
 
   const [sortField, setSortField] = useState<SortField>("name")
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
@@ -107,6 +109,11 @@ export const CvAnalyses: FC = () => {
     ) : (
       <ArrowDownward fontSize="inherit" className="ml-1 inline-block text-primary text-xs" />
     )
+  }
+
+  const handleCvSelect = (fileId: string) => {
+    dispatch(setSelectedFile(fileId))
+    navigate("/cv-analysis-of-candidate")
   }
 
   return (
@@ -243,7 +250,7 @@ export const CvAnalyses: FC = () => {
                               key={analysis.id}
                               className="cursor-pointer transition-all duration-300 hover:bg-gray-100"
                               style={{ animationDelay: `${index * 0.05}s` }}
-                              onClick={() => (window.location.href = `/cv-analysis/${analysis.id}`)}
+                              onClick={() => handleCvSelect(analysis.id)}
                               title="Click to view CV analysis details"
                               role="link"
                               aria-label={`View analysis for ${analysis.name}`}

@@ -12,7 +12,7 @@ import { CvAnalysisOfCandidate } from "../pages/cv-analysis-of-candidate"
 import { createBrowserRouter } from "react-router-dom"
 import { CvAnalyses } from "@/pages/cv-analyses"
 import { setNewVisitorData } from "@/store/visitor-slice"
-import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react"
+import { useVisitorVerification } from "@/hooks/use-visitor-verification"
 import PrivateRoute from "./private-route"
 
 type RouteConfig = {
@@ -47,15 +47,12 @@ export function AppRoutes(): JSX.Element {
     }
   }, [dispatch, userId])
 
-  const { data: fingerprintData } = useVisitorData({ extendedResult: false }, { immediate: true })
+  const { fingerPrintId } = useVisitorVerification()
 
-  // @ts-expect-error wrong types from fingerprintjs
-  const visitorId = fingerprintData?.meta.version || ""
-
-  if (visitorId) {
+  if (fingerPrintId) {
     dispatch(
       setNewVisitorData({
-        fingerprintId: `anon-${visitorId}`,
+        fingerprintId: `anon-${fingerPrintId}`,
       })
     )
   }

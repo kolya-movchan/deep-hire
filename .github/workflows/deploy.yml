@@ -47,7 +47,7 @@ jobs:
       # Step 6: Sync build files to S3 with public read access
       - name: Deploy to S3
         run: aws s3 sync ./dist s3://${{ secrets.AWS_BUCKET_NAME }} --acl public-read
-        
+
       # Step 7: Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*" --output json

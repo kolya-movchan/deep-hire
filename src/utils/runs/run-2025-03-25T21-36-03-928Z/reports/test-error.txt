@@ -1,0 +1,12 @@
+2025-03-25T21:37:56.232Z
+ProtocolError: Protocol error (Target.closeTarget): No target with given id found
+ProtocolError: Protocol error (Target.closeTarget): No target with given id found
+    at Callback.<instance_members_initializer> (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:125:12)
+    at new Callback (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:130:3)
+    at CallbackRegistry.create (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:28:22)
+    at Connection._rawSend (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/Connection.ts:136:22)
+    at Connection.send (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/Connection.ts:120:17)
+    at CdpPage.close (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/Page.ts:1144:24)
+    at async simulateUser (/Users/Home/deep-hire/src/utils/loadTest.ts:95:5)
+    at async Promise.all (index 19)
+    at async runLoadTest (/Users/Home/deep-hire/src/utils/loadTest.ts:135:5)

@@ -1,0 +1,5 @@
+2025-03-25T21:34:24.561Z
+Error: At least 2 job URLs must be defined for proper testing
+Error: At least 2 job URLs must be defined for proper testing
+    at generateUsers (/Users/Home/deep-hire/src/utils/loadTest.ts:106:11)
+    at runLoadTest (/Users/Home/deep-hire/src/utils/loadTest.ts:129:17)

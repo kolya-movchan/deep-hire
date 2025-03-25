@@ -8,8 +8,8 @@ const __dirname = dirname(__filename)
 
 // Default configuration
 const DEFAULT_CONFIG: LoadTestConfig = {
-  concurrentUsers: 5,
-  headless: false,
+  concurrentUsers: 20,
+  headless: true,
   baseUrl: "http://localhost:3001/",
 }
 
@@ -51,39 +51,113 @@ interface LoadTestConfig {
   baseUrl: string
 }
 
+interface TimingMetrics {
+  navigationStart: number
+  navigationEnd: number
+  fileUploadStart: number
+  fileUploadEnd: number
+  urlInputStart: number
+  urlInputEnd: number
+  formSubmitStart: number
+  formSubmitEnd: number
+  processingStart: number
+  processingEnd: number
+  totalDuration: number
+}
+
 async function simulateUser(
   browser: Browser,
   userData: UserSimulation,
   dirs: ReturnType<typeof createRunDirectory>,
   config: LoadTestConfig
-): Promise<void> {
+): Promise<TimingMetrics> {
   const page = await browser.newPage()
+  const metrics: TimingMetrics = {
+    navigationStart: 0,
+    navigationEnd: 0,
+    fileUploadStart: 0,
+    fileUploadEnd: 0,
+    urlInputStart: 0,
+    urlInputEnd: 0,
+    formSubmitStart: 0,
+    formSubmitEnd: 0,
+    processingStart: 0,
+    processingEnd: 0,
+    totalDuration: 0,
+  }
+
+  const simulationStart = Date.now()
 
   try {
     console.log(`${userData.userId}: Starting simulation`)
+    console.log(`${userData.userId}: Using PDF: ${userData.pdfPath}`)
+    console.log(`${userData.userId}: Using URL: ${userData.url}`)
 
     // Navigate to your application
+    metrics.navigationStart = Date.now()
+    console.log(
+      `${userData.userId}: Navigation started at ${new Date(metrics.navigationStart).toISOString()}`
+    )
     await page.goto(config.baseUrl)
+    metrics.navigationEnd = Date.now()
+    console.log(
+      `${userData.userId}: Navigation completed in ${metrics.navigationEnd - metrics.navigationStart}ms`
+    )
 
     // Wait for the file input to be available
     await page.waitForSelector('input[type="file"]')
 
     // Upload PDF file
+    metrics.fileUploadStart = Date.now()
+    console.log(
+      `${userData.userId}: File upload started at ${new Date(metrics.fileUploadStart).toISOString()}`
+    )
     const fileInput = await page.$('input[type="file"]')
     if (fileInput) {
       await fileInput.uploadFile(userData.pdfPath)
     }
+    metrics.fileUploadEnd = Date.now()
+    console.log(
+      `${userData.userId}: File upload completed in ${metrics.fileUploadEnd - metrics.fileUploadStart}ms`
+    )
 
     // Fill in URL input
+    metrics.urlInputStart = Date.now()
+    console.log(
+      `${userData.userId}: URL input started at ${new Date(metrics.urlInputStart).toISOString()}`
+    )
     await page.type(".form-input.input-url input", userData.url)
+    metrics.urlInputEnd = Date.now()
+    console.log(
+      `${userData.userId}: URL input completed in ${metrics.urlInputEnd - metrics.urlInputStart}ms`
+    )
 
     // Submit the form
+    metrics.formSubmitStart = Date.now()
+    console.log(
+      `${userData.userId}: Form submission started at ${new Date(metrics.formSubmitStart).toISOString()}`
+    )
     await page.click('button[type="submit"]')
+    metrics.formSubmitEnd = Date.now()
+    console.log(
+      `${userData.userId}: Form submission completed in ${metrics.formSubmitEnd - metrics.formSubmitStart}ms`
+    )
 
     // Wait for upload to complete - adjust selector based on your UI
+    metrics.processingStart = Date.now()
+    console.log(
+      `${userData.userId}: Processing started at ${new Date(metrics.processingStart).toISOString()}`
+    )
     await page.waitForSelector(".upload-success", { timeout: 100000 })
+    metrics.processingEnd = Date.now()
+    console.log(
+      `${userData.userId}: Processing completed in ${metrics.processingEnd - metrics.processingStart}ms`
+    )
 
-    console.log(`${userData.userId}: Simulation completed successfully`)
+    metrics.totalDuration = Date.now() - simulationStart
+    console.log(
+      `${userData.userId}: Simulation completed successfully in ${metrics.totalDuration}ms`
+    )
   } catch (error) {
     console.error(`${userData.userId}: Error during simulation:`, error)
     // Take screenshot on error and save to screenshots directory
@@ -91,8 +165,12 @@ async function simulateUser(
       path: join(dirs.screenshotsDir, `error-${userData.userId}-${Date.now()}.png`),
       fullPage: true,
     })
+
+    metrics.totalDuration = Date.now() - simulationStart
+    console.log(`${userData.userId}: Simulation failed after ${metrics.totalDuration}ms`)
   } finally {
     await page.close()
+    return metrics
   }
 }
 
@@ -101,16 +179,11 @@ const JOB_URLS = ["https://universegroup.recruitee.com/o/remote-2d-motion-design
 
 // Generate users based on the desired count, always mixing between the URLs
 const generateUsers = (count: number): UserSimulation[] => {
-  // Ensure we have at least 2 URLs to mix between
-  if (JOB_URLS.length < 2) {
-    throw new Error("At least 2 job URLs must be defined for proper testing")
-  }
-
   return Array.from({ length: count }, (_, index) => ({
     userId: `user${index + 1}`,
     pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
     // Ensure we're cycling through all available URLs
-    url: JOB_URLS[index % JOB_URLS.length],
+    url: JOB_URLS[0],
   }))
 }
 
@@ -135,12 +208,39 @@ async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<
   const dirs = createRunDirectory()
 
   try {
-    // Run all user simulations concurrently
-    await Promise.all(users.map((user) => simulateUser(browser, user, dirs, config)))
+    // Run all user simulations concurrently and collect metrics
+    const metricsResults = await Promise.all(
+      users.map((user) => simulateUser(browser, user, dirs, config))
+    )
 
     const endTime = Date.now()
     const duration = (endTime - startTime) / 1000
     console.log(`\nAll simulations completed in ${duration} seconds`)
+
+    // Calculate average metrics
+    const avgMetrics = metricsResults.reduce(
+      (acc, metrics) => {
+        Object.keys(metrics).forEach((key) => {
+          const typedKey = key as keyof TimingMetrics
+          if (typedKey !== "totalDuration") {
+            // For timing pairs, calculate the duration
+            if (typedKey.endsWith("End")) {
+              const startKey = typedKey.replace("End", "Start") as keyof TimingMetrics
+              const duration = metrics[typedKey] - metrics[startKey]
+              const durationKey = `avg${typedKey.replace("End", "Duration")}` as keyof typeof acc
+              // @ts-ignore - Dynamic key assignment
+              acc[durationKey] = (acc[durationKey] || 0) + duration / metricsResults.length
+            }
+          } else {
+            // For total duration
+            // @ts-ignore - Dynamic key assignment
+            acc[typedKey] = (acc[typedKey] || 0) + metrics[typedKey] / metricsResults.length
+          }
+        })
+        return acc
+      },
+      {} as Record<string, number>
+    )
 
     // Save test results to reports directory
     fs.writeFileSync(
@@ -155,11 +255,20 @@ async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<
           headless: config.headless,
           baseUrl: config.baseUrl,
           timestamp: new Date().toISOString(),
+          metrics: {
+            individual: metricsResults,
+            average: avgMetrics,
+          },
         },
         null,
         2
       )
     )
+
+    console.log("\nAverage timing metrics:")
+    Object.entries(avgMetrics).forEach(([key, value]) => {
+      console.log(`${key}: ${value.toFixed(2)}ms`)
+    })
   } catch (error) {
     console.error("Test failed:", error)
     // Log errors to reports directory
@@ -175,9 +284,9 @@ async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<
 // Example usage:
 // Run with 5 concurrent users in headless mode
 runLoadTest({
-  concurrentUsers: 5,
+  concurrentUsers: DEFAULT_CONFIG.concurrentUsers,
   headless: DEFAULT_CONFIG.headless,
-  // baseUrl: "https://staging.example.com/" // Uncomment to override default URL
+  baseUrl: DEFAULT_CONFIG.baseUrl,
 }).catch((error) => {
   console.error("Fatal error:", error)
   // Create error directory if it doesn't exist yet

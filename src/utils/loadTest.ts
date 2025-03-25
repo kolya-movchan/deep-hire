@@ -1,9 +1,36 @@
 import puppeteer, { Browser } from "puppeteer"
 import { fileURLToPath } from "url"
 import { dirname, join } from "path"
+import fs from "fs"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+
+// Create base directories
+const UTILS_DIR = join(__dirname)
+const RUNS_DIR = join(UTILS_DIR, "runs")
+
+if (!fs.existsSync(RUNS_DIR)) {
+  fs.mkdirSync(RUNS_DIR, { recursive: true })
+}
+
+// Create a new run directory with timestamp
+const createRunDirectory = () => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+  const runDir = join(RUNS_DIR, `run-${timestamp}`)
+  const screenshotsDir = join(runDir, "screenshots")
+  const reportsDir = join(runDir, "reports")
+
+  fs.mkdirSync(runDir)
+  fs.mkdirSync(screenshotsDir)
+  fs.mkdirSync(reportsDir)
+
+  return {
+    runDir,
+    screenshotsDir,
+    reportsDir,
+  }
+}
 
 interface UserSimulation {
   userId: string
@@ -11,7 +38,11 @@ interface UserSimulation {
   url: string
 }
 
-async function simulateUser(browser: Browser, userData: UserSimulation): Promise<void> {
+async function simulateUser(
+  browser: Browser,
+  userData: UserSimulation,
+  dirs: ReturnType<typeof createRunDirectory>
+): Promise<void> {
   const page = await browser.newPage()
 
   try {
@@ -41,9 +72,9 @@ async function simulateUser(browser: Browser, userData: UserSimulation): Promise
     console.log(`${userData.userId}: Simulation completed successfully`)
   } catch (error) {
     console.error(`${userData.userId}: Error during simulation:`, error)
-    // Take screenshot on error
+    // Take screenshot on error and save to screenshots directory
     await page.screenshot({
-      path: `error-${userData.userId}-${Date.now()}.png`,
+      path: join(dirs.screenshotsDir, `error-${userData.userId}-${Date.now()}.png`),
       fullPage: true,
     })
   } finally {
@@ -73,19 +104,55 @@ async function runLoadTest() {
   console.log("Starting concurrent browser simulations...")
   const startTime = Date.now()
 
+  // Create directories for this test run
+  const dirs = createRunDirectory()
+
   try {
     // Run all user simulations concurrently
-    await Promise.all(users.map((user) => simulateUser(browser, user)))
+    await Promise.all(users.map((user) => simulateUser(browser, user, dirs)))
 
     const endTime = Date.now()
     const duration = (endTime - startTime) / 1000
     console.log(`\nAll simulations completed in ${duration} seconds`)
+
+    // Save test results to reports directory
+    fs.writeFileSync(
+      join(dirs.reportsDir, `test-report.json`),
+      JSON.stringify(
+        {
+          startTime,
+          endTime,
+          duration,
+          usersCount: users.length,
+          timestamp: new Date().toISOString(),
+        },
+        null,
+        2
+      )
+    )
   } catch (error) {
     console.error("Test failed:", error)
+    // Log errors to reports directory
+    fs.writeFileSync(
+      join(dirs.reportsDir, `test-error.txt`),
+      `${new Date().toISOString()}\n${error}\n${error instanceof Error ? error.stack : ""}`
+    )
   } finally {
     await browser.close()
   }
 }
 
 // Add error handling for the main function
-runLoadTest().catch(console.error)
+runLoadTest().catch((error) => {
+  console.error("Fatal error:", error)
+  // Create error directory if it doesn't exist yet
+  const errorDir = join(RUNS_DIR, "fatal-errors")
+  if (!fs.existsSync(errorDir)) {
+    fs.mkdirSync(errorDir, { recursive: true })
+  }
+  // Log fatal errors to a separate directory
+  fs.writeFileSync(
+    join(errorDir, `fatal-error-${Date.now()}.txt`),
+    `${new Date().toISOString()}\n${error}\n${error instanceof Error ? error.stack : ""}`
+  )
+})

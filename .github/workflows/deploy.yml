@@ -26,6 +26,14 @@ jobs:
 
       # Step 4: Build the application (Vite build)
       - name: Build the app
+        env:
+          VITE_AWS_API_URL: ${{ secrets.AWS_API_URL }}
+          VITE_APP_SYNC_URL: ${{ secrets.APP_SYNC_URL }}
+          VITE_APP_SYNC_API_KEY: ${{ secrets.APP_SYNC_API_KEY }}
+          VITE_PUBLIC_AWS_REGION: ${{ secrets.AWS_REGION }}
+          VITE_PUBLIC_AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          VITE_PUBLIC_AWS_IDENTITY_POOL_ID: ${{ secrets.AWS_IDENTITY_POOL_ID }}
+          VITE_FINGERPRINT_API_KEY: ${{ secrets.FINGERPRINT_API_KEY }}
         run: npm run build
 
       # Step 5: Configure AWS CLI
@@ -34,8 +42,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.VITE_PUBLIC_AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       # Step 6: Sync build files to S3 with public read access
       - name: Deploy to S3
-        run: aws s3 sync ./dist s3://my-saas-cv-uploads --acl public-read
+        run: aws s3 sync ./dist s3://${{ secrets.PUBLIC_AWS_BUCKET_NAME }} --acl public-read

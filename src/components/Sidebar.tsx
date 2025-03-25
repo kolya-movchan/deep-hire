@@ -53,12 +53,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePath }) => {
           path: "/cv-analyses",
           highlight: activePath === "/cv-analyses" || activePath?.startsWith("/cv-analysis/"),
         },
-        {
-          icon: <BusinessCenter sx={{ color: "#0891b2" }} />,
-          text: "Vacancies",
-          path: "/vacancies",
-          highlight: activePath === "/vacancies",
-        },
       ]
     : [
         {

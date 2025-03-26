@@ -1,0 +1,13 @@
+2025-03-25T22:00:36.489Z
+ProtocolError: Protocol error (Runtime.callFunctionOn): Execution context was destroyed.
+ProtocolError: Protocol error (Runtime.callFunctionOn): Execution context was destroyed.
+    at Callback.<instance_members_initializer> (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:125:12)
+    at new Callback (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:130:3)
+    at CallbackRegistry.create (/Users/Home/deep-hire/node_modules/puppeteer-core/src/common/CallbackRegistry.ts:28:22)
+    at Connection._rawSend (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/Connection.ts:136:22)
+    at CdpCDPSession.send (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/CdpSession.ts:103:29)
+    at ExecutionContext.#evaluate (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/ExecutionContext.ts:416:44)
+    at ExecutionContext.evaluate (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/ExecutionContext.ts:291:32)
+    at IsolatedWorld.evaluate (/Users/Home/deep-hire/node_modules/puppeteer-core/src/cdp/IsolatedWorld.ts:196:26)
+    at CdpJSHandle.evaluate (/Users/Home/deep-hire/node_modules/puppeteer-core/src/api/JSHandle.ts:76:29)
+    at CdpElementHandle.evaluate (/Users/Home/deep-hire/node_modules/puppeteer-core/src/api/ElementHandle.ts:285:30)

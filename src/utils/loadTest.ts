@@ -8,7 +8,7 @@ const __dirname = dirname(__filename)
 
 // Default configuration
 const DEFAULT_CONFIG: LoadTestConfig = {
-  concurrentUsers: 2,
+  concurrentUsers: 3,
   headless: true,
   baseUrl: "http://localhost:3001/",
 }
@@ -170,6 +170,7 @@ async function simulateUser(
     console.log(`${userData.userId}: Simulation failed after ${metrics.totalDuration}ms`)
   } finally {
     await page.close()
+    // eslint-disable-next-line no-unsafe-finally
     return metrics
   }
 }
@@ -177,14 +178,22 @@ async function simulateUser(
 // Sample job URLs for testing - always ensure we have at least 2 URLs
 const JOB_URLS = ["https://universegroup.recruitee.com/o/remote-2d-motion-designer-2-5"]
 
-// Generate users based on the desired count, always mixing between the URLs
+// Sample PDF files for testing
+const PDF_FILES = ["sample-1.pdf", "sample-2.pdf", "sample-3.pdf"]
+
+// Generate users based on the desired count, cycling through the PDF files
 const generateUsers = (count: number): UserSimulation[] => {
-  return Array.from({ length: count }, (_, index) => ({
-    userId: `user${index + 1}`,
-    pdfPath: join(__dirname, "../../test-files/sample-1.pdf"),
-    // Ensure we're cycling through all available URLs
-    url: JOB_URLS[0],
-  }))
+  return Array.from({ length: count }, (_, index) => {
+    // Cycle through the PDF files (0, 1, 2, 0, 1, 2, ...)
+    const pdfIndex = index % PDF_FILES.length
+
+    return {
+      userId: `user${index + 1}`,
+      pdfPath: join(__dirname, "../../test-files", PDF_FILES[pdfIndex]),
+      // Ensure we're cycling through all available URLs
+      url: JOB_URLS[0],
+    }
+  })
 }
 
 async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<void> {
@@ -228,12 +237,10 @@ async function runLoadTest(customConfig: Partial<LoadTestConfig> = {}): Promise<
               const startKey = typedKey.replace("End", "Start") as keyof TimingMetrics
               const duration = metrics[typedKey] - metrics[startKey]
               const durationKey = `avg${typedKey.replace("End", "Duration")}` as keyof typeof acc
-              // @ts-ignore - Dynamic key assignment
               acc[durationKey] = (acc[durationKey] || 0) + duration / metricsResults.length
             }
           } else {
             // For total duration
-            // @ts-ignore - Dynamic key assignment
             acc[typedKey] = (acc[typedKey] || 0) + metrics[typedKey] / metricsResults.length
           }
         })

@@ -86,14 +86,39 @@ npm run dev
 
 ### 🔧 Environment Variables
 
-Create a `.env` file with the following variables:
+Copy `.env.example` to `.env` and configure the following variables:
+
+```bash
+# Copy the example file
+cp .env.example .env
+```
+
+**Required Environment Variables:**
 
 ```env
-VITE_FINGERPRINT_API_KEY=your_fingerprint_api_key
+# 🌐 AWS Configuration
 VITE_PUBLIC_AWS_REGION=eu-north-1
-VITE_PUBLIC_AWS_BUCKET_NAME=your_s3_bucket_name
-VITE_PUBLIC_AWS_IDENTITY_POOL_ID=your_identity_pool_id
+VITE_PUBLIC_AWS_BUCKET_NAME=your-s3-bucket-name
+VITE_PUBLIC_AWS_IDENTITY_POOL_ID=eu-north-1:your-identity-pool-id
+
+# 📡 AWS API & GraphQL Configuration
+VITE_AWS_API_URL=https://your-api-gateway-url.amazonaws.com
+VITE_APP_SYNC_URL=https://your-appsync-endpoint.appsync-api.eu-north-1.amazonaws.com/graphql
+VITE_APP_SYNC_API_KEY=your-appsync-api-key
+
+# 🔍 Fingerprint.js Configuration (for anonymous user tracking)
+VITE_FINGERPRINT_API_KEY=your-fingerprintjs-api-key
 ```
+
+**Variable Descriptions:**
+
+- `VITE_PUBLIC_AWS_REGION`: AWS region where your resources are deployed
+- `VITE_PUBLIC_AWS_BUCKET_NAME`: S3 bucket name for CV file uploads
+- `VITE_PUBLIC_AWS_IDENTITY_POOL_ID`: Cognito Identity Pool ID for authentication
+- `VITE_AWS_API_URL`: API Gateway endpoint URL for REST API calls
+- `VITE_APP_SYNC_URL`: AWS AppSync GraphQL endpoint URL
+- `VITE_APP_SYNC_API_KEY`: AppSync API key for GraphQL authentication
+- `VITE_FINGERPRINT_API_KEY`: FingerprintJS API key for anonymous user tracking
 
 ## 🏗️ Project Structure
 
